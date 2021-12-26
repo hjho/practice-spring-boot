@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<!-- DEFAULT MESSAGE -->
+	<entry key="0000">정상적으로 처리 되었습니다.</entry>
+	<entry key="9999">일시적인 오류가 발생했습니다.</entry>
+
+</properties>
