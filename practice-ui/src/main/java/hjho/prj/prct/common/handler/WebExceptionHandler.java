@@ -36,9 +36,6 @@ public class WebExceptionHandler {
 			mav.addObject("code"   , message.getCode());
 			mav.addObject("message", message.getMessage());
 			
-		} else {
-			mav = new ModelAndView("redirect:/error/page");
-			mav.addObject("rspn", message);
 		}
 		
 		return mav;
@@ -58,7 +55,7 @@ public class WebExceptionHandler {
 		return this.getErrorModelAndView(request, e);
 	}
 	
-	// HTML ERROR PAGE
+	// HTML ERROR RETURN
 	private ModelAndView getErrorModelAndView(HttpServletRequest request, Exception e) {
 		
 		String header = request.getHeader("user-agent");
@@ -71,9 +68,6 @@ public class WebExceptionHandler {
 			mav.addObject("code"   , message.getCode());
 			mav.addObject("message", message.getMessage());
 			
-		} else {
-			mav = new ModelAndView("redirect:/error/page");
-			mav.addObject("rspn", message);
 		}
 		
 		return mav;
