@@ -1,0 +1,30 @@
+# 서버 설정
+server:
+  servlet:
+    register-default-servlet: true
+
+# 암/복호화 설정
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
+
+# 외부 API URL (Default)  
+url:
+  practice-api: http://localhost:8092
+
+---
+spring:
+  profiles: loc
+
+server:
+  port: 8091
+
+url:
+  practice-api: http://localhost:8091
+
+---
+spring:
+  profiles: dev
+
+server:
+  port: 8092

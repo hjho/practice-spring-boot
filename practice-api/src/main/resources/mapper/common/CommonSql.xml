@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common.sql">
+
+    <sql id="page-head">
+        SELECT CEIL(row_no/#{length, jdbcType=NUMERIC}) AS page
+             , OUT_TB.*
+          FROM (
+                SELECT COUNT(*) OVER () AS total_cnt
+                     , ROWNUM           AS row_no
+                     , IN_TB.*
+                  FROM (
+    </sql>
+    
+    <sql id="page-foot"> <![CDATA[
+                       ) IN_TB
+               ) OUT_TB
+         WHERE OUT_TB.row_no BETWEEN (#{length, jdbcType=NUMERIC} * (#{page, jdbcType=NUMERIC}-1))+1 
+                                 AND (#{length, jdbcType=NUMERIC} *  #{page, jdbcType=NUMERIC})
+    ]]>
+    </sql>
+    
+</mapper> 

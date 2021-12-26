@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<!-- 메모장 같은... -->
+	<entry key="JDBC_URL">jdbc:oracle:thin:@localhost:1521/XE</entry>
+	<entry key="USER_NAME">PRACTICE</entry>
+	<entry key="PASSWORD">Credit!23</entry>
+	
+	<entry key="CRUPRO_ALGORITHM">AES/CBC/PKCS5Padding</entry>
+	<entry key="CRUPRO_KEY_LOC">2389417982374198734123</entry>
+	<entry key="CRUPRO_KEY_DEV">1947328791468273147326</entry>
+	
+	<entry key="JASPT_ALGORITHM">PBEWithMD5AndDES</entry>
+	<entry key="JASPT_KEY_LOC">jasypt_loc_key</entry>
+	<entry key="JASPT_KEY_DEV">jasypt_dev_key</entry>
+	
+	<entry key="JWT_KEY_LOC">LOCHJH</entry>
+	<entry key="JWT_KEY_DEV">DEVHJH</entry>
+	
+</properties>
