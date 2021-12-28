@@ -4,9 +4,11 @@ import hjho.prj.prct.common.clazz.PagingModel;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
+@ToString(callSuper=true)
 public class MgrDeptMgPagingPVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;

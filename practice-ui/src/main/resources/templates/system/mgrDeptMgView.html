@@ -36,7 +36,9 @@
 			<br>	
 				<!-- 부서 테이블 -->
 				<div class="card">
-				  	<h5 class="card-header">부서목록</h5>
+				  	<h6 class="card-header">
+				  		부서목록
+				  	</h6>
 				  	<div class="card-body">
 				  		<table class="table table-hover table-bordered" id="tableMgrDept">
 							<thead class="table-light">
@@ -56,9 +58,9 @@
 			<br>
 				<!-- 부서 상세 정보 -->
 				<div class="card">
-				  	<h5 class="card-header">
+				  	<h6 class="card-header">
 				  		부서 상세 정보
-				  	</h5>
+				  	</h6>
 				  	<div class="card-body">
 					  	<form id="formMgrDept">
 					  		<div class="row">
@@ -88,9 +90,9 @@
 					  				<label for="managerId">관리자ID/명</label>
 						  			<div class="input-group">
 									  	<div class="input-group-prepend">
-									    	<button class="btn btn-sm btn-outline-secondary" type="button" onclick="fnGetMgrEmp()">검색</button>
+									    	<button data-target="#modalEmployee" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
 									  	</div>
-									  	<input type="text" class="form-control form-control-sm text-right" id="managerId" name="managerId" readonly>
+									  	<input type="text" class="form-control form-control-sm text-right" id="managerId" name="managerId" style="min-width: 50px" readonly>
 									  	<div class="input-group-append">
 											<input type="text" class="form-control form-control-sm" id="managerName" name="managerName" readonly>
 										</div>
@@ -102,7 +104,7 @@
 									  	<div class="input-group-prepend">
 									    	<button class="btn btn-sm btn-outline-secondary" type="button" onclick="fnGetLocation()">검색</button>
 									  	</div>
-									  	<input type="text" class="form-control form-control-sm text-right" id="locationId" name="locationId" readonly>
+									  	<input type="text" class="form-control form-control-sm text-right" id="locationId" name="locationId" style="min-width: 50px" readonly>
 									  	<div class="input-group-append">
 											<input type="text" class="form-control form-control-sm" id="locationName" name="locationName" readonly>
 										</div>
@@ -130,17 +132,22 @@
 				  	</div>
 				</div>
 			<br>
+				<th:block th:include="/system/employeeModal"></th:block>
 			</th:block>
 			
 
 <th:block th:fragment="mgrDeptMgScript">
 	<script>
 		$(document).ready(function() {
+			// 테이블 초기화
 			DataTableUtils.init('#tableMgrDept');
+			DataTableUtils.init('#tableEmployee');
 			
+			// 상세 정보 초기화
 			fnDtlInit();
 			
-			$('#tableMgrDept').on('click', 'tr', function() {
+			// 테이블 클릭 함수
+			$('#tableMgrDept').on('click', 'tbody tr', function() {
 				fnDtlInit();
 				
 				var data = $('#tableMgrDept').dataTable().fnGetData(this);
@@ -148,9 +155,18 @@
 					return;
 				}
 				
+				if(DataTableUtils.isSeleted('#tableMgrDept', this)) {
+					return;
+				}
+				
 				fnDtlData(data);
 			});
 			
+			// 모달 팝업 초기화 (지역 검색)
+			$('#modalEmployee').on('show.bs.modal', function (e) {
+				// 사원 조회
+				fnGetMgrEmp();
+			});
 		});
 		// 조회
 		function fnGet() {
@@ -173,8 +189,8 @@
 		            { "data": "managerName"   , "class": "text-left"  }
 		        ]
 			});
-			
 		}
+		
 		// 값 설정
 		function fnDtlData(data) {
 			// 부서 번호
@@ -221,19 +237,46 @@
 						function() {},
 						function(param) { return param; }
 					),
-					funcOk : function(data) {},
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableMgrDept');
+					},
 					funcErr : function(data) {}
 			}
 			console.log(obj);
 			AjaxUtils.run(obj);
 		}
-		// 사원 조회
-		function fnGetMgrEmp() {
-			alert("사원 검색");
-		}
 		// 지역 조회
 		function fnGetLocation() {
 			alert("지역 검색");
+		}
+		// 지역 조회
+		function fnListDataTest() {
+			// alert("지역 검색");
+			var arr = [];
+			for(var i=0; i<3; i++) {
+				var map = {
+						"departmentId" : i,
+						"departmentName" : i + "테스트"
+				}
+				arr.push(map);
+			}
+			var obj = {
+					url : "/mgr/dept/test",
+					contentType : "application/json",
+					param : AjaxUtils.getParam(
+						"#formMgrDept",
+						function() {},
+						function(param) { 
+							console.log(JSON.stringify(arr));
+							return JSON.stringify(arr); 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableMgrDept');
+					},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
 		}
 	</script>
 </th:block>

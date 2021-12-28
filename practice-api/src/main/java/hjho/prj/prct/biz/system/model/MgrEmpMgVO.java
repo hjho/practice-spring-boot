@@ -1,6 +1,6 @@
 package hjho.prj.prct.biz.system.model;
 
-import hjho.prj.prct.biz.table.Departments;
+import hjho.prj.prct.biz.table.Employees;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
-public class MgrDeptMgVO extends Departments {
+public class MgrEmpMgVO extends Employees {
 
 	private static final long serialVersionUID = 1L;
 

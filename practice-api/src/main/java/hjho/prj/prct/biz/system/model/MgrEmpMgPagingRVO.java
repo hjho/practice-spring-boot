@@ -1,6 +1,6 @@
 package hjho.prj.prct.biz.system.model;
 
-import hjho.prj.prct.biz.table.Departments;
+import hjho.prj.prct.biz.table.Employees;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,17 +9,14 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
-public class MgrDeptMgPagingRVO extends Departments {
+public class MgrEmpMgPagingRVO extends Employees {
 
 	private static final long serialVersionUID = 1L;
 	
 	// 추가 변수
-	@ApiParam(name="managerName", value="부서장 명")
-	private String managerName;
+	@ApiParam(name="departmentName", value="부서 명")
+	private String departmentName;
 	
-	@ApiParam(name="locationName", value="지역 명")
-	private String locationName;
-		
 	// 페이지네이션 변수 
 	@ApiParam(name="rowNo", value="행 번호")
 	private long   rowNo;

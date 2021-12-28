@@ -60,6 +60,9 @@ var DataTableUtils = function() {
 					"url": data.url,
 					"type" : "GET",
 					"data" : function(d) {
+						if(StringUtils.isEmpty(data.param)) {
+							data.param = {};
+						}
 						var pageInfo = $(data.tableId).DataTable().page.info();
 						var orderInfo = $(data.tableId).DataTable().order()[0];
 						d = data.param;
@@ -74,6 +77,25 @@ var DataTableUtils = function() {
 				},
 				"columns" : data.columns
 			});
+		},
+		refrash : function(tableId) {
+			var pages = $(tableId).dataTable().api().page.info().pages;
+			if(pages != 0) {
+				$(tableId).dataTable().api().ajax.reload(null, false);
+			}
+		},
+		isSeleted : function(tableId, tr) {
+			
+			if($(tr).attr('class').indexOf('selected') > -1) {
+				$(tr).removeClass('selected');
+				return true;
+				
+			} else {
+				$(tableId + ' tbody tr').removeClass('selected');
+				$(tr).addClass('selected');
+				return false;
+			}
+			return false;
 		}
 	}
 }();

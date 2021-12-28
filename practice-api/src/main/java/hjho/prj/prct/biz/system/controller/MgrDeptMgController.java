@@ -1,6 +1,7 @@
 package hjho.prj.prct.biz.system.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,5 +79,20 @@ public class MgrDeptMgController extends CommonController {
 		output.setData(0);
 		return output;
 	}
+	
+	@PostMapping("/test")
+	@ApiOperation(value="test", notes="테스트", response=Integer.class)
+	public CommonMessage test(@RequestBody Map<String, List<MgrDeptMgVO>> map) {
+		List<MgrDeptMgVO> mgrDeptMgList = map.get("mgrDeptMgList");
+		
+		this.parameterLog("MgrDeptMg[test]", mgrDeptMgList);
+		
+		CommonMessage output = new CommonMessage();
+		
+		output.setOk();
+		output.setData(0);
+		return output;
+	}
+	
 }
 
