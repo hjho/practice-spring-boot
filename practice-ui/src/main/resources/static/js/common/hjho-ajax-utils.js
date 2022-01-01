@@ -30,11 +30,13 @@ var AjaxUtils = function() {
 		 * parameter obj.url, obj.method, obj.param, obj.funcOk(), obj.funcErr()
 		 */
 		run : function(obj) {
+			var defContentType = "application/x-www-form-urlencoded; charset=utf-8";
 			$.ajax({
-				url     : obj.url,
-				method  : (StringUtils.isEmpty(obj.method)) ? "POST" : obj.method,
-				data    : obj.param,
-				dataType: "json"
+				url         : obj.url,
+				method      : (StringUtils.isEmpty(obj.method)) ? "POST" : obj.method,
+				data        : obj.param,
+				contentType : (StringUtils.isEmpty(obj.contentType)) ? defContentType : obj.contentType,
+				dataType    : "json"
 			// Ajax Success
 			}).done(function(data, textStatus, jqXHR) {
 				var result = data.result;
