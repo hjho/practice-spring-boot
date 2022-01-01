@@ -10,14 +10,13 @@
 				  	<div class="card-body">
 				  		<div class="row">
 					   		<div class="col-10 row">
-								<div class="col-4 row">
-					   				<label for="inLocationId" class="col-4 col-form-label text-right">지역</label>
-							      	<select class="col-8 form-control" id="inLocationId">
-							        	<option value=0 selected>All</option>
-							        	<option value=1000>Roma</option>
-							        	<option value=1100>Venice</option>
-							        	<option value=1200>Tokyo</option>
-							        	<option value=1300>Hiroshima</option>
+								<div class="col-5 row">
+					   				<label for="inLocationId" class="col-3 col-form-label text-right">국가</label>
+							      	<select class="col-8 form-control" id="inCountryId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxCunt}">
+							        	<option th:value=${item.countryId} th:text=${item.countryName}></option>
+							        </th:block>
 							      	</select>
 								</div>
 								<div class="col-4 row">
@@ -46,8 +45,8 @@
 									<th class="text-center">No</th>
 									<th class="text-center">부서번호</th>
 									<th class="text-center">부서명</th>
-									<th class="text-center">지역번호</th>
-									<th class="text-center">지역명</th>
+									<th class="text-center">위치번호</th>
+									<th class="text-center">도시명</th>
 									<th class="text-center">관리자아이디</th>
 									<th class="text-center">관리자명</th>
 								</tr>
@@ -99,7 +98,7 @@
 									</div>
 								</div>
 					  			<div class="col-4">
-					  				<label for="locationId">지역ID/명</label>
+					  				<label for="locationId">위치ID/도시명</label>
 						  			<div class="input-group">
 									  	<div class="input-group-prepend">
 									    	<button data-target="#modalLocation" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
@@ -170,9 +169,9 @@
 				fnGetMgrEmp();
 			});
 			
-			// 모달 팝업 초기화 (지역 검색)
+			// 모달 팝업 초기화 (위치 검색)
 			$('#modalLocation').on('show.bs.modal', function (e) {
-				// 지역 조회
+				// 위치 조회
 				fnGetLoc();
 			});
 		});
@@ -185,7 +184,7 @@
 				url : "/mgr/dept",
 				param : {
 					"departmentName" : $('#inDepartmentName').val(),
-					"locationId"     : $('#inLocationId').val()
+					"countryId"     : $('#inCountryId').val()
 				},
 				columns: [
 		            { "data": "rowNo"         , "class": "text-center"},

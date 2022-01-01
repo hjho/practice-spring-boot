@@ -1,4 +1,4 @@
-package hjho.prj.prct.biz.mgr.model;
+package hjho.prj.prct.biz.place.model;
 
 import hjho.prj.prct.common.clazz.PagingModel;
 import lombok.Data;
@@ -6,14 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
-public class MgrDeptMgPagingVO extends PagingModel {
+@ToString(callSuper=true)
+public class CuntMgPagingPVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
 
-	private String departmentName;
-	
-	private String countryId;
-	
 }

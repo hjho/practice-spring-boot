@@ -11,7 +11,7 @@ public class Locations extends CommonModel {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@ApiParam(name="locationId", value="지역 번호")
+	@ApiParam(name="locationId", value="위치 번호")
 	private Long   locationId;
 	
 	@ApiParam(name="streetAddress", value="도로명")

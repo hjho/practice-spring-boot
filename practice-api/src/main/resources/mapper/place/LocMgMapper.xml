@@ -6,35 +6,35 @@
     <sql id="order-loc">
         ORDER BY
         <choose>
-            <when test='sortCol == 0'>employee_id</when>
-            <when test='sortCol == 1'>department_name</when>
-            <when test='sortCol == 2'>employee_id</when>
-            <when test='sortCol == 3'>first_name</when>
-            <when test='sortCol == 4'>hire_date</when>
-            <when test='sortCol == 5'>job_id</when>
-            <otherwise>employee_id</otherwise>
+            <when test='sortCol == 0'>location_id</when>
+            <when test='sortCol == 1'>location_id</when>
+            <when test='sortCol == 2'>country_name</when>
+            <when test='sortCol == 3'>state_province</when>
+            <when test='sortCol == 4'>city</when>
+            <when test='sortCol == 5'>street_address</when>
+            <otherwise>location_id</otherwise>
         </choose>
         <if test='sortType == "asc"'> asc</if>
         <if test='sortType == "desc"'> desc</if>
-        , employee_id asc
+        , location_id asc
     </sql>
 	
     <select id = "getLoc" 
             parameterType = "hjho.prj.prct.biz.place.model.LocMgPagingPVO" 
             resultType    = "hjho.prj.prct.biz.place.model.LocMgPagingRVO">
-        /* 지역 관리 > 조회 */
+        /* 위치 관리 > 조회 */
     <include refid="common.sql.page-head"/>
         SELECT loc.country_id 
-             , (SELECT con.country_name 
-                  FROM hr.countries con 
-                 WHERE con.country_id = loc.country_id) AS country_name
+             , (SELECT cunt.country_name 
+                  FROM hr.countries cunt 
+                 WHERE cunt.country_id = loc.country_id) AS country_name
              , loc.location_id 
              , loc.city 
              , loc.postal_code 
              , loc.state_province 
              , loc.street_address 
           FROM hr.locations loc
-    <!-- <include refid="hjho.prj.prct.biz.place.mapper.LocMgMapper.order-place-loc"/> -->
+    <include refid="hjho.prj.prct.biz.place.mapper.LocMgMapper.order-loc"/>
     <include refid="common.sql.page-foot"/>
     </select>
     
