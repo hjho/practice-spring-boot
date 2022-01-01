@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.place.mapper.CuntMgMapper">
+	
+    <sql id="order-cunt">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>country_id</when>
+            <otherwise>country_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , country_id asc
+    </sql>
+	
+    <select id = "getCunt" 
+            parameterType = "hjho.prj.prct.biz.place.model.CuntMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.place.model.CuntMgPagingRVO">
+        /* 국가 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT cunt.region_id 
+             , (SELECT region_name 
+                  FROM hr.regions reg 
+                 WHERE reg.region_id = cunt.region_id) AS region_name 
+             , cunt.country_id 
+             , cunt.country_name 
+          FROM hr.countries cunt
+    <include refid="hjho.prj.prct.biz.place.mapper.CuntMgMapper.order-cunt"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+</mapper> 

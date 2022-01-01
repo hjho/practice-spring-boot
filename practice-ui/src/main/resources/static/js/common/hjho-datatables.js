@@ -2,7 +2,7 @@
  * 공통 Java Script DataTable function 
  */
 var DataTableUtils = function() {
-	var lengthMenu = [[10, 20, 40, -1], [10, 20, 40, 'All']];
+	var lengthMenu = [[10, 20, 40, 80], [10, 20, 40, '80']];
 	var language = {
 		    "decimal":        "",
 		    "emptyTable":     "검색 결과가 없습니다.",
@@ -41,10 +41,39 @@ var DataTableUtils = function() {
 			    "language" : language,
 			    "autoWidth": false,
 			    "select": "single",
+			    "searching" : false,
 			    "data": []
 			});
 		},
 		get : function(data) {
+			
+			// 포멧별 컬럼 렌더링
+			$.each(data.columns, function(index, item) {
+				// column format type
+				var type = item.format;
+				
+				if(StringUtils.isNotEmpty(type)) {
+					switch(type) {
+					case "dtm"  : // 일시 
+						item["render"] = function(data, type, row) {
+							return DateUtils.dtmFormat(data);
+						}
+						break;
+					case "date" : // 일자
+						item["render"] = function(data, type, row) {
+							return DateUtils.dateFormat(data);
+						}
+						break;
+					case "time" : // 시간
+						item["render"] = function(data, type, row) {
+							return DateUtils.timeFormat(data);
+						}
+						break;
+					}
+				}
+			});
+			
+			// 데이터 테이블 RUN
 			$(data.tableId).dataTable( {
 				"destroy": true,
 				"serverSide": true,
@@ -54,12 +83,16 @@ var DataTableUtils = function() {
 				"ordering": true,
 				"autoWidth": false,
 				"select": "single",
+				"searching" : false,
 				"lengthMenu": lengthMenu,
 				"language" : language,
 				"ajax" : {
 					"url": data.url,
 					"type" : "GET",
 					"data" : function(d) {
+						if(StringUtils.isEmpty(data.param)) {
+							data.param = {};
+						}
 						var pageInfo = $(data.tableId).DataTable().page.info();
 						var orderInfo = $(data.tableId).DataTable().order()[0];
 						d = data.param;
@@ -74,6 +107,25 @@ var DataTableUtils = function() {
 				},
 				"columns" : data.columns
 			});
+		},
+		refrash : function(tableId) {
+			var pages = $(tableId).dataTable().api().page.info().pages;
+			if(pages != 0) {
+				$(tableId).dataTable().api().ajax.reload(null, false);
+			}
+		},
+		isSeleted : function(tableId, tr) {
+			
+			if($(tr).attr('class').indexOf('selected') > -1) {
+				$(tr).removeClass('selected');
+				return true;
+				
+			} else {
+				$(tableId + ' tbody tr').removeClass('selected');
+				$(tr).addClass('selected');
+				return false;
+			}
+			return false;
 		}
 	}
 }();

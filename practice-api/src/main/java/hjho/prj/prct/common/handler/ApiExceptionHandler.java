@@ -63,11 +63,11 @@ public class ApiExceptionHandler {
 		// HTTP STATUS
 		HttpStatus status = HttpStatus.valueOf(response.getStatus());
 		
-		// e.printStackTrace();
 		log.debug("========================================");
+		// log.debug("=== Cause       : {}", e.getCause());
 		log.debug("=== Exception   : {}", e.getClass());
 		log.debug("=== Response    : {}", message);
-		log.debug("=== Http Value  : [{}]{}, {}", status.value(), status.getReasonPhrase(), status.series());
+		log.debug("=== Http Value  : [{}] {}, {}", status.value(), status.getReasonPhrase(), status.series());
 		log.debug("========================================");
 		
 		return new ResponseEntity<CommonMessage>(message, headers, status);

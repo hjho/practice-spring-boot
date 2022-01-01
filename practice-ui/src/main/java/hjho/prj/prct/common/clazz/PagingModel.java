@@ -9,15 +9,11 @@ public class PagingModel extends CommonModel {
 	
 	private static final long serialVersionUID = 1L;
 
-	private long   rowNo;
+	private Long   page;
 	
-	private long   page;
+	private Long   length;
 	
-	private long   length;
-	
-	private long   totalCnt;
-	
-	private long   sortCol;
+	private Long   sortCol;
 	
 	private String sortType;
 	
