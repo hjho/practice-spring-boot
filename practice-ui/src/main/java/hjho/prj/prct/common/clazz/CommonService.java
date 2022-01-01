@@ -37,6 +37,9 @@ public class CommonService {
 	public CommonMessage delete(String url, Object data) {
 		return this.excute(HttpMethod.DELETE, url, data);
 	}
+	public Object selectBox(String url, Object data) {
+		return this.excute(HttpMethod.GET, url, data).getData();
+	}
 	
 	private CommonMessage excute(HttpMethod method, String url, Object data) {
 		// Set Header

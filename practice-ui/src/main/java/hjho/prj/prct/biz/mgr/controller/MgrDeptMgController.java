@@ -33,6 +33,8 @@ public class MgrDeptMgController extends CommonController {
 	
 	private final String PLACE_LOC_API_URL = "/api/place/loc";
 	
+	private final String PLACE_CUNT_API_URL = "/api/place/cunt";
+	
 	@Autowired 
 	private CommonService commonService;
 	
@@ -40,8 +42,11 @@ public class MgrDeptMgController extends CommonController {
 	@RequestMapping("/page")
 	public ModelAndView page() {
 		log.debug("[L] MANAGE PAGE MOVE");
+		ModelAndView mav = super.getPageMav();
 		
-		return super.pageView("mgr", "mgrDeptMg");
+		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL, null));
+		
+		return super.pageView(mav, "mgr", "mgrDeptMg");
 	}
 	
 	@GetMapping()

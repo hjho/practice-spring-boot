@@ -16,7 +16,7 @@ public class MgrDeptMgPagingPVO extends PagingModel {
 	@ApiParam(name="departmentName", value="부서 명")
 	private String departmentName;
 	
-	@ApiParam(name="locationId", value="지역 아이디")
-	private Long   locationId;
+	@ApiParam(name="countryId", value="국가 아이디")
+	private String countryId;
 	
 }

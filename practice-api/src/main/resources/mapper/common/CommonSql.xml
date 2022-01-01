@@ -4,8 +4,7 @@
 <mapper namespace="common.sql">
 
     <sql id="page-head">
-        SELECT CEIL(row_no/#{length, jdbcType=NUMERIC}) AS page
-             , OUT_TB.*
+        SELECT OUT_TB.*
           FROM (
                 SELECT COUNT(*) OVER () AS total_cnt
                      , ROWNUM           AS row_no
@@ -13,12 +12,13 @@
                   FROM (
     </sql>
     
-    <sql id="page-foot"> <![CDATA[
+    <sql id="page-foot">
                        ) IN_TB
                ) OUT_TB
+     <if test="length != null and length > 0">
          WHERE OUT_TB.row_no BETWEEN (#{length, jdbcType=NUMERIC} * (#{page, jdbcType=NUMERIC}-1))+1 
                                  AND (#{length, jdbcType=NUMERIC} *  #{page, jdbcType=NUMERIC})
-    ]]>
+     </if>
     </sql>
     
 </mapper> 

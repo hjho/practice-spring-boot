@@ -3,20 +3,20 @@
  	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     	<div class="modal-content">
       		<div class="modal-header">
-        		<h5 class="modal-title">지역 선택</h5>
+        		<h5 class="modal-title">위치 선택</h5>
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           			<span aria-hidden="true">&times;</span>
         		</button>
       		</div>
       		<div class="modal-body">
       			<div class="card">
-				  	<h5 class="card-header">지역 목록</h5>
+				  	<h5 class="card-header">위치 목록</h5>
 				  	<div class="card-body">
 				  		<table class="table table-hover table-bordered" id="tableLocation">
 							<thead class="table-light">
 								<tr>
 									<th class="text-center">No</th>
-									<th class="text-center">지역번호</th>
+									<th class="text-center">위치번호</th>
 									<th class="text-center">국가명</th>
 									<th class="text-center">주</th>
 									<th class="text-center">도시명</th>
@@ -47,7 +47,7 @@
 			}
 		});
 	});
-	// 지역 조회
+	// 위치 조회
 	function fnGetLoc() {
 		DataTableUtils.get({
 			tableId : "#tableLocation",
@@ -62,11 +62,11 @@
 	        ]
 		});
 	}
-	// 지역 선택
+	// 위치 선택
 	function fnChocLoc() {
 		var data = $('#tableLocation').dataTable().fnGetData('#tableLocation .selected');
 		if(StringUtils.isEmpty(data)) {
-			return alert("지역을 선택해주세요.");;
+			return alert("위치를 선택해주세요.");;
 		}
 		
 		var locationId     = data.locationId;
@@ -75,9 +75,9 @@
 		var message =  "";
 		    message += "(" + locationId + ")" + data.countryName + " " + data.stateProvince + " " + locationIdName + " " + data.streetAddress;
 		    message += "\n";
-		    message += "지역을 선택하시겠습니까?";
+		    message += "위 위치로 선택하시겠습니까?";
 		if(confirm(message)) {
-			// 지역번호/도시명
+			// 위치번호/도시명
 			$('#formMgrDept').find('#locationId').val(locationId);
 			$('#formMgrDept').find('#locationName').val(locationIdName);
 			$('#modalLocation').modal('hide');

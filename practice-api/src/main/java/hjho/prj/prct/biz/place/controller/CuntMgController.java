@@ -12,41 +12,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hjho.prj.prct.biz.place.model.LocMgPagingPVO;
-import hjho.prj.prct.biz.place.model.LocMgPagingRVO;
-import hjho.prj.prct.biz.place.model.LocMgVO;
-import hjho.prj.prct.biz.place.service.LocMgService;
+import hjho.prj.prct.biz.place.model.CuntMgPagingPVO;
+import hjho.prj.prct.biz.place.model.CuntMgPagingRVO;
+import hjho.prj.prct.biz.place.model.CuntMgVO;
+import hjho.prj.prct.biz.place.service.CuntMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/api/place/loc")
-@Api(tags="LocMg", value="위치 관리")
-public class LocMgController extends CommonController {
+@RequestMapping("/api/place/cunt")
+@Api(tags="CuntMg", value="국가 관리")
+public class CuntMgController extends CommonController {
 	
 	@Autowired 
-	private LocMgService locMgService;
+	private CuntMgService cuntMgService;
 	
 	@GetMapping()
-	@ApiOperation(value="getLoc", notes="위치 조회", response=LocMgPagingRVO.class)
-	public CommonMessage getLoc(@ModelAttribute LocMgPagingPVO locMgPagingPVO) {
-		this.parameterLog("LocMg[getLoc]", locMgPagingPVO);
+	@ApiOperation(value="getCunt", notes="국가 조회", response=CuntMgPagingRVO.class)
+	public CommonMessage getCunt(@ModelAttribute CuntMgPagingPVO cuntMgPagingPVO) {
+		this.parameterLog("CuntMg[getCunt]", cuntMgPagingPVO);
 		
 		CommonMessage output = new CommonMessage();
 		
-		List<LocMgPagingRVO> listLoc = locMgService.getLoc(locMgPagingPVO);
+		List<CuntMgPagingRVO> listCunt = cuntMgService.getCunt(cuntMgPagingPVO);
 		
 		output.setOk();
-		output.setData(listLoc);
+		output.setData(listCunt);
 		return output;
 	}
 	
 	@PostMapping()
-	@ApiOperation(value="postLoc", notes="위치 등록", response=Integer.class)
-	public CommonMessage postLoc(@RequestBody LocMgVO locMgVO) {
-		this.parameterLog("LocMg[postLoc]", locMgVO);
+	@ApiOperation(value="postCunt", notes="국가 등록", response=Integer.class)
+	public CommonMessage postCunt(@RequestBody CuntMgVO cuntMgVO) {
+		this.parameterLog("CuntMg[postCunt]", cuntMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
@@ -56,9 +56,9 @@ public class LocMgController extends CommonController {
 	}
 	
 	@PutMapping()
-	@ApiOperation(value="putLoc", notes="위치 수정", response=Integer.class)
-	public CommonMessage putLoc(@RequestBody LocMgVO locMgVO) {
-		this.parameterLog("LocMg[putLoc]", locMgVO);
+	@ApiOperation(value="putCunt", notes="국가 수정", response=Integer.class)
+	public CommonMessage putCunt(@RequestBody CuntMgVO cuntMgVO) {
+		this.parameterLog("CuntMg[putCunt]", cuntMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
@@ -68,9 +68,9 @@ public class LocMgController extends CommonController {
 	}
 	
 	@DeleteMapping()
-	@ApiOperation(value="deleteLoc", notes="위치 삭제", response=Integer.class)
-	public CommonMessage deleteLoc(@RequestBody LocMgVO locMgVO) {
-		this.parameterLog("LocMg[deleteLoc]", locMgVO);
+	@ApiOperation(value="deleteCunt", notes="국가 삭제", response=Integer.class)
+	public CommonMessage deleteCunt(@RequestBody CuntMgVO cuntMgVO) {
+		this.parameterLog("CuntMg[deleteCunt]", cuntMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
