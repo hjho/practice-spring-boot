@@ -1,0 +1,87 @@
+<!--------------------- START LOCATION MODAL START ----------------------------->
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modalLocation">
+ 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title">지역 선택</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      		<div class="modal-body">
+      			<div class="card">
+				  	<h5 class="card-header">지역 목록</h5>
+				  	<div class="card-body">
+				  		<table class="table table-hover table-bordered" id="tableLocation">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">지역번호</th>
+									<th class="text-center">국가명</th>
+									<th class="text-center">주</th>
+									<th class="text-center">도시명</th>
+									<th class="text-center">도로명</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+      		</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+	        	<button type="button" class="btn btn-primary" onclick="fnChocLoc()">선택</button>
+	      	</div>
+    	</div>
+  	</div>
+</div>
+<script>
+	$(document).ready(function() {
+		$('#tableLocation').on('click', 'tbody tr', function() {
+			var data = $('#tableLocation').dataTable().fnGetData(this);
+			if(StringUtils.isEmpty(data)) {
+				return;
+			}
+			
+			if(DataTableUtils.isSeleted('#tableLocation', this)) {
+				return;
+			}
+		});
+	});
+	// 지역 조회
+	function fnGetLoc() {
+		DataTableUtils.get({
+			tableId : "#tableLocation",
+			url : "/mgr/dept/loc",
+			columns: [
+	            { "data": "rowNo"        , "class": "text-center"},
+	            { "data": "locationId"   , "class": "text-center", "visible": false},
+	            { "data": "countryName"  , "class": "text-left"  },
+	            { "data": "stateProvince", "class": "text-left"  },
+	            { "data": "city"  		 , "class": "text-left"  },
+	            { "data": "streetAddress", "class": "text-left"  }
+	        ]
+		});
+	}
+	// 지역 선택
+	function fnChocLoc() {
+		var data = $('#tableLocation').dataTable().fnGetData('#tableLocation .selected');
+		if(StringUtils.isEmpty(data)) {
+			return alert("지역을 선택해주세요.");;
+		}
+		
+		var locationId     = data.locationId;
+		var locationIdName = data.city;
+		
+		var message =  "";
+		    message += "(" + locationId + ")" + data.countryName + " " + data.stateProvince + " " + locationIdName + " " + data.streetAddress;
+		    message += "\n";
+		    message += "지역을 선택하시겠습니까?";
+		if(confirm(message)) {
+			// 지역번호/도시명
+			$('#formMgrDept').find('#locationId').val(locationId);
+			$('#formMgrDept').find('#locationName').val(locationIdName);
+			$('#modalLocation').modal('hide');
+		}
+	}
+</script>
+<!--------------------- END LOCATION MODAL END ----------------------------->

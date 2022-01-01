@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.mgr.mapper.MgrEmpMgMapper">
+	
+    <sql id="order-mgr-emp">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>employee_id</when>
+            <when test='sortCol == 1'>department_name</when>
+            <when test='sortCol == 2'>employee_id</when>
+            <when test='sortCol == 3'>first_name</when>
+            <when test='sortCol == 4'>hire_date</when>
+            <when test='sortCol == 5'>job_id</when>
+            <otherwise>employee_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , employee_id asc
+    </sql>
+	
+    <select id = "getMgrEmp" 
+            parameterType = "hjho.prj.prct.biz.mgr.model.MgrEmpMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.mgr.model.MgrEmpMgPagingRVO">
+        /* 관리자 사원 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT employee_id 
+             , first_name 
+             , last_name 
+             , email 
+             , phone_number 
+             , TO_CHAR(hire_date, 'yyyyMMddhh24Miss') AS hire_date
+             , job_id
+             , salary
+             -- , commission_pct
+             , manager_id
+             , department_id
+             , (SELECT department_name 
+                  FROM hr.departments dept 
+                 WHERE dept.department_id = emp.department_id) AS department_name
+          FROM hr.employees emp
+    <include refid="hjho.prj.prct.biz.mgr.mapper.MgrEmpMgMapper.order-mgr-emp"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+</mapper> 

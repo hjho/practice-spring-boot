@@ -6,11 +6,16 @@
 	<entry key="0000">정상적으로 처리 되었습니다.</entry>
 	<entry key="9999">일시적인 오류가 발생했습니다.</entry>
 	
+	<entry key="0001">변경 건수는 {0}건 입니다.</entry>
+	<entry key="0002">삭제 건수는 {0}건 입니다.</entry>
+	
 	<!-- 000 ADD MESSAGE -->
 	<entry key="9001">입력 값이 존재하지 않습니다.</entry>
 	<entry key="9002">{0}은(는) 필수 입력 값 입니다.</entry>
 	<entry key="9003">{0} 오류 입니다.</entry>
-	<entry key="9004">토큰이 만료되었습니다.''</entry>
+	<entry key="9004">토큰이 만료되었습니다.</entry>
+	<entry key="9005">해당 {0}는(은) 이미 존재합니다.</entry>
+	<entry key="9006">해당 {0}는(은) 존재하지 않습니다.</entry>
 	
 	<!-- 100 MAIN MESSAGE -->
 	<entry key="9100">존재하지 않는 아이디 입니다.</entry>
