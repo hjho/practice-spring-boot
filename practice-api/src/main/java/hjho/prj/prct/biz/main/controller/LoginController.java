@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/login")
-@Api(tags="Login", value="LOGIN")
+@Api(tags="Login", value="LOGIN", description="로그인 검증")
 public class LoginController extends CommonController {
 
 	@Autowired

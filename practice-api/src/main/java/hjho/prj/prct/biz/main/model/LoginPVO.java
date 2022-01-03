@@ -4,38 +4,40 @@ import java.util.List;
 import java.util.Map;
 
 import hjho.prj.prct.common.clazz.CommonModel;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper=true)
 @Data
+@EqualsAndHashCode(callSuper=false)
+@ApiModel(value="LoginPVO", description="로그인 검증 INPUT")
 public class LoginPVO extends CommonModel {
 
 	private static final long serialVersionUID = 1L;
 	
-	@ApiParam(name="userId", value="아이디")
+	@ApiModelProperty(name="userId", value="아이디")
 	private String userId;
 	
-	@ApiParam(name="userPw", value="패스워드")
+	@ApiModelProperty(name="userPw", value="패스워드")
 	private String userPw;
 	
-	@ApiParam(name="userName", value="성명")
+	@ApiModelProperty(name="userName", value="성명")
 	private String userName;
 	
-	@ApiParam(name="dtm", value="일시")
+	@ApiModelProperty(name="dtm", value="일시")
 	private String dtm;
 	
-	@ApiParam(name="num", value="숫자")
+	@ApiModelProperty(name="num", value="숫자")
 	private long   num;
 	
-	@ApiParam(name="check", value="여부")
+	@ApiModelProperty(name="check", value="여부")
 	private String check;
 	
-	@ApiParam(name="objList", value="오브젝트 리스트")
+	@ApiModelProperty(name="objList", value="오브젝트 리스트")
 	private List<Map<String, Object>> objList;
 	
-	@ApiParam(name="objMap", value="오브젝트 맵")
+	@ApiModelProperty(name="objMap", value="오브젝트 맵")
 	private Map<String, Object> objMap;
 	
 }

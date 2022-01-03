@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.mgr.mapper.MgrLocMgMapper">
+	
+    <sql id="order-mgr-loc">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>location_id</when>
+            <when test='sortCol == 1'>location_id</when>
+            <when test='sortCol == 2'>country_name</when>
+            <when test='sortCol == 3'>state_province</when>
+            <when test='sortCol == 4'>city</when>
+            <when test='sortCol == 5'>street_address</when>
+            <otherwise>location_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , location_id asc
+    </sql>
+	
+    <select id = "getMgrLoc" 
+            parameterType = "hjho.prj.prct.biz.mgr.model.MgrLocMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.mgr.model.MgrLocMgPagingRVO">
+        /* 부서 위치 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT loc.country_id 
+             , (SELECT cunt.country_name 
+                  FROM hr.countries cunt 
+                 WHERE cunt.country_id = loc.country_id) AS country_name
+             , loc.location_id 
+             , loc.city 
+             , loc.postal_code 
+             , loc.state_province 
+             , loc.street_address 
+          FROM hr.locations loc
+        <where>
+          <if test='city != null and city != ""'>
+           AND loc.city LIKE '%'||#{city, jdbcType=VARCHAR}||'%'
+          </if>
+          <if test='countryId != null and countryId != ""'>
+           AND loc.country_id = #{countryId, jdbcType=VARCHAR}
+          </if>
+        </where>
+    <include refid="hjho.prj.prct.biz.mgr.mapper.MgrLocMgMapper.order-mgr-loc"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postMgrLoc" parameterType="hjho.prj.prct.biz.mgr.model.MgrLocMgVO">
+        /* 부서 위치 관리 > 등록 */
+        INSERT INTO hr.locations (
+                    location_id
+                  , postal_code
+                  , state_province
+                  , city
+                  , street_address
+                  , country_id
+         ) VALUES ( 
+                    hr.locations_seq.NEXTVAL
+                  , #{postalCode    , jdbcType=VARCHAR}
+                  , #{stateProvince , jdbcType=VARCHAR}
+                  , #{city          , jdbcType=VARCHAR}
+                  , #{streetAddress , jdbcType=VARCHAR}
+                  , #{countryId     , jdbcType=VARCHAR}
+         )
+                
+    </insert>
+    
+    <update id="putMgrLoc" parameterType="hjho.prj.prct.biz.mgr.model.MgrLocMgVO">
+        /* 부서 위치 관리 > 수정 */
+        UPDATE hr.locations
+           SET postal_code    = #{postalCode    , jdbcType=VARCHAR}
+             , state_province = #{stateProvince , jdbcType=VARCHAR}
+             , city           = #{city          , jdbcType=VARCHAR}
+             , street_address = #{streetAddress , jdbcType=VARCHAR}
+             , country_id     = #{countryId     , jdbcType=VARCHAR}
+         WHERE location_id    = #{locationId    , jdbcType=NUMERIC}
+    </update>
+    
+    <delete id="deleteMgrLoc" parameterType="hjho.prj.prct.biz.mgr.model.MgrLocMgVO">
+        /* 부서 위치 관리 > 삭제 */
+        DELETE 
+          FROM hr.locations
+         WHERE location_id = #{locationId, jdbcType=NUMERIC}
+    </delete>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.mgr.model.MgrLocMgVO" resultType="int">
+        /* 부서 위치 관리 > PK */
+        SELECT COUNT(*) AS cnt
+          FROM hr.locations
+         WHERE location_id = #{locationId, jdbcType=NUMERIC}
+    </select>
+    
+</mapper> 

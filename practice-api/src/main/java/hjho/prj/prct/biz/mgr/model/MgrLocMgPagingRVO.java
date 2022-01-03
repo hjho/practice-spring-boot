@@ -1,6 +1,6 @@
 package hjho.prj.prct.biz.mgr.model;
 
-import hjho.prj.prct.biz.table.Employees;
+import hjho.prj.prct.biz.table.Locations;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,20 +10,20 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper=true)
-@ApiModel(value="MgrEmpMgPagingPVO", description="관리자 사원 관리 페이징 OUTPUT")
-public class MgrEmpMgPagingRVO extends Employees {
+@ApiModel(value="LocMgPagingPVO", description="위치 관리 페이징 OUTPUT")
+public class MgrLocMgPagingRVO extends Locations {
 
 	private static final long serialVersionUID = 1L;
 	
 	// 추가 변수
-	@ApiModelProperty(name="departmentName", value="부서 명")
-	private String departmentName;
+	@ApiModelProperty(name="countryName", value="국가 명")
+	private String countryName;
 	
 	// 페이지네이션 변수 
 	@ApiModelProperty(name="rowNo", value="행 번호")
-	private long   rowNo;
+	private Long   rowNo;
 	
 	@ApiModelProperty(name="totalCnt", value="전체 행 갯수")
-	private long   totalCnt;
+	private Long   totalCnt;
 	
 }

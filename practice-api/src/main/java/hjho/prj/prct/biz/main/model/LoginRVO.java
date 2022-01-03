@@ -1,23 +1,25 @@
 package hjho.prj.prct.biz.main.model;
 
 import hjho.prj.prct.common.clazz.CommonModel;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper=true)
 @Data
+@EqualsAndHashCode(callSuper=false)
+@ApiModel(value="LoginRVO", description="로그인 검증 OUTPUT")
 public class LoginRVO extends CommonModel {
 
 	private static final long serialVersionUID = 1L;
 	
-	@ApiParam(name="userId", value="아이디")
+	@ApiModelProperty(name="userId", value="아이디")
 	private String userId;
 	
-	@ApiParam(name="userPw", value="패스워드")
+	@ApiModelProperty(name="userPw", value="패스워드")
 	private String userPw;
 	
-	@ApiParam(name="userNm", value="이름")
+	@ApiModelProperty(name="userNm", value="이름")
 	private String userNm;
 	
 }

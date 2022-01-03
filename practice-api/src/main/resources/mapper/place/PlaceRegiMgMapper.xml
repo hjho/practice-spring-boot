@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.place.mapper.PlaceRegiMgMapper">
+	
+    <sql id="order-place-regi">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>region_id</when>
+            <when test='sortCol == 1'>region_id</when>
+            <when test='sortCol == 2'>region_name</when>
+            <otherwise>region_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , region_id asc
+    </sql>
+	
+    <select id = "getPlaceRegi" 
+            parameterType = "hjho.prj.prct.biz.place.model.PlaceRegiMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.place.model.PlaceRegiMgPagingRVO">
+        /* 대륙 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT region_id
+             , region_name 
+          FROM hr.regions
+      <where>
+        <if test='regionName != null and regionName != ""'>
+           AND region_name LIKE '%'||#{regionName, jdbcType=VARCHAR}||'%'
+        </if>
+      </where>
+    <include refid="hjho.prj.prct.biz.place.mapper.PlaceRegiMgMapper.order-place-regi"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postPlaceRegi" parameterType="hjho.prj.prct.biz.place.model.PlaceRegiMgVO">
+        /* 대륙 관리 > 등록 */
+        INSERT INTO hr.regions (
+                    region_id
+                  , region_name
+         ) VALUES ( 
+                    #{regionId  , jdbcType=NUMERIC}
+                  , #{regionName, jdbcType=VARCHAR}
+         )
+                
+    </insert>
+    
+    <update id="putPlaceRegi" parameterType="hjho.prj.prct.biz.place.model.PlaceRegiMgVO">
+        /* 대륙 관리 > 수정 */
+        UPDATE hr.regions
+           SET region_name = #{regionName, jdbcType=VARCHAR}
+         WHERE region_id   = #{regionId  , jdbcType=NUMERIC}
+    </update>
+    
+    <delete id="deletePlaceRegi" parameterType="hjho.prj.prct.biz.place.model.PlaceRegiMgVO">
+        /* 대륙 관리 > 삭제 */
+        DELETE 
+          FROM hr.regions
+         WHERE region_id = #{regionId, jdbcType=NUMERIC}
+    </delete>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.place.model.PlaceRegiMgVO" resultType="int">
+        /* 대륙 관리 > PK */
+        SELECT COUNT(*) AS cnt
+          FROM hr.regions
+         WHERE region_id = #{regionId, jdbcType=NUMERIC}
+    </select>
+</mapper> 
