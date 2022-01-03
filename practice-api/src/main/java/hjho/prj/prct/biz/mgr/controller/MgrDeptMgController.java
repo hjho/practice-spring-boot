@@ -22,6 +22,7 @@ import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/mgr/dept")
@@ -94,7 +95,7 @@ public class MgrDeptMgController extends CommonController {
 	
 	@PostMapping("/test")
 	@ApiOperation(value="test", notes="테스트", response=Integer.class)
-	public CommonMessage test(@RequestBody Map<String, List<MgrDeptMgVO>> map) {
+	public CommonMessage test(@RequestBody @ApiParam(name="map", value="mgrDeptMgList") Map<String, List<MgrDeptMgVO>> map) {
 		List<MgrDeptMgVO> mgrDeptMgList = map.get("mgrDeptMgList");
 		
 		this.parameterLog("MgrDeptMg[test]", mgrDeptMgList);
