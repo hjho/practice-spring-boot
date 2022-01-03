@@ -82,10 +82,12 @@ public class CommonService {
 		Map<String, Object> map = new ObjectMapper().convertValue(data, HashMap.class);
 		sb.append("?");
 		for (String key : map.keySet()) {
-			sb.append(key);
-			sb.append("=");
-			sb.append(map.get(key));
-			sb.append("&");
+			if(map.get(key) != null) {
+				sb.append(key);
+				sb.append("=");
+				sb.append(map.get(key));
+				sb.append("&");
+			}
 		}
 		return sb.substring(0, (sb.length()-1)).toString();
 	}

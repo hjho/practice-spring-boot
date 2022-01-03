@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/test")
-@Api(tags="Test", value="TEST")
+@Api(tags="Test", value="TEST", description="테스트 용")
 public class TestController {
 
 	@Autowired

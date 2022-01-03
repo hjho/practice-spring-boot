@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import hjho.prj.prct.biz.mgr.model.MgrDeptMgPagingVO;
 import hjho.prj.prct.biz.mgr.model.MgrDeptMgVO;
 import hjho.prj.prct.biz.mgr.model.MgrEmpMgPagingVO;
-import hjho.prj.prct.biz.place.model.LocMgPagingVO;
+import hjho.prj.prct.biz.mgr.model.MgrLocMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
@@ -31,7 +31,7 @@ public class MgrDeptMgController extends CommonController {
 	
 	private final String MGR_EMP_API_URL = "/api/mgr/emp";
 	
-	private final String PLACE_LOC_API_URL = "/api/place/loc";
+	private final String PLACE_LOC_API_URL = "/api/mgr/loc";
 	
 	private final String PLACE_CUNT_API_URL = "/api/place/cunt";
 	
@@ -41,7 +41,7 @@ public class MgrDeptMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] MANAGE PAGE MOVE");
+		log.debug("[L] DEPARTMENT PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
 		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL, null));
@@ -66,9 +66,9 @@ public class MgrDeptMgController extends CommonController {
 	}
 	
 	@GetMapping("/loc")
-	public ModelAndView getLoc(LocMgPagingVO locMgPagingVO) {
+	public ModelAndView getMgrLoc(MgrLocMgPagingVO mgrLocMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PLACE_LOC_API_URL, locMgPagingVO);
+		CommonMessage output = commonService.get(PLACE_LOC_API_URL, mgrLocMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}

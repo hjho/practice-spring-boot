@@ -36,10 +36,10 @@
             ON dept.location_id = loc.location_id
         <where>
           <if test='departmentName != null and departmentName != ""'>
-               department_name LIKE '%'||#{departmentName, jdbcType=VARCHAR}||'%'
+           AND department_name LIKE '%'||#{departmentName, jdbcType=VARCHAR}||'%'
           </if>
           <if test='countryId != null and countryId != ""'>
-               loc.country_id = #{countryId, jdbcType=VARCHAR}
+           AND loc.country_id = #{countryId, jdbcType=VARCHAR}
           </if>
         </where>
         <include refid="hjho.prj.prct.biz.mgr.mapper.MgrDeptMgMapper.order-mgr-dept"/>
