@@ -13,6 +13,7 @@ import hjho.prj.prct.biz.mgr.model.MgrDeptMgPagingPVO;
 import hjho.prj.prct.biz.mgr.model.MgrDeptMgPagingRVO;
 import hjho.prj.prct.biz.mgr.model.MgrDeptMgVO;
 import hjho.prj.prct.common.exception.UserException;
+import hjho.prj.prct.common.util.LongUtil;
 
 @Service
 public class MgrDeptMgService {
@@ -33,12 +34,8 @@ public class MgrDeptMgService {
 		// 입력값 확인.
 		if(this.isInputValOk(mgrDeptMgVO, false)) {
 			
-			// PK 확인.
-			if(this.isDataZero(mgrDeptMgVO)) {
-				insCnt = mgrDeptMgMapper.postMgrDept(mgrDeptMgVO);
-			} else {
-				throw new UserException("9005", new String[] {"부서번호"});
-			}
+			insCnt = mgrDeptMgMapper.postMgrDept(mgrDeptMgVO);
+			
 		}
 		
 		return insCnt;
@@ -52,10 +49,10 @@ public class MgrDeptMgService {
 		if(this.isInputValOk(mgrDeptMgVO, true)) {
 			
 			// PK 확인.
-			if(this.isDataZero(mgrDeptMgVO)) {
-				throw new UserException("9006", new String[] {"부서번호"});
-			} else {
+			if(this.isDataOne(mgrDeptMgVO)) {
 				updCnt = mgrDeptMgMapper.putMgrDept(mgrDeptMgVO);
+			} else {
+				throw new UserException("9006", new String[] {"부서번호"});
 			}
 		}
 		
@@ -70,10 +67,10 @@ public class MgrDeptMgService {
 		if(this.isInputValOk(mgrDeptMgVO, true)) {
 			
 			// PK 확인.
-			if(this.isDataZero(mgrDeptMgVO)) {
-				throw new UserException("9006", new String[] {"부서번호"});
-			} else {
+			if(this.isDataOne(mgrDeptMgVO)) {
 				delCnt = mgrDeptMgMapper.deleteMgrDept(mgrDeptMgVO);
+			} else {
+				throw new UserException("9006", new String[] {"부서번호"});
 			}
 		}
 		
@@ -87,7 +84,7 @@ public class MgrDeptMgService {
 		if(mgrDeptMgVO != null) {
 			
 			// 부서 ID 
-			if(isNotSeq && mgrDeptMgVO.getDepartmentId() == null) {
+			if(isNotSeq && LongUtil.isEmpty(mgrDeptMgVO.getDepartmentId())) {
 				throw new UserException("9002", new String[] {"부서번호"});
 				
 			// 부서 명
@@ -104,11 +101,11 @@ public class MgrDeptMgService {
 	
 	// 관리자 관리 PK 확인.
 	@Transactional(readOnly=true)
-	private boolean isDataZero(MgrDeptMgVO mgrDeptMgVO) {
+	private boolean isDataOne(MgrDeptMgVO mgrDeptMgVO) {
 		
 		int cnt = mgrDeptMgMapper.pkCheck(mgrDeptMgVO);;
 		
-		return (cnt == 0);
+		return (cnt == 1);
 	}
 	
 }

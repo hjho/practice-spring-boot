@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.place.mapper.PlaceCuntMgMapper">
+	
+    <sql id="order-place-cunt">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>country_id</when>
+            <when test='sortCol == 1'>country_id</when>
+            <when test='sortCol == 2'>country_name</when>
+            <when test='sortCol == 3'>region_name</when>
+            <otherwise>country_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , country_id asc
+    </sql>
+	
+    <select id = "getPlaceCunt" 
+            parameterType = "hjho.prj.prct.biz.place.model.PlaceCuntMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.place.model.PlaceCuntMgPagingRVO">
+        /* 국가 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT cunt.region_id 
+             , (SELECT region_name 
+                  FROM hr.regions reg 
+                 WHERE reg.region_id = cunt.region_id) AS region_name 
+             , cunt.country_id 
+             , cunt.country_name 
+          FROM hr.countries cunt
+      <where>
+        <if test='regionId != null and regionId != ""'>
+           AND region_id = #{regionId, jdbcType=NUMERIC}
+        </if>
+      </where>
+    <include refid="hjho.prj.prct.biz.place.mapper.PlaceCuntMgMapper.order-place-cunt"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postPlaceCunt" parameterType="hjho.prj.prct.biz.place.model.PlaceCuntMgVO">
+        /* 국가 관리 > 등록 */
+        INSERT INTO hr.countries (
+                    country_id
+                  , country_name
+                  , region_id
+         ) VALUES ( 
+                    #{countryId  , jdbcType=VARCHAR}
+                  , #{countryName, jdbcType=VARCHAR}
+                  , #{regionId   , jdbcType=NUMERIC}
+         )
+                
+    </insert>
+    
+    <update id="putPlaceCunt" parameterType="hjho.prj.prct.biz.place.model.PlaceCuntMgVO">
+        /* 국가 관리 > 수정 */
+        UPDATE hr.countries
+           SET country_name = #{countryName, jdbcType=VARCHAR}
+             , region_id    = #{regionId   , jdbcType=NUMERIC}
+         WHERE country_id   = #{countryId  , jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deletePlaceCunt" parameterType="hjho.prj.prct.biz.place.model.PlaceCuntMgVO">
+        /* 국가 관리 > 삭제 */
+        DELETE 
+          FROM hr.countries
+         WHERE country_id = #{countryId, jdbcType=VARCHAR}
+    </delete>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.place.model.PlaceCuntMgVO" resultType="int">
+        /* 국가 관리 > PK */
+        SELECT COUNT(*) AS cnt
+          FROM hr.countries
+         WHERE country_id = #{countryId, jdbcType=VARCHAR}
+    </select>
+</mapper> 

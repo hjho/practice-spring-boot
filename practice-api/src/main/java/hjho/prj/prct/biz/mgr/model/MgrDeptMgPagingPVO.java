@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
 @ApiModel(value="MgrDeptMgPagingPVO", description="관리자 부서 관리 페이징 INPUT")
 public class MgrDeptMgPagingPVO extends PagingModel {

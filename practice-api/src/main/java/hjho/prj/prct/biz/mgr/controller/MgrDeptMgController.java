@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/mgr/dept")
-@Api(tags="MgrDeptMg", value="관리자 부서 관리")
+@Api(tags="MgrDeptMg", value="관리자 부서 관리", description="관리자 부서 관리")
 public class MgrDeptMgController extends CommonController {
 	
 	@Autowired

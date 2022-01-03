@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/mgr/emp")
-@Api(tags="MgrEmpMg", value="관리자 사원 관리")
+@Api(tags="MgrEmpMg", value="관리자 사원 관리", description="관리자 사원 관리")
 public class MgrEmpMgController extends CommonController {
 	
 	@Autowired

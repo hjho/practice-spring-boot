@@ -6,23 +6,37 @@
 <body>
 		<div th:fragment="menu">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          		<div class="sidebar-sticky">
-            		<ul class="nav flex-column">
-              			<li class="nav-item">
-                			<a class="nav-link active" href="#">
-	                  			<span data-feather="home"></span>Dashboard 
-	                  			<span class="sr-only">(current)</span>
+				<div class="sidebar-sticky">
+
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<a class="nav-link active" href="/main/page">
+								<span data-feather="home"></span>
+								Dashboard 
+							</a>
+              			</li>
+						<li class="nav-item">
+                			<a class="nav-link" href="/place/regi/page">
+								<span data-feather="globe"></span>
+                  				대륙 관리
                 			</a>
               			</li>
               			<li class="nav-item">
-                			<a class="nav-link" href="#">
-                 			 <span data-feather="file"></span>Orders
+                			<a class="nav-link" href="/place/cunt/page">
+								<span data-feather="flag"></span>
+                  				국가 관리
                 			</a>
               			</li>
               			<li class="nav-item">
-                			<a class="nav-link" href="#">
-                  				<span data-feather="shopping-cart"></span>
-                  				Products
+                			<a class="nav-link" href="/mgr/loc/page">
+								<span data-feather="compass"></span>
+                  				위치 관리
+                			</a>
+              			</li>
+              			<li class="nav-item">
+                			<a class="nav-link" href="/mgr/dept/page">
+                 			 	<span data-feather="folder"></span>
+                 			 	부서 관리
                 			</a>
               			</li>
             		</ul>
@@ -33,6 +47,7 @@
 		             		<span data-feather="plus-circle"></span>
 		           		</a>
 		            </h6>
+		            
 		            <ul class="nav flex-column mb-2">
 		              	<li class="nav-item">
 		                	<a class="nav-link" href="#">
