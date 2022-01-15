@@ -8,22 +8,10 @@ import lombok.ToString;
 @Data
 @ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
-public class MgrEmpMgPagingVO extends PagingModel {
+public class MgrJobHsMgPagingVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
+
+	private Long  employeeId;
 	
-	private String employeeId;
-	
-	private String firstName;
-	
-	private String lastName; 
-	
-	private String hireDate; 
-	
-	private String jobId;
-	
-	private Long   managerId;
-    
-	private Long   departmentId;
-    
 }

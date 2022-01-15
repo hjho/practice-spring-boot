@@ -1,0 +1,98 @@
+<!--------------------- START JOB MODAL START ----------------------------->
+<div class="modal fade" id="modalJob" tabindex="-1" role="dialog" aria-hidden="true">
+ 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title">직책 선택</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      		<div class="modal-body">
+      			<div class="card">
+				  	<h5 class="card-header">직책 목록</h5>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableJob">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">직책아이디</th>
+									<th class="text-center">직책명</th>
+									<th class="text-center">최소연봉</th>
+									<th class="text-center">최대연봉</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+      		</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-secondary" onclick="fnNotChocJob()">선택안함</button>
+	        	<button type="button" class="btn btn-primary" onclick="fnChocJob()">선택</button>
+	      	</div>
+    	</div>
+  	</div>
+</div>
+<script th:inline="javascript">
+	$(document).ready(function() {
+		$('#tableJob').on('click', 'tbody tr', function() {
+			var data = $('#tableJob').dataTable().fnGetData(this);
+			if(StringUtils.isEmpty(data)) {
+				return;
+			}
+			
+			if(DataTableUtils.isSeleted('#tableJob', this)) {
+				return;
+			}
+		});
+	});
+	// 조회
+	function fnGetMgrJob() {
+		DataTableUtils.get({
+			tableId : "#tableJob",
+			url : "/mgr/emp/job",
+			columns: [
+	            { "data": "rowNo"    , "class": "text-center"},
+	            { "data": "jobId"    , "class": "text-center"},
+	            { "data": "jobTitle" , "class": "text-left"  },
+	            { "data": "minSalary", "class": "text-right" , format: "money"},
+	            { "data": "maxSalary", "class": "text-right" , format: "money"}
+	        ]
+		});
+	}
+	// 선택
+	function fnChocJob() {
+		var data = $('#tableJob').dataTable().fnGetData('#tableJob .selected');
+		if(StringUtils.isEmpty(data)) {
+			return alert("직책을 선택해주세요.");;
+		}
+		
+		var no = data.jobId;
+		var nm = data.jobTitle;
+		
+		var message =  nm + "(" +no+ ")";
+		    message += "직책을 선택하시겠습니까?";
+		if(confirm(message)) {
+			// 잭책ID/명
+			$('#jobId').val(no);
+			$('#jobTitle').val(nm);
+			if(typeof isJobSA == 'function') {
+				if(isJobSA(no)) {
+					$('#commissionPct').attr('disabled', false);
+				} else {
+					$('#commissionPct').val("");
+					$('#commissionPct').attr('disabled', true);
+				}
+			}
+			$('#modalJob').modal('hide');
+		}
+	}
+	// 선택 안함
+	function fnNotChocJob() {
+		// 잭책ID/명
+		$('#jobId').val("");
+		$('#jobTitle').val("");
+		$('#modalJob').modal('hide');
+	}
+</script>
+<!--------------------- END Job MODAL END ----------------------------->

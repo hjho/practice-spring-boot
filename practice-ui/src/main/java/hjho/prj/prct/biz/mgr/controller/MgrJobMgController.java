@@ -1,4 +1,4 @@
-package hjho.prj.prct.biz.place.controller;
+package hjho.prj.prct.biz.mgr.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import hjho.prj.prct.biz.place.model.PlaceCuntMgPagingVO;
-import hjho.prj.prct.biz.place.model.PlaceCuntMgVO;
+import hjho.prj.prct.biz.mgr.model.MgrJobMgPagingVO;
+import hjho.prj.prct.biz.mgr.model.MgrJobMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
@@ -17,12 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/place/cunt")
-public class PlaceCuntMgController extends CommonController {
+@RequestMapping("/mgr/job")
+public class MgrJobMgController extends CommonController {
 	
-	private final String PLACE_CUNT_API_URL = "/api/place/cunt";
-	
-	private final String PLACE_REGI_API_URL = "/api/place/regi";
+	private final String MGR_JOB_API_URL = "/api/mgr/job";
 	
 	@Autowired 
 	private CommonService commonService;
@@ -30,34 +28,42 @@ public class PlaceCuntMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] COUNTRY PAGE MOVE");
+		log.debug("[L] JOBS PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxRegi", commonService.selectBox(PLACE_REGI_API_URL));
-		
-		return super.pageView(mav, "place", "placeCuntMg");
+		return super.pageView(mav, "mgr", "mgrJobMg");
 	}
 	
 	@GetMapping()
-	public ModelAndView getPlaceCunt(PlaceCuntMgPagingVO placeCuntMgPagingVO) {
+	public ModelAndView getMgrJob(MgrJobMgPagingVO mgrJobMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PLACE_CUNT_API_URL, placeCuntMgPagingVO);
+		CommonMessage output = commonService.get(MGR_JOB_API_URL, mgrJobMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	
+	/**
+	 * <pre>
+	 * Http Method 를 @GetMapping, @PostMapping 만 사용 하는 이유 <br>
+	 *  - 톰캣은 파라미터를  GET과 POST만 파싱해준다. 
+	 *  - PUT, DELETE는 별도의 추가 Config 필요.
+	 * </pre>
+	 * @param method
+	 * @param mgrJobMgVO
+	 * @return
+	 */
 	@PostMapping("/{method}")
-	public ModelAndView postPlaceCunt(@PathVariable("method") String method, PlaceCuntMgVO placeCuntMgVO) {
+	public ModelAndView postMgrJob(@PathVariable("method") String method, MgrJobMgVO mgrJobMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PLACE_CUNT_API_URL, placeCuntMgVO);
+				output = commonService.post(MGR_JOB_API_URL, mgrJobMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PLACE_CUNT_API_URL, placeCuntMgVO);
+				output = commonService.put(MGR_JOB_API_URL, mgrJobMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PLACE_CUNT_API_URL, placeCuntMgVO);
+				output = commonService.delete(MGR_JOB_API_URL, mgrJobMgVO);
 				break;
 			default:
 				output = new CommonMessage();

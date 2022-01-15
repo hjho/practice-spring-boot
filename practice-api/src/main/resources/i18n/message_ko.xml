@@ -21,6 +21,8 @@
 	<entry key="9100">존재하지 않는 아이디 입니다.</entry>
 	<entry key="9101">비밀번호가 맞지 않습니다.</entry>
 	
-	
+	<!-- 200 MGR MESSAGE -->
+	<entry key="9200">최소 연봉은 최대 연봉보다 클 수 없습니다.</entry>
+	<entry key="9201">해당 사원의 변경 히스토리가 존재합니다.</entry>
 	
 </properties>

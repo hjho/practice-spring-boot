@@ -20,6 +20,14 @@ span.req {
     font-weight: bold;
 }
 
+/* 검색 결과 없을 때 */
+table.dataTable td.dataTables_empty, 
+table.dataTable th.dataTables_empty {
+	height: 100px;
+    vertical-align: middle;
+    color: red;
+}
+
 /* Main Page Back Ground Color 
 .main-page {
 	background-color: silver; 

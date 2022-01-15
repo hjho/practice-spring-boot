@@ -25,7 +25,12 @@ var EventUtils = function() {
 		 */
 		onlyInt : function(elId) {
 			var text = $(elId).val();
-			$(elId).val(text.replace(/[^0-9]/g,""));
+			$(elId).val(text.replace(/[^0-9]/g, ""));
+		},
+		onlyFloat : function(elId, limit) {
+			var text = $(elId).val();
+			var floatBuf = parseFloat(StringUtils.nvl2(text.replace(/[^0-9^.]/g, ""), "0"));
+			$(elId).val(floatBuf.toFixed(limit));
 		},
 		/**
 		 * function dtmFormat

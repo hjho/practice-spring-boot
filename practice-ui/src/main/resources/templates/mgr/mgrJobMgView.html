@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="mgrJobMg">
+				<!-- 조회 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-5 row">
+									<label for="inJobTitle" class="col-4 col-form-label text-right">직책명</label>
+			    					<input type="text" class="col-8 form-control enter-start" id="inJobTitle">
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()">조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		직책 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableMgrJob">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">직책아이디</th>
+									<th class="text-center">직책명</th>
+									<th class="text-center">최소연봉</th>
+									<th class="text-center">최대연봉</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		직책 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formMgrJob">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="jobId"><span class="req">*</span>직책아이디</label>
+			    					<input type="text" class="form-control form-control-sm" id="jobId" name="jobId" aria-describedby="jobIdText" placeholder="">
+			    					<small id="jobIdText" class="form-text text-muted">
+	  									직책아이디는 대문자와 "_" 조합입니다.
+									</small>
+								</div>
+					  			<div class="col-4">
+									<label for="jobTitle"><span class="req">*</span>직책명</label>
+			    					<input type="text" class="form-control form-control-sm" id="jobTitle" name="jobTitle">
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="minSalary">최소연봉(만원)</label>
+			    					<input type="text" class="form-control form-control-sm text-right" id="minSalary" name="minSalary" onkeyup="EventUtils.commaFormat(this)" >
+								</div>
+					  			<div class="col-4">
+									<label for="maxSalary">최대연봉(만원)</label>
+			    					<input type="text" class="form-control form-control-sm text-right" id="maxSalary" name="maxSalary" onkeyup="EventUtils.commaFormat(this)" >
+								</div>
+	  						</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="mgrJobMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableMgrJob');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableMgrJob').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableMgrJob').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableMgrJob', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("부서 검색");
+			DataTableUtils.get({
+				tableId : "#tableMgrJob",
+				url : "/mgr/job",
+				param : {
+					"jobTitle" : $('#inJobTitle').val()
+				},
+				columns: [
+		            { "data": "rowNo"    , "class": "text-center"},
+		            { "data": "jobId"    , "class": "text-center"},
+		            { "data": "jobTitle" , "class": "text-left"  },
+		            { "data": "minSalary", "class": "text-right" , format: "money"},
+		            { "data": "maxSalary", "class": "text-right" , format: "money"}
+		        ]
+			});
+		}
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			// 직책 아이디
+			$('#formMgrJob').find('#jobId').val("").attr('disabled', false);
+			// 직책 명
+			$('#formMgrJob').find('#jobTitle').val("");
+			// 최소 연봉
+			$('#formMgrJob').find('#minSalary').val(0);
+			// 최대 연봉
+			$('#formMgrJob').find('#maxSalary').val(0);
+		}
+		
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 부서 번호
+			$('#formMgrJob').find('#departmentId').val(data.departmentId);
+			// 직책 아이디
+			$('#formMgrJob').find('#jobId').val(data.jobId).attr('disabled', true);
+			// 직책 명
+			$('#formMgrJob').find('#jobTitle').val(data.jobTitle);
+			// 최소 연봉
+			$('#formMgrJob').find('#minSalary').val(StringUtils.commaFormat(data.minSalary));
+			// 최대 연봉
+			$('#formMgrJob').find('#maxSalary').val(StringUtils.commaFormat(data.maxSalary));
+		}
+		
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// 입력 값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 직책를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/mgr/job"+method,
+					param : AjaxUtils.getParam(
+						"#formMgrJob",
+						function() {
+							$('#minSalary').val(StringUtils.numberFormat($('#minSalary').val()));
+							$('#maxSalary').val(StringUtils.numberFormat($('#maxSalary').val()));
+						},
+						function(param) { 
+							$('#minSalary').val(StringUtils.commaFormat($('#minSalary').val()));
+							$('#maxSalary').val(StringUtils.commaFormat($('#maxSalary').val()));
+							return param; 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableMgrJob');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		// 필수 입력값 확인.
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(StringUtils.isEmpty($('#jobId').val())) {
+				alert(message);
+				return '#jobId';
+			}
+			
+			if(StringUtils.isEmpty($('#jobTitle').val())) {
+				alert(message);
+				return '#jobTitle';
+			}
+			
+			return '';
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+
