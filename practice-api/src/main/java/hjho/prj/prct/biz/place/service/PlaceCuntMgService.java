@@ -33,7 +33,7 @@ public class PlaceCuntMgService {
 			
 			// PK 확인.
 			if(this.isDataOne(placeCuntMgVO)) {
-				throw new UserException("9006", new String[] {"국가아이디"});
+				throw new UserException("9005", new String[] {"국가아이디"});
 			} else {
 				insCnt = placeCuntMgMapper.postPlaceCunt(placeCuntMgVO);
 			}

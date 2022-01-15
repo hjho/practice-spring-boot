@@ -5,74 +5,65 @@
 	<link rel="shortcut icon" href="#">
 	<!-- jQuery -->
 	<script th:src="@{/js/jquery/jquery-3.6.0.min.js}" type="text/javascript"></script>
-	<!-- Bootstrap 4.0.0 -->
-	<link th:href="@{/bootstrap-4.0.0/css/bootstrap.css}" rel="stylesheet" type="text/css" />
-	<!-- 
-	<link th:href="@{/bootstrap-4.0.0/css/bootstrap-grid.css}" rel="stylesheet" type="text/css" />
-	<link th:href="@{/bootstrap-4.0.0/css/bootstrap-reboot.css}" rel="stylesheet" type="text/css" />
 	
-	<script th:href="@{/bootstrap-4.0.0/js/bootstrap.js}" type="text/javascript"></script>
-	<script th:href="@{/bootstrap-4.0.0/js/bootstrap.bundle.js}" type="text/javascript"></script>
-	 -->
-	<!-- DataTables
-	<link th:href="@{/DataTables/datatables.css}" rel="stylesheet" type="text/css"/>
-	<script th:src="@{/DataTables/datatables.js}" type="text/javascript"></script>
-	 -->
+	<!-- Bootstrap 4.0.0 -->
+	<link th:href="@{/css/bootstrap-4.6.1/bootstrap.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/css/bootstrap-4.6.1/login.css}" rel="stylesheet" type="text/css" />
+	
 	<!-- Common -->
 	<script th:src="@{/js/common/hjho-string-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-ajax-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-date-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-event-utils.js}" type="text/javascript"></script>
 	
-	<!-- 로그인 -->
-	<link th:href="@{/bootstrap-4.0.0/css/signin.css}" rel="stylesheet" type="text/css" />
-	
 <title>프로젝트 연습(로그인)</title>
 </head>
-<body>
-	<div class="text-center" id="loginDtl">
-		<form class="form-signin" id="loginFormData">
-	    	<img class="mb-4" th:src="@{/images/bootstrap-stack.png}" alt="" width="72" height="72">
-	      	<h1 class="h3 mb-3 font-weight-normal">Practice Login</h1>
-	      	<div class="row">
-		      	<label class="col-md-3 mt-2 text-right" for="userId">Id</label>
-		      	<input class="col-md-9 form-control" type="text" id="userId" name="userId" placeholder="Identification">
-		      	
-		      	<label class="col-md-3 mt-2 text-right" for=userPw>Pw</label>
-		      	<input class="col-md-9 form-control" type="password" id="userPw" name="userPw" placeholder="Password">
-		      	
-		      	<label class="col-sm-3 mt-2 text-right" for=userName>Name</label>
-		      	<input class="col-sm-9 form-control" type="text" id="userName" name="userName" placeholder="TEST">
-		      	
-		      	<label class="col-sm-3 mt-2 text-right" for=dtm>Time</label>
-		      	<input class="col-sm-9 form-control" type="text" id="dtm" name="dtm" placeholder="TEST">
-		      	
-		      	<label class="col-sm-3 mt-2 text-right" for="num">Num</label>
-		      	<input class="col-sm-9 form-control" type="text" id="num" name="num" onkeyup="EventUtils.commaFormat(this)" placeholder="TEST">
-			</div>
-	      	<div class="checkbox mb-2">
-	        	<label>
-	          		<input type="checkbox" value="remember-me" id="check" name="check" onclick="EventUtils.checkBoxVal(this)"> 여부
-	        	</label>
-	      	</div>
-	    </form>
+<body class="text-center">
+	<form class="form-signin" id="loginFormData">
+    	<img class="mb-4" th:src="@{/images/bootstrap-stack.png}" alt="" width="72" height="72">
+      	<h1 class="h3 mb-3 font-weight-normal">Practice Login</h1>
+      	<div class="row">
+	      	<label class="col-md-3 mt-2 text-right" for="userId">Id</label>
+	      	<input class="col-md-9 form-control" type="text" id="userId" name="userId" placeholder="Identification">
+	      	
+	      	<label class="col-md-3 mt-2 text-right" for=userPw>Pw</label>
+	      	<input class="col-md-9 form-control" type="password" id="userPw" name="userPw" placeholder="Password">
+	      	
+	      	<label class="col-sm-3 mt-2 text-right" for=userName>Name</label>
+	      	<input class="col-sm-9 form-control" type="text" id="userName" name="userName" placeholder="TEST">
+	      	
+	      	<label class="col-sm-3 mt-2 text-right" for=dtm>Time</label>
+	      	<input class="col-sm-9 form-control" type="text" id="dtm" name="dtm" placeholder="TEST">
+	      	
+	      	<label class="col-sm-3 mt-2 text-right" for="num">Num</label>
+	      	<input class="col-sm-9 form-control" type="text" id="num" name="num" onkeyup="EventUtils.commaFormat(this)" placeholder="TEST">
+	      	
+	      	<label class="col-sm-3 mt-2 text-right"></label>
+        	<label class="col-sm-9 text-left pl-0">
+          		<input type="checkbox" value="remember-me" id="check" name="check" onclick="EventUtils.checkBoxVal(this)"> 아이디 기억
+        	</label>
+		</div>
 	    <button class="btn btn-lg btn-primary btn-block" onclick="loginProc()">로그인</button>
 	    <p class="mt-5 mb-3 text-muted">&copy; 2021-ING</p>
-	</div>
+    </form>
 </body>
 <script th:inline="javascript">
 	$(document).ready(function() {
 		
 		fnLoginDtlInit();
 		
+		$('#loginFormData').submit(function() {
+		    return false; // return false to cancel form action
+		});
+		
 	});
 	function fnLoginDtlInit() {
-		$('#loginDtl').find('#userName').val("홀길동").attr('disabled', true);
-		$('#loginDtl').find('#userId').val("");
-		$('#loginDtl').find('#userPw').val("");
-		$('#loginDtl').find('#dtm').val(DateUtils.nowFormat("yyyy-MM-dd hh:mi:ss"));
-		$('#loginDtl').find('#num').val(0);
-		$('#loginDtl').find('#check').val("Y").attr('checked', true);
+		$('#loginFormData').find('#userName').val("홀길동").attr('disabled', true);
+		$('#loginFormData').find('#userId').val("");
+		$('#loginFormData').find('#userPw').val("");
+		$('#loginFormData').find('#dtm').val(DateUtils.nowFormat("yyyy-MM-dd hh:mi:ss"));
+		$('#loginFormData').find('#num').val(0);
+		$('#loginFormData').find('#check').val("Y").attr('checked', true);
 	}
 	
 	function loginProc() {

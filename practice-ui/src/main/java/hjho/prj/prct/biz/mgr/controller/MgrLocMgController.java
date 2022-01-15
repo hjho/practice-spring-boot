@@ -34,7 +34,7 @@ public class MgrLocMgController extends CommonController {
 		log.debug("[L] LOCATION PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL, null));
+		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL));
 		
 		return super.pageView(mav, "mgr", "mgrLocMg");
 	}

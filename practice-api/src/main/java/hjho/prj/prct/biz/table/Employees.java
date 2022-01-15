@@ -14,7 +14,7 @@ public class Employees extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	
 	@ApiModelProperty(name="employeeId", value="사원 번호")
-	private String employeeId;
+	private Long   employeeId;
 		
 	@ApiModelProperty(name="firstName", value="이름")
 	private String firstName;
@@ -35,15 +35,15 @@ public class Employees extends CommonModel {
 	private String jobId;
 		
 	@ApiModelProperty(name="salary", value="급여")
-	private String salary;
+	private Float  salary;
 		
 	@ApiModelProperty(name="commissionPct", value="수수료(영업사원)")
-	private String commissionPct;
+	private Float  commissionPct;
 	
 	@ApiModelProperty(name="managerId", value="부서장 아이디")
-	private String managerId;
+	private Long   managerId;
 	
 	@ApiModelProperty(name="departmentId", value="부서 번호")
-	private String departmentId;
+	private Long   departmentId;
 
 }

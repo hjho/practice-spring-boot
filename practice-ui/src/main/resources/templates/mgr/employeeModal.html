@@ -12,15 +12,16 @@
       			<div class="card">
 				  	<h5 class="card-header">사원 목록</h5>
 				  	<div class="card-body">
-				  		<table class="table table-hover table-bordered" id="tableEmployee">
+				  		<table class="table table-sm table-hover table-bordered" id="tableEmployee">
 							<thead class="table-light">
 								<tr>
 									<th class="text-center">No</th>
-									<th class="text-center">부서명</th>
 									<th class="text-center">사원번호</th>
 									<th class="text-center">사원명</th>
-									<th class="text-center">고용일시</th>
-									<th class="text-center">직책</th>
+									<th class="text-center">입사일자</th>
+									<th class="text-center">부서명</th>
+									<th class="text-center">직책명</th>
+									<th class="text-center">연봉(만원)</th>
 								</tr>
 							</thead>
 						</table>
@@ -54,17 +55,13 @@
 			tableId : "#tableEmployee",
 			url : "/mgr/dept/emp",
 			columns: [
-	            { "data": "rowNo"       , "class": "text-center"},
-	            { "data": "departmentName", "class": "text-center"},
-	            { "data": "employeeId"  , "class": "text-center"},
-	            { 
-	            	"data": "firstName"	, "class": "text-left"  ,
-	            	"render": function(data, type, row) {
-	            		return data + " " + row.lastName;
-	            	}
-	            },
-	            { "data": "hireDate"    , "class": "text-center", "format": "dtm"},
-	            { "data": "jobId"  		, "class": "text-left"  },
+	            { "data": "rowNo"         , "class": "text-center"},
+	            { "data": "employeeId"    , "class": "text-center"},
+	            { "data": "employeeName"  , "class": "text-left"  },
+	            { "data": "hireDate"      , "class": "text-center", "format": "date", "visible": false},
+	            { "data": "departmentName", "class": "text-left"  , "visible": false},
+	            { "data": "jobTitle"      , "class": "text-left"  },
+	            { "data": "salary"        , "class": "text-right" , "format": "money", "visible": false}
 	        ]
 		});
 	}
@@ -83,16 +80,16 @@
 		if(confirm(message)) {
 			// 관리자ID/명
 			// alert("사원 번호 : "+ empId + ", 사원 명 : " + empName);
-			$('#formMgrDept').find('#managerId').val(empId);
-			$('#formMgrDept').find('#managerName').val(empName);
+			$('#managerId').val(empId);
+			$('#managerName').val(empName);
 			$('#modalEmployee').modal('hide');
 		}
 	}
 	// 사원 선택 안함
 	function fnNotChocEmp() {
 		// 관리자ID/명
-		$('#formMgrDept').find('#managerId').val("");
-		$('#formMgrDept').find('#managerName').val("");
+		$('#managerId').val("");
+		$('#managerName').val("");
 		$('#modalEmployee').modal('hide');
 	}
 </script>

@@ -39,7 +39,7 @@
 				  		부서 목록
 				  	</h6>
 				  	<div class="card-body">
-				  		<table class="table table-hover table-bordered" id="tableMgrDept">
+				  		<table class="table table-sm table-hover table-bordered" id="tableMgrDept">
 							<thead class="table-light">
 								<tr>
 									<th class="text-center">No</th>
@@ -174,7 +174,7 @@
 				url : "/mgr/dept",
 				param : {
 					"departmentName" : $('#inDepartmentName').val(),
-					"countryId"     : $('#inCountryId').val()
+					"countryId"      : $('#inCountryId').val()
 				},
 				columns: [
 		            { "data": "rowNo"         , "class": "text-center"},

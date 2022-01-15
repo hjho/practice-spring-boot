@@ -34,7 +34,7 @@ public class PlaceRegiMgService {
 			
 			// PK 확인.
 			if(this.isDataOne(placeRegiMgVO)) {
-				throw new UserException("9006", new String[] {"대륙번호"});
+				throw new UserException("9005", new String[] {"대륙번호"});
 			} else {
 				insCnt = placeRegiMgMapper.postPlaceRegi(placeRegiMgVO);
 			}
