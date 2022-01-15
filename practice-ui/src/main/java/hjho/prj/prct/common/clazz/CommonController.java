@@ -11,6 +11,7 @@ public class CommonController {
 	protected final String UPD = "put";
 	protected final String DEL = "delete";
 	
+//	protected final String MAIN_PAGE = "index";
 	protected final String MAIN_PAGE = "mainPage";
 	
 	protected final String LOGIN_PAGE = "loginPage";

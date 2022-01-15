@@ -51,8 +51,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 			"/images/**",			// static
 			"/html/**",				// static
 			"/css/**",				// static
-			"/bootstrap-4.0.0/**",	// bootstrap4
-			"/DataTables/**",		// DataTable
 			"/login/**",			// login page
 			"/error/**",			// error page
 			"/favicon.*"

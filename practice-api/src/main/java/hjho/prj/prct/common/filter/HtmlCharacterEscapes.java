@@ -60,9 +60,21 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 
 	@Override
 	public SerializableString getEscapeSequence(int ch) {
-		// return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
+		
+		// 사용자 지정 HTML 변환.
 		// log.debug("[F] getEscapeCodesForAscii : {}", this.translator.translate(Character.toString((char) ch)));
-		return new SerializedString(this.translator.translate(Character.toString((char) ch)));
+		
+		char charAt = (char) ch;
+		
+		// EMOJI(확장문자) Parse Error
+		SerializedString serializedString = null;
+		if(Character.isHighSurrogate(charAt) || Character.isLowSurrogate(charAt)) {
+			String emojiStr = "\\u".concat(String.format("%04x", charAt));
+			serializedString = new SerializedString(emojiStr);
+		} else {
+			serializedString = new SerializedString(this.translator.translate(Character.toString(charAt)));
+		}
+		return serializedString;
 	}
 
 }

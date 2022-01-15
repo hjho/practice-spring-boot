@@ -1,0 +1,27 @@
+/* 테이블 헤더  언더라인 */
+table.dataTable thead th, table.dataTable thead td {
+    background-color: #CCCCCC;
+    border-bottom: 1px solid #FF9900;
+}
+
+/* 테이블 바디 언더라인 */
+table.dataTable.no-footer {
+    border-bottom: 1px solid #FF9900;
+}
+
+/* 테이블 선택 */
+table.dataTable tbody tr.selected {
+    background-color: #CCFF99;
+}
+
+/* INPUT 필수 입력값  */
+span.req {
+    color: red;
+    font-weight: bold;
+}
+
+/* Main Page Back Ground Color 
+.main-page {
+	background-color: silver; 
+}
+*/
