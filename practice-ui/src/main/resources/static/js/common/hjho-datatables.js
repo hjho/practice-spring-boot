@@ -3,26 +3,30 @@
  */
 var DataTableUtils = function() {
 	var lengthMenu = [[10, 20, 40, 80], [10, 20, 40, '80']];
+	var processingHtml = '';
+	processingHtml += '<div class="d-flex justify-content-center">';
+	processingHtml +=     '<div class="spinner-border text-success" role="status" aria-hidden="true"></div>';
+	processingHtml += '</div>';
 	var language = {
-		    "decimal":        "",
-		    "emptyTable":     "검색 결과가 없습니다.",
-		    "info":           "총 _TOTAL_ 중  _START_ 부터 _END_ 건",
-		    "infoEmpty":      "총 0 건",
-		    "infoFiltered":   "(filtered from _MAX_ total entries)",
-		    "infoPostFix":    "",
-		    "thousands":      ",",
-		    "lengthMenu":     "_MENU_ 건 씩",
+		    "decimal"       : "",
+		    "emptyTable"    : "검색 결과가 없습니다.",
+		    "info"          : "총 _TOTAL_ 중  _START_ 부터 _END_ 건",
+		    "infoEmpty"     : "총 0 건",
+		    "infoFiltered"  : "(filtered from _MAX_ total entries)",
+		    "infoPostFix"   : "",
+		    "thousands"     : ",",
+		    "lengthMenu"    : "_MENU_ 건 씩",
 		    "loadingRecords": "로딩 중...",
-		    "processing":     "처리 중...",
-		    "search":         "검색:",
-		    "zeroRecords":    "No matching records found",
-		    "paginate": {
-		        "first":      "처음",
-		        "last":       "마지막",
-		        "next":       "다음",
-		        "previous":   "이전"
+		    "processing"    : processingHtml,
+		    "search"        : "검색:",
+		    "zeroRecords"   : "No matching records found",
+		    "paginate" : {
+		        "first"   : "처음",
+		        "last"    : "마지막",
+		        "next"    : "다음",
+		        "previous": "이전"
 		    },
-		    "aria": {
+		    "aria" : {
 		        "sortAscending":  ": activate to sort column ascending",
 		        "sortDescending": ": activate to sort column descending"
 		    }
@@ -54,21 +58,26 @@ var DataTableUtils = function() {
 				
 				if(StringUtils.isNotEmpty(type)) {
 					switch(type) {
-					case "dtm"  : // 일시 
-						item["render"] = function(data, type, row) {
-							return DateUtils.dtmFormat(data);
-						}
-						break;
-					case "date" : // 일자
-						item["render"] = function(data, type, row) {
-							return DateUtils.dateFormat(data);
-						}
-						break;
-					case "time" : // 시간
-						item["render"] = function(data, type, row) {
-							return DateUtils.timeFormat(data);
-						}
-						break;
+						case "dtm"  : // 일시 
+							item["render"] = function(data, type, row) {
+								return DateUtils.dtmFormat(data);
+							}
+							break;
+						case "date" : // 일자
+							item["render"] = function(data, type, row) {
+								return DateUtils.dateFormat(data);
+							}
+							break;
+						case "time" : // 시간
+							item["render"] = function(data, type, row) {
+								return DateUtils.timeFormat(data);
+							}
+							break;
+						case "money" : // 돈, 콤마
+							item["render"] = function(data, type, row) {
+								return StringUtils.commaFormat(data);
+							}
+							break;
 					}
 				}
 			});

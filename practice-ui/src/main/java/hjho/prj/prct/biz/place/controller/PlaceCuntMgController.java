@@ -33,7 +33,7 @@ public class PlaceCuntMgController extends CommonController {
 		log.debug("[L] COUNTRY PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxRegi", commonService.selectBox(PLACE_REGI_API_URL, null));
+		mav.addObject("boxRegi", commonService.selectBox(PLACE_REGI_API_URL));
 		
 		return super.pageView(mav, "place", "placeCuntMg");
 	}

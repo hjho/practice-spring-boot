@@ -76,7 +76,7 @@ var StringUtils = function() {
 		 * parameter string
 		 */
 		numberFormat : function(str) {
-			var text = this.nvl(str).replace(/[^0-9]/g,"");
+			var text = this.nvl("" + str).replace(/[^0-9]/g, "");
 			var text2 = (this.isEmpty(text)) ? "0" : text;
 			return parseInt(text2);
 		},
@@ -85,8 +85,8 @@ var StringUtils = function() {
 		 * parameter string
 		 */
 		commaFormat : function(str) {
-			var number = "" + this.numberFormat(str);
-			return number.replace(/(\d)(?=(?:\d{3})+(?!\d))/g,"$1,");
+			var number = "" + this.numberFormat("" + str);
+			return number.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
 		}
 	}
 }();

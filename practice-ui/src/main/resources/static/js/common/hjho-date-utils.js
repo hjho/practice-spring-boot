@@ -67,7 +67,8 @@ var DateUtils = function() {
 		dateFormat : function(str) {
 			var dateBuf = StringUtils.nvl(str).replace(/[^0-9]/g,"");
 			// yyyymmddhhmiss
-			if(dateBuf.length == 14) {
+			if(dateBuf.length >= 14) {
+				dateBuf = dateBuf.substring(0, 14);
 				dateBuf = dateBuf.substring(0, 8);
 			}
 			// yyyymmdd
@@ -80,7 +81,8 @@ var DateUtils = function() {
 		timeFormat : function(str) {
 			var timeBuf = StringUtils.nvl(str).replace(/[^0-9]/g,"");
 			// yyyymmddhhmiss
-			if(timeBuf.length == 14) {
+			if(timeBuf.length >= 14) {
+				timeBuf = timeBuf.substring(0, 14);
 				timeBuf = timeBuf.substring(8);
 			}
 			// hhmiss
@@ -92,7 +94,7 @@ var DateUtils = function() {
 		// YYYY-MM-DD HH24:MI:SS
 		dtmFormat : function(str) {
 			var dtmBuf = StringUtils.nvl(str).replace(/[^0-9]/g,"");
-			return this.dateFormat(str) + " " + this.timeFormat(str);
+			return this.dateFormat(dtmBuf) + " " + this.timeFormat(dtmBuf);
 		}
 		
 	}

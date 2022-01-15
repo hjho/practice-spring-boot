@@ -11,5 +11,19 @@ import lombok.ToString;
 public class MgrEmpMgPagingVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private String employeeId;
+	
+	private String firstName;
+	
+	private String lastName; 
+	
+	private String hireDate; 
+	
+	private String jobId;
+	
+	private Long   managerId;
+    
+	private Long   departmentId;
+    
 }

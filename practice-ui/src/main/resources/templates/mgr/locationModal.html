@@ -12,14 +12,14 @@
       			<div class="card">
 				  	<h5 class="card-header">부서 위치 목록</h5>
 				  	<div class="card-body">
-				  		<table class="table table-hover table-bordered" id="tableLocation">
+				  		<table class="table table-sm table-hover table-bordered" id="tableLocation">
 							<thead class="table-light">
 								<tr>
 									<th class="text-center">No</th>
 									<th class="text-center">위치번호</th>
 									<th class="text-center">국가명</th>
-									<th class="text-center">주</th>
-									<th class="text-center">도시명</th>
+									<th class="text-center">주(시/도)</th>
+									<th class="text-center">도시명(시/군/구)</th>
 									<th class="text-center">도로명</th>
 								</tr>
 							</thead>
@@ -78,16 +78,16 @@
 		    message += "위 위치로 선택하시겠습니까?";
 		if(confirm(message)) {
 			// 위치번호/도시명
-			$('#formMgrDept').find('#locationId').val(locationId);
-			$('#formMgrDept').find('#locationName').val(locationIdName);
+			$('#locationId').val(locationId);
+			$('#locationName').val(locationIdName);
 			$('#modalLocation').modal('hide');
 		}
 	}
 	// 위치 선택 안함
 	function fnNotChocLoc() {
 		// 위치번호/도시명
-		$('#formMgrDept').find('#locationId').val("");
-		$('#formMgrDept').find('#locationName').val("");
+		$('#locationId').val("");
+		$('#locationName').val("");
 		$('#modalLocation').modal('hide');
 	}
 </script>

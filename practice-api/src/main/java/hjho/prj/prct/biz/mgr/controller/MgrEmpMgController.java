@@ -18,6 +18,7 @@ import hjho.prj.prct.biz.mgr.model.MgrEmpMgVO;
 import hjho.prj.prct.biz.mgr.service.MgrEmpMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
+import hjho.prj.prct.common.exception.UserException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -45,37 +46,52 @@ public class MgrEmpMgController extends CommonController {
 	
 	@PostMapping()
 	@ApiOperation(value="postMgrEmp", notes="관리자 사원 등록", response=Integer.class)
-	public CommonMessage postMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) {
+	public CommonMessage postMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) throws UserException {
 		this.parameterLog("MgrEmpMg[postMgrEmp]", mgrEmpMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
+		int insCnt = mgrEmpMgService.postMgrEmp(mgrEmpMgVO);
+		
 		output.setOk();
-		output.setData(0);
+		output.setData(insCnt);
+		if(insCnt < 1) {
+			output.setError();
+		}
 		return output;
 	}
 	
 	@PutMapping()
 	@ApiOperation(value="putMgrEmp", notes="관리자 사원 수정", response=Integer.class)
-	public CommonMessage putMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) {
+	public CommonMessage putMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) throws UserException {
 		this.parameterLog("MgrEmpMg[putMgrEmp]", mgrEmpMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
+		int updCnt = mgrEmpMgService.putMgrEmp(mgrEmpMgVO);
+		
 		output.setOk();
-		output.setData(0);
+		output.setData(updCnt);
+		if(updCnt < 1) {
+			output.setError();
+		}
 		return output;
 	}
 	
 	@DeleteMapping()
 	@ApiOperation(value="deleteMgrEmp", notes="관리자 사원 삭제", response=Integer.class)
-	public CommonMessage deleteMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) {
+	public CommonMessage deleteMgrEmp(@RequestBody MgrEmpMgVO mgrEmpMgVO) throws UserException {
 		this.parameterLog("MgrEmpMg[deleteMgrEmp]", mgrEmpMgVO);
 		
 		CommonMessage output = new CommonMessage();
 		
+		int delCnt = mgrEmpMgService.deleteMgrEmp(mgrEmpMgVO);
+		
 		output.setOk();
-		output.setData(0);
+		output.setData(delCnt);
+		if(delCnt < 1) {
+			output.setError();
+		}
 		return output;
 	}
 	
