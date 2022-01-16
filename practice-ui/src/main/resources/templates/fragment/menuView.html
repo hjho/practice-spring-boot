@@ -6,67 +6,41 @@
 <body>
 			<th:block th:fragment="menu">
 				<div class="sidebar-sticky pt-3">
-					<ul class="nav flex-column">
-						<li class="nav-item">
-		              		<a class="nav-link" href="/place/regi/page">
-								<span data-feather="globe"></span>
-		                		대륙 관리
-		                		<span class="sr-only">(current)</span>
-		              		</a>
-		            	</li>
-		            	<li class="nav-item">
-		              		<a class="nav-link" href="/place/cunt/page">
-								<span data-feather="flag"></span>
-		                		국가 관리
-		              		</a>
-		            	</li>
-		            	<li class="nav-item">
-		              		<a class="nav-link" href="/mgr/loc/page">
-								<span data-feather="compass"></span>
-		                		위치 관리
-		              		</a>
-		            	</li>
-		            	<li class="nav-item">
-		              		<a class="nav-link" href="/mgr/dept/page">
-		               			 <span data-feather="folder"></span>
-		               			 부서 관리
-		              		</a>
-		            	</li>
-		            	<li class="nav-item">
-		              		<a class="nav-link" href="/mgr/job/page">
-		               			 <span data-feather="briefcase"></span>
-		               			 직책 관리
-		              		</a>
-		            	</li>
-		            	<li class="nav-item">
-		              		<a class="nav-link" href="/mgr/emp/page">
-		               			 <span data-feather="user"></span>
-		               			 사원 관리
-		              		</a>
-		            	</li>
-		          	</ul>
-		
-		          	<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-		              	<span>Saved reports</span>
-		           		<a class="d-flex align-items-center text-muted" href="#">
-		             		<span data-feather="plus-circle"></span>
-		           		</a>
-		            </h6>
-		            
-		            <ul class="nav flex-column mb-2">
-		              	<li class="nav-item">
-		                	<a class="nav-link" href="#">
-		                  		<span data-feather="file-text"></span>
-		                  		Current month
-		                	</a>
-		              	</li>
-		              	<li class="nav-item">
-		                	<a class="nav-link" href="#">
-		                  		<span data-feather="file-text"></span>
-		                  		Last quarter
-		                	</a>
-		              	</li>
-		            </ul>
+					<div class="accordion" id="sideBarMenu">
+<th:block th:each="menuBsVO : ${menuTree.menuBs}">
+					  	<div class="card menu">
+					    	<div class="card-header menu" 
+					    	     th:id="|${menuBsVO.menuId}Mg|">
+					    	
+					      		<h5 data-toggle="collapse" class="sidebar-heading d-flex justify-content-between align-items-center px-3 text-muted menu-title"
+					      		    th:id="|${menuBsVO.menuId}MgTitle|">
+					       		   	<span th:text="${menuBsVO.menuNm}"></span>
+						       		<a class="d-flex align-items-center text-muted">
+						         		<span th:id="|${menuBsVO.menuId}MgTitleUp|" data-feather="chevron-up"></span>
+						         		<span th:id="|${menuBsVO.menuId}MgTitleDown|" data-feather="chevron-down"></span>
+						       		</a>
+					      		</h5>
+					      		
+					    	</div>
+					    	<div data-parent="#sideBarMenu"
+					    	     th:id="|${menuBsVO.menuId}MgBody|" class="collapse">
+					      		<div class="card-body menu-body">
+	<th:block th:each="menuDtVO : ${menuTree.menuDt}">
+		<th:block th:if="${#strings.equals(menuBsVO.menuId, menuDtVO.hrMenuId)}">
+					        		<div class="nav-item col-12"
+					        		     th:id="|${menuDtVO.menuId}Mg|">
+						             	<a class="nav-link">
+											<span th:id="|${menuDtVO.menuId}MgIcon|"></span>
+											<span th:text="${menuDtVO.menuNm}"></span>
+					              		</a>
+						           	</div>
+		</th:block>
+	</th:block>
+					      		</div>
+					    	</div>
+					  	</div>
+</th:block>
+					</div>
          		</div>
 			</th:block>
 </body>

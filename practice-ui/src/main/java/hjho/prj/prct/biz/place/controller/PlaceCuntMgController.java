@@ -35,6 +35,8 @@ public class PlaceCuntMgController extends CommonController {
 		
 		mav.addObject("boxRegi", commonService.selectBox(PLACE_REGI_API_URL));
 		
+		mav.addObject("menuTree", commonService.selectBox("/api/main/menu"));
+		
 		return super.pageView(mav, "place", "placeCuntMg");
 	}
 	
