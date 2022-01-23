@@ -28,6 +28,33 @@ table.dataTable th.dataTables_empty {
     color: red;
 }
 
+/* 재설정 Menu Font Up (main.css) */
+.sidebar-heading {
+  font-size: 1.0rem;
+}
+
+/* 메뉴 */
+.card.menu {
+	border: 0;
+}
+.card-header.menu {
+	padding: 0;
+	margin: 0;
+}
+/* 메뉴 제목 */
+.menu-title {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+/* 메뉴 내용 */
+.card-body.menu-body {
+	padding: 0px;
+}
+/* 재설정 (main.css) */
+.nav-link.disabled {
+    color: #6c757d;
+}
+
 /* Main Page Back Ground Color 
 .main-page {
 	background-color: silver; 

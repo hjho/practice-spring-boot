@@ -64,21 +64,27 @@
     <div class="container-fluid">
       	<div class="row">
       		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      		<!-- 사이드바 시작 -->
+	     	<!-- START SIDE BAR START -->
 	        	<th:block th:replace="/fragment/menuView.html :: menu"></th:block>
-	        <!-- 사이드바 끝 -->	
+	        <!-- END SIDE BAR END -->	
       		</nav>
       		
         	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 main-page"><br>
-	        <!-- 콘텐츠 시작 -->
+	        <!-- START MAIN CONTENT START -->
 	        	<th:block th:replace="${viewPath} :: ${viewName}"></th:block>
-	        <!-- 콘텐츠 끝 -->
+	        <!-- END MAIN CONTENT END -->
         	</main>
       	</div>
     </div>
 </body>
+<!-- START MAIN PAGE SCTIPT START -->
 	<script th:inline="javascript">
+	
+		const pathName = document.location.pathname;
+	
 		$(document).ready(function() {
+			initMenu();
+			
 			feather.replace();
 			
 			$('.enter-start').on('keyup', function(e) {
@@ -90,7 +96,55 @@
 			$('.change-start').on('change', function(e) {
 				$('.inqr-run').click();
 			})
+			
 		});
+		
+		function initMenu() {
+			var menuBs = /*[[${menuTree.menuBs}]]*/[]; 
+			var menuDt = /*[[${menuTree.menuDt}]]*/[];
+			
+			$.each(menuBs, function(index, menuBsVO) {
+				var menuId = menuBsVO.menuId + 'Mg';
+				var menuTitlId = menuId + 'Title'
+				var menuBodyId = menuId + 'Body'
+				$('#'+menuTitlId).attr('data-target', '#'+menuBodyId);
+				$('#'+menuTitlId).attr('aria-controls', menuBodyId);
+				
+				$('#'+menuBodyId).attr('aria-labelledby', menuId);
+				
+				$('#'+menuBodyId).on('show.bs.collapse', function () {
+					$('#'+menuTitlId+'Up').show();
+					$('#'+menuTitlId+'Down').hide();
+				});
+				$('#'+menuBodyId).on('hide.bs.collapse', function () {
+					$('#'+menuTitlId+'Up').hide();
+					$('#'+menuTitlId+'Down').show();
+				});
+				
+				if(pathName.indexOf(menuBsVO.pageUrl) == 0) {
+					$('#'+menuTitlId+'Down').hide();
+				} else {
+					$('#'+menuTitlId+'Up').hide();
+				}
+				
+				$.each(menuDt, function(index, menuDtVO) {
+					var hrMenuId = menuDtVO.hrMenuId + 'Mg';
+					if(hrMenuId == menuId) {
+						var pageUrl = menuDtVO.pageUrl+'/page';
+						var menuDtId = menuDtVO.menuId + 'Mg';
+						$('#'+menuDtId+' a').attr('href', pageUrl);
+						$('#'+menuDtId+'Icon').attr('data-feather', menuDtVO.iconUrl);
+						// console.log(pathName + ", " + pageUrl + " = " + (pathName == pageUrl));
+						if(pathName == pageUrl) {
+							// console.log(">>>>> " + menuBodyId + ", " + menuDtId);
+							$('#'+menuBodyId).addClass('show');
+							$('#'+menuDtId+' a').addClass('active');
+						}
+					}
+				});
+			});
+		}
 	</script>
+<!-- END MAIN PAGE SCTIPT END -->
 	<th:block th:replace="${viewPath} :: ${viewName}+Script"></th:block>
 </html>
