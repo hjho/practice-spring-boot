@@ -3,13 +3,31 @@
 
 <mapper namespace="hjho.prj.prct.biz.main.mapper.LoginMapper">
 
+    <select id = "idCheck" 
+            parameterType = "hjho.prj.prct.biz.main.model.LoginPVO" 
+            resultType    = "int">
+        /* ID 검증 */
+        SELECT COUNT(*) AS id_cnt
+          FROM (
+                SELECT '20220001' as user_id
+                  FROM DUAL
+               )
+         WHERE user_id = #{userId, jdbcType=VARCHAR} 
+    </select>
+    
     <select id = "loginProc" 
             parameterType = "hjho.prj.prct.biz.main.model.LoginPVO" 
             resultType    = "hjho.prj.prct.biz.main.model.LoginRVO">
-        SELECT 'hjho' as user_id
-             , '1234' as user_pw
-             , '홍길동' as user_nm
-          FROM DUAL
+        /* LOGIN 검증 */
+        SELECT * 
+          FROM (
+                SELECT '20220001' as user_id
+                     , 'a123456789' as user_pw
+                     , '홍길동' as user_nm
+                  FROM DUAL
+               )
+         WHERE user_id = #{userId, jdbcType=VARCHAR} 
+           AND user_pw = #{userPw, jdbcType=VARCHAR}
     </select>
     
 </mapper> 

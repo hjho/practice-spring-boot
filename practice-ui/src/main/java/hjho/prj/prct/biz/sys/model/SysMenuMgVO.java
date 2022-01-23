@@ -1,12 +1,14 @@
-package hjho.prj.prct.biz.main.model;
+package hjho.prj.prct.biz.sys.model;
 
 import hjho.prj.prct.common.clazz.CommonModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
+@ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
-public class MainMenuMgVO extends CommonModel {
+public class SysMenuMgVO extends CommonModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,11 +16,15 @@ public class MainMenuMgVO extends CommonModel {
 	
 	private String hrMenuId;
 	
+	private String menuNm;
+	
+	private String menuCtnt;
+	
 	private String pageUrl;
 	
 	private Long   ordByCls;
 	
-	private String iconUrl;
+	private String iconVal;
 	
 	private String useYn;
 	

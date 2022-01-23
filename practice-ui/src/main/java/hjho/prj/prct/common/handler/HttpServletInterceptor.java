@@ -2,6 +2,7 @@ package hjho.prj.prct.common.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		StopWatch stopWatch = new StopWatch(request.getRequestURL().toString());
 		stopWatch.start("ResponseTime");
 		request.setAttribute(STOP_WATCH, stopWatch);
+		
 //		// 로그인 여부 확인
 //		StopWatch loginStopWatch = new StopWatch("LoginCheck");
 //		loginStopWatch.start();
@@ -44,7 +46,9 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 //		ruleStopWatch.start();
 //		ruleStopWatch.stop();
 //		log.info("\n{}", ruleStopWatch.shortSummary());
-		 
+		HttpSession session = request.getSession();
+		log.debug("[H] [BEFORE ] Http Session Id : {}", session.getId());
+		
 		return true;
 	}
 	

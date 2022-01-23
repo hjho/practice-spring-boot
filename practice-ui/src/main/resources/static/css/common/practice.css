@@ -50,6 +50,12 @@ table.dataTable th.dataTables_empty {
 .card-body.menu-body {
 	padding: 0px;
 }
+/* 메뉴내용 (main.css) */
+.card-body.menu-body .nav-item {
+    padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 /* 재설정 (main.css) */
 .nav-link.disabled {
     color: #6c757d;

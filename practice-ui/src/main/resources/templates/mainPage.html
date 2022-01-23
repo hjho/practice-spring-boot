@@ -100,46 +100,35 @@
 		});
 		
 		function initMenu() {
-			var menuBs = /*[[${menuTree.menuBs}]]*/[]; 
-			var menuDt = /*[[${menuTree.menuDt}]]*/[];
+			var treeMenu = /*[[${session.menu}]]*/[]; 
 			
-			$.each(menuBs, function(index, menuBsVO) {
-				var menuId = menuBsVO.menuId + 'Mg';
-				var menuTitlId = menuId + 'Title'
-				var menuBodyId = menuId + 'Body'
-				$('#'+menuTitlId).attr('data-target', '#'+menuBodyId);
-				$('#'+menuTitlId).attr('aria-controls', menuBodyId);
+			$.each(treeMenu, function(index, menuHr) {
+				var menuTitlId = "#" + menuHr.menuId + 'MgTitle'
+				var menuBodyId = "#" + menuHr.menuId + 'MgBody'
 				
-				$('#'+menuBodyId).attr('aria-labelledby', menuId);
-				
-				$('#'+menuBodyId).on('show.bs.collapse', function () {
-					$('#'+menuTitlId+'Up').show();
-					$('#'+menuTitlId+'Down').hide();
+				// Show, Hide 이벤트 추가
+				$(menuBodyId).on('show.bs.collapse', function () {
+					$(menuTitlId+'Up').show();
+					$(menuTitlId+'Down').hide();
 				});
-				$('#'+menuBodyId).on('hide.bs.collapse', function () {
-					$('#'+menuTitlId+'Up').hide();
-					$('#'+menuTitlId+'Down').show();
+				$(menuBodyId).on('hide.bs.collapse', function () {
+					$(menuTitlId+'Up').hide();
+					$(menuTitlId+'Down').show();
 				});
 				
-				if(pathName.indexOf(menuBsVO.pageUrl) == 0) {
-					$('#'+menuTitlId+'Down').hide();
+				if(pathName.indexOf(menuHr.pageUrl) == 0) {
+					$(menuTitlId+'Down').hide();
 				} else {
-					$('#'+menuTitlId+'Up').hide();
+					$(menuTitlId+'Up').hide();
 				}
 				
-				$.each(menuDt, function(index, menuDtVO) {
-					var hrMenuId = menuDtVO.hrMenuId + 'Mg';
-					if(hrMenuId == menuId) {
-						var pageUrl = menuDtVO.pageUrl+'/page';
-						var menuDtId = menuDtVO.menuId + 'Mg';
-						$('#'+menuDtId+' a').attr('href', pageUrl);
-						$('#'+menuDtId+'Icon').attr('data-feather', menuDtVO.iconUrl);
-						// console.log(pathName + ", " + pageUrl + " = " + (pathName == pageUrl));
-						if(pathName == pageUrl) {
-							// console.log(">>>>> " + menuBodyId + ", " + menuDtId);
-							$('#'+menuBodyId).addClass('show');
-							$('#'+menuDtId+' a').addClass('active');
-						}
+				$.each(menuHr.menuLr, function(index, menuLr) {
+					var pageUrl = menuLr.pageUrl+'/page';
+					var menuDtId = "#" + menuLr.menuId + 'Mg';
+					
+					if(pathName == pageUrl) {
+						$(menuBodyId).addClass('show');
+						$(menuDtId+' a').addClass('active');
 					}
 				});
 			});

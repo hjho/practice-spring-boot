@@ -11,4 +11,16 @@ public class CommonModel implements Serializable {
 	
 	private String functionYn;
 	
+	private String cretSysId;
+	
+	private String cretMgrId;
+	
+	private String cretDtm;
+	
+	private String updSysId;
+	
+	private String updMgrId;
+
+	private String updDtm;
+	
 }
