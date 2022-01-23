@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.main.mapper.MainMenuAuthMapper">
+
+    <select id = "getMenuAuthHr" 
+            parameterType = "hjho.prj.prct.biz.main.model.MainMenuAuthPVO" 
+            resultType    = "hjho.prj.prct.biz.main.model.MainMenuAuthRVO">
+        /* 상위 메뉴 */
+        SELECT menu_id 
+             , hr_menu_id 
+             , menu_nm 
+             , page_url 
+             , icon_val 
+          FROM practice.sys_menu_info
+         WHERE use_yn = 'Y'
+           AND (hr_menu_id IS NULL OR hr_menu_id = '') 
+         ORDER BY ord_by_cls
+    </select>
+    
+    <select id = "getMenuAuthLr" 
+            parameterType = "hjho.prj.prct.biz.main.model.MainMenuAuthRVO" 
+            resultType    = "hjho.prj.prct.biz.main.model.MenuAuthVO">
+        /* 하위 메뉴 */
+        SELECT menu_id 
+             , hr_menu_id 
+             , menu_nm 
+             , page_url 
+             , icon_val 
+          FROM practice.sys_menu_info
+         WHERE use_yn     = 'Y' 
+           AND hr_menu_id = #{menuId, jdbcType=VARCHAR}
+         ORDER BY ord_by_cls
+    </select>
+    
+</mapper> 

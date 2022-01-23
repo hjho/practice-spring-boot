@@ -101,15 +101,6 @@
 										</div>
 									</div>
 								</div>
-					  			<div class="col-4">
-									<label for="test2">테스트2</label>
-			    					<div class="form-check">
-									  	<input class="form-check-input" type="checkbox" id="test2" onclick="EventUtils.checkBoxVal(this)">
-									  	<label class="form-check-label" for="test2">
-									    	이 부서를 사용합니다.
-									  	</label>
-									</div>
-								</div>
 	  						</div>
 					  	</form>
 				  	</div>
@@ -201,8 +192,6 @@
 			// 지역ID/명
 			$('#formMgrDept').find('#locationId').val("");
 			$('#formMgrDept').find('#locationName').val("");
-			// 사용여부
-			$('#formMgrDept').find('#test2').val("Y").attr('checked', true);
 		}
 		
 		// 값 설정
@@ -221,13 +210,6 @@
 			// 지역ID/명
 			$('#formMgrDept').find('#locationId').val(data.locationId);
 			$('#formMgrDept').find('#locationName').val(data.locationName);
-			// 사용여부
-			if(data.test2 == 'Y') {
-				$('#formMgrDept').find('#test2').val("Y").attr('checked', true);	
-			} else {
-				$('#formMgrDept').find('#test2').val("N").attr('checked', false);
-			}
-			
 		}
 		
 		// 등록, 수정, 삭제

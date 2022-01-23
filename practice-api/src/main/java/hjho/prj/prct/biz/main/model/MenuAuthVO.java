@@ -1,15 +1,10 @@
-package hjho.prj.prct.biz.table;
+package hjho.prj.prct.biz.main.model;
 
-import hjho.prj.prct.common.clazz.CommonModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class MenuInfo extends CommonModel {
-
-	private static final long serialVersionUID = 1L;
+public class MenuAuthVO {
 
 	@ApiModelProperty(name="menuId", value="메뉴 아이디")
 	private String menuId;
@@ -29,8 +24,8 @@ public class MenuInfo extends CommonModel {
 	@ApiModelProperty(name="ordByCls", value="계층별 순서")
 	private Long   ordByCls;
 	
-	@ApiModelProperty(name="iconUrl", value="아이콘값")
-	private String iconUrl;
+	@ApiModelProperty(name="iconVal", value="아이콘값")
+	private String iconVal;
 	
 	@ApiModelProperty(name="useYn", value="사용여부")
 	private String useYn;

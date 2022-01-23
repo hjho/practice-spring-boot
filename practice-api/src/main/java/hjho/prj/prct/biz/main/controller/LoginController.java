@@ -26,7 +26,7 @@ public class LoginController extends CommonController {
 	@PostMapping("/proc")
 	@ApiOperation(value="proc", notes="로그인 검증", response=LoginRVO.class)
 	public CommonMessage loginProc(@RequestBody LoginPVO loginPVO) throws UserException {
-		this.parameterLog("LoginController.loginProc", loginPVO);
+		this.parameterLog("LoginController[loginProc]", loginPVO);
 		CommonMessage message = new CommonMessage();
 		
 		LoginRVO returnVO = loginService.loginProc(loginPVO);

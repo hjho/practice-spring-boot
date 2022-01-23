@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="sysMenuMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-4 row">
+									<label for="inMenuNm" class="col-4 col-form-label text-right">메뉴명</label>
+			    					<input type="text" class="col-8 form-control enter-start" id="inMenuNm">
+								</div>
+								<div class="col-4 row">
+									<label for="inUseYn" class="col-6 col-form-label text-right">사용여부</label>
+							      	<select class="col-6 form-control change-start" id="inUseYn">
+							        	<option value="" selected>전체</option>
+							        	<option value="Y">사용</option>
+							        	<option value="N">미사용</option>
+							      	</select>
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()"><span data-feather="search"></span>조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		메뉴 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableSysMenu">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">메뉴 아이디</th>
+									<th class="text-center">메뉴 명</th>
+									<th class="text-center">페이지URL</th>
+									<th class="text-center">하위메뉴 수</th>
+									<th class="text-center">사용여부</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		메뉴 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formSysMenu">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="menuId"><span class="req">*</span>메뉴아이디</label>
+			    					<input type="text" class="form-control form-control-sm" id="menuId" name="menuId" aria-describedby="menuIdText">
+			    					<small id="menuIdText" class="form-text text-muted">
+	  									메뉴아이디는 10자리 입니다.
+									</small>
+								</div>
+					  			<div class="col-4">
+									<label for="menuNm"><span class="req">*</span>메뉴명</label>
+			    					<input type="text" class="form-control form-control-sm" id="menuNm" name="menuNm">
+								</div>
+					  			<div class="col-4">
+					  				<label for="hrMenuId">상위메뉴ID/명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalHrMenu" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="hrMenuId" name="hrMenuId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="hrMenuNm" readonly>
+										</div>
+									</div>
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+								<div class="col-4">
+									<label for="pageUrl"><span class="req">*</span>페이지URL</label>
+			    					<input type="text" class="form-control form-control-sm" id="pageUrl" name="pageUrl">
+								</div>
+								<div class="col-4">
+									<label for="iconVal">아이콘값</label>
+			    					<input type="text" class="form-control form-control-sm" id="iconVal" name="iconVal">
+								</div>
+								<div class="col-4">
+									<label for="ordByCls"><span class="req">*</span>계층별순서</label>
+			    					<input type="text" class="form-control form-control-sm text-right" id="ordByCls" name="ordByCls">
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+								<div class="col-8">
+									<label for="menuCtnt">메뉴설명</label>
+			    					<input type="text" class="form-control form-control-sm" id="menuCtnt" name="menuCtnt">
+								</div>
+						  		<div class="col-4">
+									<label for="useYn"><span class="req">*</span>사용여부</label>
+			    					<div class="form-check">
+									  	<input class="form-check-input" type="checkbox" id="useYn" onclick="EventUtils.checkBoxVal(this)">
+									  	<label class="form-check-label" for="useYn">
+									    	이 메뉴를 사용합니다.
+									  	</label>
+									</div>
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+								<div class="col-4">
+									<label for="cretDtm">등록일시</label>
+			    					<input type="text" class="form-control form-control-sm" id="cretDtm" disabled>
+								</div>
+						  		<div class="col-4">
+									<label for="updDtm">수정일시</label>
+			    					<div class="form-check">
+									  	<input type="text" class="form-control form-control-sm" id="updDtm" disabled>
+									</div>
+								</div>
+					  		</div>
+					  	
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+<th:block th:include="/sys/sysHrMenuModal"></th:block>
+			</th:block>
+			
+
+<th:block th:fragment="sysMenuMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableSysMenu');
+			DataTableUtils.init('#tableHrMenu');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableSysMenu').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableSysMenu').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableSysMenu', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+			// 모달 팝업 초기화 (메뉴 검색)
+			$('#modalHrMenu').on('show.bs.modal', function (e) {
+				fnGetHrMenu();
+			});
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			DataTableUtils.get({
+				tableId : "#tableSysMenu",
+				url : "/sys/menu",
+				param : {
+					"menuNm": $('#inMenuNm').val(),
+					"useYn" : $('#inUseYn').val()
+				},
+				orderYn: "N",
+				columns: [
+					{ "data": "rowNo"    , "class": "text-center"},
+		            { "data": "menuId"   , "class": "text-center"},
+		            { 
+						"data": "menuNm" , "class": "text-left",
+						"render": function(data, type, row) {
+							var menuNm = data;
+							if(row.lvl > 1) {
+								menuNm = row.hrMenuNm + " > " + data;
+							}
+							return menuNm;
+						}  
+		            },
+		            { "data": "pageUrl"  , "class": "text-left"  },
+		            { "data": "lrMenuCnt", "class": "text-center"},
+		            { "data": "useYn"    , "class": "text-center"}
+		        ]
+			});
+		}
+		
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 메뉴 아이디
+			$('#formSysMenu').find('#menuId').val("").attr("disabled", false);
+			// 메뉴 명
+			$('#formSysMenu').find('#menuNm').val("");
+			// 상위메뉴ID/명
+			$('#formSysMenu').find('#hrMenuId').val("");
+			$('#formSysMenu').find('#hrMenuNm').val("");
+			// 페이지URL
+			$('#formSysMenu').find('#pageUrl').val("");
+			// 아이콘값
+			$('#formSysMenu').find('#iconVal').val("");
+			// 계층별순서
+			$('#formSysMenu').find('#ordByCls').val(0);
+			// 메뉴내용
+			$('#formSysMenu').find('#menuCtnt').val("");
+			// 사용여부 
+			$('#formSysMenu').find('#useYn').val("Y").attr('checked', true);
+			// 등록일시
+			$('#formSysMenu').find('#cretDtm').val("");
+			// 수정일시 
+			$('#formSysMenu').find('#updDtm').val("");
+		}
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			if(!StringUtils.isYn(data.useYn) && data.lrMenuCnt == 0) {
+				$('#btnDel').attr('disabled', false);	
+			} else {
+				$('#btnDel').attr('disabled', true);
+			}
+			
+			// 메뉴 아이디
+			$('#formSysMenu').find('#menuId').val(data.menuId).attr("disabled", true);
+			// 메뉴 명
+			$('#formSysMenu').find('#menuNm').val(data.menuNm);
+			// 상위메뉴ID/명
+			$('#formSysMenu').find('#hrMenuId').val(data.hrMenuId);
+			$('#formSysMenu').find('#hrMenuNm').val(data.hrMenuNm);
+			// 페이지URL
+			$('#formSysMenu').find('#pageUrl').val(data.pageUrl);
+			// 아이콘값
+			$('#formSysMenu').find('#iconVal').val(data.iconVal);
+			// 계층별순서
+			$('#formSysMenu').find('#ordByCls').val(data.ordByCls);
+			// 메뉴내용
+			$('#formSysMenu').find('#menuCtnt').val(data.menuCtnt);
+			// 사용여부
+			$('#formSysMenu').find('#useYn').val(data.useYn).attr('checked', StringUtils.isYn(data.useYn));	
+			// 등록일시
+			$('#formSysMenu').find('#cretDtm').val(data.cretDtm);
+			// 수정일시 
+			$('#formSysMenu').find('#updDtm').val(data.updDtm);
+		}
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// 입력값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 메뉴 정보를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/sys/menu"+method,
+					param : AjaxUtils.getParam(
+						"#formSysMenu",
+						function() {},
+						function(param) {
+							param += "&useYn="+$('#formSysMenu').find('#useYn').val();
+							return param; 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableSysMenu');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(StringUtils.isEmpty($('#menuId').val())) {
+				alert(message);
+				return '#menuId';
+			}
+			
+			return '';
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

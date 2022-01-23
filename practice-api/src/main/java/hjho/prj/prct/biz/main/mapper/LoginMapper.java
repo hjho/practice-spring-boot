@@ -10,4 +10,6 @@ public interface LoginMapper {
 
 	public LoginRVO loginProc(LoginPVO loginPVO);
 
+	public int idCheck(LoginPVO loginPVO);
+
 }
