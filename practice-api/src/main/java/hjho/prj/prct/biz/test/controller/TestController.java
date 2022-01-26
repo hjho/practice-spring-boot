@@ -81,6 +81,31 @@ public class TestController {
 		message.setData(isOk);
 		return message;
 	}
+	@ApiOperation(value="hmac encrypt", notes="HMAC 암호화 테스트", response=String.class)
+	@GetMapping("/hmac/encrypt")
+	public CommonMessage hmacEncrypt(@RequestParam String decText) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### HMac Encrypt Parameter : {}", decText);
+		
+		String encText = cryptoUtils.hmacBase64(decText);
+		
+		message.setOk();
+		message.setData(encText);
+		return message;
+	}
+	
+	@ApiOperation(value="hmac check", notes="HMAC 암호화 확인", response=Boolean.class)
+	@GetMapping("/hmac/check")
+	public CommonMessage hmacCheck(@RequestParam String password, @RequestParam String shaPassword) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### HMac Check Parameter : {}, {}", password, shaPassword);
+
+		boolean isOk = cryptoUtils.hmacCheck(password, shaPassword);
+
+		message.setOk();
+		message.setData(isOk);
+		return message;
+	}
 	
 	@ApiOperation(value="enc jasypt", notes="JASYPT 암호화 테스트", response=String.class)
 	@GetMapping("/jasypt/encrypt")
