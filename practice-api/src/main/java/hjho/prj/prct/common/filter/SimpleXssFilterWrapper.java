@@ -23,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 	
+	private boolean isLog = false;
+	
 	private InputStream input; 
 	
 	public SimpleXssFilterWrapper(HttpServletRequest request) {
@@ -66,7 +68,9 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 			returnMap.put(key, obj);
 		}
 		String output = mapper.writeValueAsString(returnMap);
-		log.debug("[F] XSS InputStream OutPut : {}", output);
+		if(this.isLog) {
+			log.debug("[F] XSS InputStream OutPut : {}", output);
+		}
 		
 		// String to ServletInputStream
 		ByteArrayInputStream bais = new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8));
@@ -93,7 +97,9 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 		
 		for(int i=0; i<valuse.length; i++) {
 			valuse[i] = SimpleXssFilter.cleanPatameter(name, valuse[i]);
-			log.debug("[F] XSS Parameter Values : {}={} ", name, valuse[i]);
+			if(this.isLog) {
+				log.debug("[F] XSS Parameter Values : {}={} ", name, valuse[i]);
+			}
 		}
 		return valuse;
 	}
@@ -105,8 +111,9 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 		if(value == null) return null;
 		
 		value = SimpleXssFilter.cleanPatameter(name, value);
-		
-		log.debug("[F] XSS Parameter : {}={} ", name, value);
+		if(this.isLog) {
+			log.debug("[F] XSS Parameter : {}={} ", name, value);
+		}
 		return value;
 	}
 	
