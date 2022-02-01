@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<link rel="shortcut icon" href="#">
+
+	<!-- 해당 url이 비어있으면 페이지 중복호출이 일어남. (페이지 제목 아이콘) -->
+	<link rel="shortcut icon" href="https://genfavicon.com/tmp/icon_c0820d6d7920e97f83ca83927a4fa4a5.ico">
 	<!-- jQuery -->
 	<script th:src="@{/js/jquery/jquery-3.6.0.min.js}" type="text/javascript"></script>
 	
@@ -136,7 +138,16 @@
 		
 		function logout() {
 			if(confirm("로그아웃 하시겠습니까?")) {
-				location.href = "/login/logout";
+				var obj = {
+					url : "/login/logout",
+					method : "GET",
+					param : '',
+					funcOk : function(data) {
+						location.href = "/login/page";
+					},
+					funcErr : function(data) {}
+				}
+				AjaxUtils.run(obj);
 			}
 		}
 	</script>

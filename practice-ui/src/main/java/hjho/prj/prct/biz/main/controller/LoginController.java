@@ -50,8 +50,11 @@ public class LoginController extends CommonController {
 	
 	@RequestMapping("/logout")
 	public ModelAndView mainLogOut() {
+		CommonMessage message = new CommonMessage();
 		SessionUtil.logout();
-		return this.loginPage();
+		message.setOk();
+		message.setMessage("로그아웃 되었습니다. \n로그인페이지로 이동합니다.");
+		return super.jsonView(message);
 	}
 	
 	

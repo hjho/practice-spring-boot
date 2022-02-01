@@ -61,7 +61,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		log.debug("[C] {} ##", StringUtil.RPAD("addArgumentResolvers", 32, ""));
+		log.debug("[C] {} ##", StringUtil.RPAD("addResourceHandlers", 32, ""));
 		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
 	}
 	

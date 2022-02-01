@@ -33,7 +33,6 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		StopWatch stopWatch = new StopWatch(request.getRequestURL().toString());
 		stopWatch.start("ResponseTime");
 		request.setAttribute(STOP_WATCH, stopWatch);
-		
 		this.initUserInfo(request);
 		
 //		// 로그인 여부 확인
@@ -91,6 +90,7 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		context.setAuthentication(authentication);
 		SecurityContextHolder.setContext(context); 
 		authentication.isAuthenticated();
+		log.debug("[H] [ Security     ] Authenticated : {}", authentication.isAuthenticated());
 		log.debug("[H] [ Security     ] Principal     : {}", authentication.getPrincipal());
 		log.debug("[H] [ Security     ] Credentials   : {}", authentication.getCredentials());
 		log.debug("[H] [ Security     ] Authorities   : {}", authentication.getAuthorities());
