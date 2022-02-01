@@ -3,6 +3,7 @@ package hjho.prj.prct.biz.test.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController {
 
 	@Autowired
-	private CryptoUtils cryptoUtils;
-	
-	@Autowired
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
 	@ApiOperation(value="aes decrypt", notes="AES 복호화 테스트", response=String.class)
@@ -35,7 +33,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Aes Decrypt Parameter : {}", encText);
 		
-		String decText = cryptoUtils.aesDecrypt(encText);
+		String decText = CryptoUtils.aesDecrypt(encText);
 		
 		message.setOk();
 		message.setData(decText);
@@ -48,7 +46,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Aes Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.aesEncrypt(decText);
+		String encText = CryptoUtils.aesEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -61,7 +59,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Sha Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.shaEncrypt(decText);
+		String encText = CryptoUtils.shaEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -75,8 +73,33 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Sha Check Parameter : {}, {}", password, shaPassword);
 		
-		boolean isOk = cryptoUtils.shaCheck(password, shaPassword);
+		boolean isOk = CryptoUtils.shaCheck(password, shaPassword);
 		
+		message.setOk();
+		message.setData(isOk);
+		return message;
+	}
+	@ApiOperation(value="hmac encrypt", notes="HMAC 암호화 테스트", response=String.class)
+	@GetMapping("/hmac/encrypt")
+	public CommonMessage hmacEncrypt(@RequestParam String decText) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### HMac Encrypt Parameter : {}", decText);
+		
+		String encText = CryptoUtils.hmacBase64(decText);
+		
+		message.setOk();
+		message.setData(encText);
+		return message;
+	}
+	
+	@ApiOperation(value="hmac check", notes="HMAC 암호화 확인", response=Boolean.class)
+	@GetMapping("/hmac/check")
+	public CommonMessage hmacCheck(@RequestParam String password, @RequestParam String shaPassword) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### HMac Check Parameter : {}, {}", password, shaPassword);
+
+		boolean isOk = CryptoUtils.hmacCheck(password, shaPassword);
+
 		message.setOk();
 		message.setData(isOk);
 		return message;
@@ -88,7 +111,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Jasypt Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.jasyptEncoding(decText);
+		String encText = CryptoUtils.jasyptEncoding(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -100,8 +123,17 @@ public class TestController {
 	public CommonMessage createJwt(@RequestParam String data) throws UserException {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### JWT Create Parameter : {}", data);
-		
-		String jwt = jsonWebTokenUtils.createJWT(data);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("other", data);
+		map.put("mgrId", "20220001");
+		map.put("url", "/mgr/dept/page");
+		map.put("CRET", "Y");
+		map.put("READ", "Y");
+		map.put("UPD", "Y");
+		map.put("DEL", "Y");
+		map.put("PRVIREAD", "Y");
+		map.put("EXPROT", "Y");
+		String jwt = jsonWebTokenUtils.createJWT(map);
 		
 		message.setOk();
 		message.setData(jwt);
@@ -118,6 +150,31 @@ public class TestController {
 		
 		message.setOk();
 		message.setData(data);
+		return message;
+	}
+	
+	@ApiOperation(value="base64 encode", notes="Base64 Encode 테스트", response=HashMap.class)
+	@GetMapping("/base64/encode")
+	public CommonMessage base64Encode(@RequestParam String str) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### Base64 Encode Parameter : {}", str);
+		
+		String encode = Base64.encodeBase64String(str.getBytes());
+		
+		message.setOk();
+		message.setData(encode);
+		return message;
+	}
+	@ApiOperation(value="base64 decode", notes="Base64 Decode 테스트", response=HashMap.class)
+	@GetMapping("/base64/decode")
+	public CommonMessage base64Decode(@RequestParam String decodeStr) throws UserException {
+		CommonMessage message = new CommonMessage();
+		log.debug("##### Base64 Decode Parameter : {}", decodeStr);
+		
+		String decode = new String(Base64.decodeBase64(decodeStr.getBytes()));
+		
+		message.setOk();
+		message.setData(decode);
 		return message;
 	}
 	

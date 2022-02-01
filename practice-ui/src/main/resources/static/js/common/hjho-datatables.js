@@ -44,6 +44,7 @@ var DataTableUtils = function() {
 			    "lengthMenu": lengthMenu,
 			    "language" : language,
 			    "autoWidth": false,
+			    "ordering": false,
 			    "select": "single",
 			    "searching" : false,
 			    "data": []
@@ -89,7 +90,7 @@ var DataTableUtils = function() {
 				"processing": true,
 				"paging": true,
 				"pagingType" : "full_numbers", // simple, simple_numbers, full, full_numbers
-				"ordering": true,
+				"ordering": (data.orderYn == "N") ? false : true,
 				"autoWidth": false,
 				"select": "single",
 				"searching" : false,

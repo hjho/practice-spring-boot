@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSessionListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,7 @@ import hjho.prj.prct.common.filter.HtmlCharacterEscapes;
 import hjho.prj.prct.common.filter.MethodWebFilter;
 import hjho.prj.prct.common.filter.ParameterResolver;
 import hjho.prj.prct.common.handler.HttpServletInterceptor;
+import hjho.prj.prct.common.util.SessionUtil;
 import hjho.prj.prct.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +61,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		log.debug("[C] {} ##", StringUtil.RPAD("addArgumentResolvers", 32, ""));
+		log.debug("[C] {} ##", StringUtil.RPAD("addResourceHandlers", 32, ""));
 		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
 	}
 	
@@ -147,6 +150,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		SessionLocaleResolver localeResolver = new SessionLocaleResolver();
 		localeResolver.setDefaultLocale(Locale.KOREAN);
 		return localeResolver;
+	}
+	
+	@Bean
+	public HttpSessionListener httpSessionListener(){
+		log.debug("[C] {} ##", StringUtil.RPAD("httpSessionListener", 32, ""));
+		return new SessionUtil();
 	}
 	
 }

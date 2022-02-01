@@ -7,16 +7,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class CommonController {
 	
-	protected final String INS = "post";
-	protected final String UPD = "put";
-	protected final String DEL = "delete";
+	public final String PAGE = "/page";
+	
+	public final String SEL = "get";
+	public final String INS = "post";
+	public final String UPD = "put";
+	public final String DEL = "delete";
 	
 //	protected final String MAIN_PAGE = "index";
-	protected final String MAIN_PAGE = "mainPage";
+	public final String MAIN_PAGE = "mainPage";
 	
-	protected final String LOGIN_PAGE = "loginPage";
+	public final String LOGIN_PAGE = "loginPage";
 	
-	protected final String JSON_VIEW = "jsonView";
+	public final String JSON_VIEW = "jsonView";
 	
 	private final String REPONSE_DATA = "result";
 	

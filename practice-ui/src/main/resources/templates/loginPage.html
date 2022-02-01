@@ -23,25 +23,13 @@
     	<img class="mb-4" th:src="@{/images/bootstrap-stack.png}" alt="" width="72" height="72">
       	<h1 class="h3 mb-3 font-weight-normal">Practice Login</h1>
       	<div class="row">
-	      	<label class="col-md-3 mt-2 text-right" for="userId">Id</label>
-	      	<input class="col-md-9 form-control" type="text" id="userId" name="userId" placeholder="Identification">
 	      	
-	      	<label class="col-md-3 mt-2 text-right" for=userPw>Pw</label>
-	      	<input class="col-md-9 form-control" type="password" id="userPw" name="userPw" placeholder="Password">
-	      	
-	      	<label class="col-sm-3 mt-2 text-right" for=userName>Name</label>
-	      	<input class="col-sm-9 form-control" type="text" id="userName" name="userName" placeholder="TEST">
-	      	
-	      	<label class="col-sm-3 mt-2 text-right" for=dtm>Time</label>
-	      	<input class="col-sm-9 form-control" type="text" id="dtm" name="dtm" placeholder="TEST">
-	      	
-	      	<label class="col-sm-3 mt-2 text-right" for="num">Num</label>
-	      	<input class="col-sm-9 form-control" type="text" id="num" name="num" onkeyup="EventUtils.commaFormat(this)" placeholder="TEST">
-	      	
-	      	<label class="col-sm-3 mt-2 text-right"></label>
-        	<label class="col-sm-9 text-left pl-0">
-          		<input type="checkbox" value="remember-me" id="check" name="check" onclick="EventUtils.checkBoxVal(this)"> 아이디 기억
-        	</label>
+	      	<label for="userId">Identification</label>
+  			<input type="text" id="userId" name="userId" class="form-control">
+  			
+  			<label for="userPw">Password</label>
+  			<input type="password" id="userPw" name="userPw" class="form-control">
+  			
 		</div>
 	    <button class="btn btn-lg btn-primary btn-block" onclick="loginProc()">로그인</button>
 	    <p class="mt-5 mb-3 text-muted">&copy; 2021-ING</p>
@@ -58,29 +46,19 @@
 		
 	});
 	function fnLoginDtlInit() {
-		$('#loginFormData').find('#userName').val("홀길동").attr('disabled', true);
 		$('#loginFormData').find('#userId').val("");
 		$('#loginFormData').find('#userPw').val("");
-		$('#loginFormData').find('#dtm').val(DateUtils.nowFormat("yyyy-MM-dd hh:mi:ss"));
-		$('#loginFormData').find('#num').val(0);
-		$('#loginFormData').find('#check').val("Y").attr('checked', true);
 	}
 	
 	function loginProc() {
 		
 		var obj = {
-				url : "/main/login/proc",
+				url : "/login/proc",
 				method : "POST",
 				param : AjaxUtils.getParam(
 					"#loginFormData",
-					function() {
-						EventUtils.onlyInt("#dtm");
-					},
-					function(param) {
-						EventUtils.dtmFormat("#dtm");
-						param += ($("#check").is(':checked')) ? "" : "&check=N";
-						return param;
-					}
+					function() {},
+					function(param) {return param;}
 				),
 				funcOk : function(data) {
 					// alert(data.message);
@@ -90,7 +68,7 @@
 					
 				}
 		}
-		console.log(obj.param);
+		// console.log(obj.param);
 		AjaxUtils.run(obj);
 	}
 </script>

@@ -83,6 +83,11 @@ public class CommonService {
 		sb.append("?");
 		for (String key : map.keySet()) {
 			if(map.get(key) != null) {
+				if(map.get(key) instanceof String) {
+					if("".equals((String) map.get(key))) {
+						continue;
+					}
+				}
 				sb.append(key);
 				sb.append("=");
 				sb.append(map.get(key));

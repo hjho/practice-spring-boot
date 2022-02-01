@@ -21,6 +21,17 @@ var StringUtils = function() {
 			return !this.isEmpty(str);
 		},
 		/**
+		 * function isNotEmpty
+		 * parameter string
+		 */
+		isYn : function(str) {
+			var yn = this.nvl2(str, "N");
+			if(yn == 'Y') {
+				return true;
+			}
+			return false;
+		},
+		/**
 		 * function nvl2
 		 * parameter string, default
 		 */

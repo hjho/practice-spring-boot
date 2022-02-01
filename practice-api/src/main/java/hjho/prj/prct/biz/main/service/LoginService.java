@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import hjho.prj.prct.biz.main.mapper.LoginMapper;
 import hjho.prj.prct.biz.main.model.LoginPVO;
-import hjho.prj.prct.biz.main.model.LoginRVO;
+import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.exception.UserException;
 
 @Service
@@ -16,26 +16,42 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
-	public LoginRVO loginProc(LoginPVO loginPVO) throws UserException {
-		LoginRVO returnVO = null;
+	public MgrInfoVO loginProc(LoginPVO loginPVO) throws UserException {
+		MgrInfoVO returnVO = null;
 		
 		// 입력 값 검증
 		if(this.isParamCheckOk(loginPVO)) {
-			returnVO = loginMapper.loginProc(loginPVO);
+			
+			// ID, PW 검증
+			returnVO = this.loginCheck(loginPVO);
 			
 		} else {
-			returnVO = new LoginRVO();
+			throw new UserException("9001");
 		}
+		
+		return returnVO;
+	}
+	private MgrInfoVO loginCheck(LoginPVO loginPVO) throws UserException {
+		MgrInfoVO returnVO = null;
+		
+		// ID 검즘
+		int idCnt = loginMapper.idCheck(loginPVO);
+		if(idCnt == 0) {
+			throw new UserException("9100");
+		}
+		// 비밀번호 검증
+		returnVO = loginMapper.loginProc(loginPVO);
+		if(ObjectUtils.isEmpty(returnVO)) {
+			throw new UserException("9101");
+		}
+		
 		return returnVO;
 	}
 	
-	
 	private boolean isParamCheckOk(LoginPVO loginPVO) throws UserException {
 		
-		if(ObjectUtils.isEmpty(loginPVO)) {
-			throw new UserException("9001");
+		if(loginPVO != null) {
 			
-		} else {
 			if(StringUtils.isEmpty(loginPVO.getUserId())) {
 				throw new UserException("9002", new String[] {"아이디"});
 				
@@ -43,14 +59,8 @@ public class LoginService {
 				throw new UserException("9002", new String[] {"패스워드"});
 				
 			}
-		}
-		
-		// 값 확인 (테스트용)
-		if(!"hjho".equals(loginPVO.getUserId())) {
-			throw new UserException("9100");
-			
-		} else if(!"1234".equals(loginPVO.getUserPw())) {
-			throw new UserException("9101");
+		} else {
+			throw new UserException("9001");
 		}
 		
 		return true;
