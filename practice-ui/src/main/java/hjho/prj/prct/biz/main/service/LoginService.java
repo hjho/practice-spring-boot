@@ -2,7 +2,7 @@ package hjho.prj.prct.biz.main.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
@@ -29,22 +29,23 @@ public class LoginService extends CommonService {
 	}
 
 	// 유저 정보 설정!
-	public boolean setUser(HttpSession session, Object userData) {
+	public boolean setUser(HttpServletRequest request, Object userData) {
 		
-		SessionUtil.setUserInfo(session, userData);
+		SessionUtil.setMgrInfo(request, userData);
 		
 		return true;
 	}
 	
 	// 메뉴 설정!
 	@SuppressWarnings("unchecked")
-	public boolean setMenu(HttpSession session, LoginPVO userInfoVO) {
+	public boolean setMenu(HttpServletRequest request, LoginPVO userInfoVO) {
 		MainMenuAuthVO userAuthVO = new MainMenuAuthVO();
 		userAuthVO.setMgrId(userInfoVO.getUserId());
 		
 		CommonMessage message = super.get(MENU_AUTH_API_URL, userAuthVO);
 		List<MainMenuAuthRVO> authList = (List<MainMenuAuthRVO>) message.getData();
-		SessionUtil.setTreeMenu(session, authList);
+		
+		SessionUtil.setTreeMenu(request, authList);
 		
 		return true;
 	}

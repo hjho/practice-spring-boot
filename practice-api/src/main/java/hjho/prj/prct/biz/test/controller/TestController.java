@@ -24,9 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController {
 
 	@Autowired
-	private CryptoUtils cryptoUtils;
-	
-	@Autowired
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
 	@ApiOperation(value="aes decrypt", notes="AES 복호화 테스트", response=String.class)
@@ -35,7 +32,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Aes Decrypt Parameter : {}", encText);
 		
-		String decText = cryptoUtils.aesDecrypt(encText);
+		String decText = CryptoUtils.aesDecrypt(encText);
 		
 		message.setOk();
 		message.setData(decText);
@@ -48,7 +45,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Aes Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.aesEncrypt(decText);
+		String encText = CryptoUtils.aesEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -61,7 +58,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Sha Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.shaEncrypt(decText);
+		String encText = CryptoUtils.shaEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -75,7 +72,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Sha Check Parameter : {}, {}", password, shaPassword);
 		
-		boolean isOk = cryptoUtils.shaCheck(password, shaPassword);
+		boolean isOk = CryptoUtils.shaCheck(password, shaPassword);
 		
 		message.setOk();
 		message.setData(isOk);
@@ -87,7 +84,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### HMac Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.hmacBase64(decText);
+		String encText = CryptoUtils.hmacBase64(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -100,7 +97,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### HMac Check Parameter : {}, {}", password, shaPassword);
 
-		boolean isOk = cryptoUtils.hmacCheck(password, shaPassword);
+		boolean isOk = CryptoUtils.hmacCheck(password, shaPassword);
 
 		message.setOk();
 		message.setData(isOk);
@@ -113,7 +110,7 @@ public class TestController {
 		CommonMessage message = new CommonMessage();
 		log.debug("##### Jasypt Encrypt Parameter : {}", decText);
 		
-		String encText = cryptoUtils.jasyptEncoding(decText);
+		String encText = CryptoUtils.jasyptEncoding(decText);
 		
 		message.setOk();
 		message.setData(encText);

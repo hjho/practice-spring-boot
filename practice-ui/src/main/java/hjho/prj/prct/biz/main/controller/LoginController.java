@@ -1,6 +1,6 @@
 package hjho.prj.prct.biz.main.controller;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,7 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.interfazz.MethodFunction;
 import hjho.prj.prct.common.interfazz.MethodFunction.Function;
+import hjho.prj.prct.common.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,19 +34,25 @@ public class LoginController extends CommonController {
 	
 	@MethodFunction(Function.R)
 	@PostMapping("/proc")
-	public ModelAndView proc(HttpSession session, LoginPVO loginVO) {
+	public ModelAndView proc(HttpServletRequest request, LoginPVO loginVO) {
 		log.debug("[L] MAIN LOGIN PROC : {}", loginVO);
-		log.debug("[L] MAIN LOGIN Session Id : {}", session.getId());
 		
 		CommonMessage rspnData = loginService.proc(loginVO);
+		
 		if("0000".equals(rspnData.getCode())) {
-			
-			// log.debug("[L] LOGIN RETURN DATA : {}", rspnData.getData());
 			// 유저 정보 설정
-			loginService.setUser(session, rspnData.getData());
+			loginService.setUser(request, rspnData.getData());
 			// 메뉴 권한 정보 설정
-			loginService.setMenu(session, loginVO);
+			loginService.setMenu(request, loginVO);
 		}
 		return super.jsonView(rspnData);
 	}
+	
+	@RequestMapping("/logout")
+	public ModelAndView mainLogOut() {
+		SessionUtil.logout();
+		return this.loginPage();
+	}
+	
+	
 }

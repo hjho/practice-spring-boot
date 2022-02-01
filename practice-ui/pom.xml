@@ -64,6 +64,11 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		 <!-- SECURITY -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
 		<!-- LOMBOK -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -74,7 +79,7 @@
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
-		</dependency> 
+		</dependency>
 		<!-- UTILS -->
 		<dependency>
 		    <groupId>org.apache.commons</groupId>

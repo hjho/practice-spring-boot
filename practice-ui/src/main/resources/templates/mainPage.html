@@ -53,7 +53,7 @@
       	</ul>
       	<ul class="navbar-nav px-3">
         	<li class="nav-item text-nowrap">
-          		<a class="nav-link" href="#">
+          		<a class="nav-link" href="javascript:logout()">
           			<span data-feather="log-out"></span>
           			Sign out
           		</a>
@@ -132,6 +132,12 @@
 					}
 				});
 			});
+		}
+		
+		function logout() {
+			if(confirm("로그아웃 하시겠습니까?")) {
+				location.href = "/login/logout";
+			}
 		}
 	</script>
 <!-- END MAIN PAGE SCTIPT END -->
