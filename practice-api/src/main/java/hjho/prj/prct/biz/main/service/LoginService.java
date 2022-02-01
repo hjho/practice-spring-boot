@@ -1,12 +1,13 @@
 package hjho.prj.prct.biz.main.service;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hjho.prj.prct.biz.main.mapper.LoginMapper;
 import hjho.prj.prct.biz.main.model.LoginPVO;
-import hjho.prj.prct.biz.main.model.LoginRVO;
+import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.exception.UserException;
 
 @Service
@@ -15,8 +16,8 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
-	public LoginRVO loginProc(LoginPVO loginPVO) throws UserException {
-		LoginRVO returnVO = null;
+	public MgrInfoVO loginProc(LoginPVO loginPVO) throws UserException {
+		MgrInfoVO returnVO = null;
 		
 		// 입력 값 검증
 		if(this.isParamCheckOk(loginPVO)) {
@@ -30,8 +31,8 @@ public class LoginService {
 		
 		return returnVO;
 	}
-	private LoginRVO loginCheck(LoginPVO loginPVO) throws UserException {
-		LoginRVO returnVO = null;
+	private MgrInfoVO loginCheck(LoginPVO loginPVO) throws UserException {
+		MgrInfoVO returnVO = null;
 		
 		// ID 검즘
 		int idCnt = loginMapper.idCheck(loginPVO);
@@ -40,7 +41,7 @@ public class LoginService {
 		}
 		// 비밀번호 검증
 		returnVO = loginMapper.loginProc(loginPVO);
-		if(StringUtils.isEmpty(returnVO.getUserId())) {
+		if(ObjectUtils.isEmpty(returnVO)) {
 			throw new UserException("9101");
 		}
 		

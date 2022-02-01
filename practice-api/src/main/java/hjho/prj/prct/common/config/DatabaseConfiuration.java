@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import hjho.prj.prct.common.handler.SqlLogInterceptor;
+
 @Configuration
 @EnableTransactionManagement
 @MapperScan(basePackages="hjho.prj.prct.biz")
@@ -71,6 +73,7 @@ public class DatabaseConfiuration {
 		sqlSessionFactoryBean.setDataSource(this.dataSource());
 		sqlSessionFactoryBean.setConfiguration(this.mybatisConfig());
 		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/**/*.xml"));
+		sqlSessionFactoryBean.setPlugins(new SqlLogInterceptor());
 		return sqlSessionFactoryBean.getObject();
 	}
 

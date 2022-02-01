@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hjho.prj.prct.biz.main.model.LoginPVO;
 import hjho.prj.prct.biz.main.model.LoginRVO;
+import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.biz.main.service.LoginService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
@@ -29,7 +30,7 @@ public class LoginController extends CommonController {
 		this.parameterLog("LoginController[loginProc]", loginPVO);
 		CommonMessage message = new CommonMessage();
 		
-		LoginRVO returnVO = loginService.loginProc(loginPVO);
+		MgrInfoVO returnVO = loginService.loginProc(loginPVO);
 		
 		message.setOk();
 		message.setData(returnVO);

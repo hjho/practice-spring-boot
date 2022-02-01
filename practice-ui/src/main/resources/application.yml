@@ -3,7 +3,14 @@ server:
   port: 8081  
   servlet:
     register-default-servlet: true
-    
+    session:
+      timeout: 600
+      cookie:
+        http-only: true
+        #max-age: 43200m    # 60m * 24h * 30d
+        #name: SID
+        #secure: true
+        
 # 스프링 설정  
 spring:
   profiles:

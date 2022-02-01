@@ -10,7 +10,9 @@ public class SimpleXssFilter {
 	public static String cleanPatameter(String name, String value) {
 		
 		String returnStr = clean(value);
-		log.debug("[F] CLEAN [ {} : {} >> {} ]", name, value, returnStr);
+		if(!returnStr.equals(value)) {
+			log.debug("[F] CLEAN [ {} : {} >> {} ]", name, value, returnStr);
+		}
 		return returnStr;
 	}
 	

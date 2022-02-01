@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<link rel="shortcut icon" href="#">
+
+	<!-- 해당 url이 비어있으면 페이지 중복호출이 일어남. (페이지 제목 아이콘) -->
+	<link rel="shortcut icon" href="https://genfavicon.com/tmp/icon_c0820d6d7920e97f83ca83927a4fa4a5.ico">
 	<!-- jQuery -->
 	<script th:src="@{/js/jquery/jquery-3.6.0.min.js}" type="text/javascript"></script>
 	
@@ -42,7 +44,7 @@
 		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     		<span class="navbar-toggler-icon"></span>
   		</button>
-      	<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+      	<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" id="searchSideBar">
       	<ul class="navbar-nav px-3">
         	<li class="nav-item text-nowrap">
           		<a class="nav-link" href="#">
@@ -53,7 +55,7 @@
       	</ul>
       	<ul class="navbar-nav px-3">
         	<li class="nav-item text-nowrap">
-          		<a class="nav-link" href="#">
+          		<a class="nav-link" href="javascript:logout()">
           			<span data-feather="log-out"></span>
           			Sign out
           		</a>
@@ -97,6 +99,10 @@
 				$('.inqr-run').click();
 			})
 			
+			$('#searchSideBar').on('keyup', function(e) {
+				var text = $(this).val();
+			})
+			
 		});
 		
 		function initMenu() {
@@ -132,6 +138,21 @@
 					}
 				});
 			});
+		}
+		
+		function logout() {
+			if(confirm("로그아웃 하시겠습니까?")) {
+				var obj = {
+					url : "/login/logout",
+					method : "GET",
+					param : '',
+					funcOk : function(data) {
+						location.href = "/login/page";
+					},
+					funcErr : function(data) {}
+				}
+				AjaxUtils.run(obj);
+			}
 		}
 	</script>
 <!-- END MAIN PAGE SCTIPT END -->

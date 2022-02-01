@@ -20,9 +20,7 @@ public class MethodWebFilter extends OncePerRequestFilter {
 			                      , FilterChain filterChain)
 	throws ServletException, IOException 
 	{
-		
-		log.debug("[F] Method Web : {}", request.getMethod());
-		log.debug("[F] Method Web URL : {}", request.getRequestURL());
+		log.debug("[F] Method Web : ({}) {}", request.getMethod(), request.getRequestURL());
 		if( "GET".equals(request.getMethod())
 		|| "POST".equals(request.getMethod())) {
 			filterChain.doFilter(request, response);
