@@ -2,6 +2,7 @@ package hjho.prj.prct.common.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.lang.Nullable;
@@ -77,19 +78,43 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		log.info("[H] [ Http COMPLET ] : {}", request.getRequestURL().toString());
 	}
 	
+	/**
+	 * <pre>
+	 * Authentication
+	 *      - 인증정보(요청 or 결과)를 가지는 인터페이스, isAuthenticated 를 통해 인증 결과를 알수 있음.
+	 * Collection<? extends GrantedAuthority> getAuthorities()
+	 *      - 인증된 주체 Principal이 가지고 있는 권한들. AuthenticationManager에 의해 SET 됨.
+	 * Object getCredentials()
+	 *      - 인증된 주체 Principal의 정확함을 증명하는 값.
+	 *      - 일반적으로 암호이지만 Authentication 과 관련된 모든 것이 될 수 있음.
+	 *      - 인증이 완료되면 데이터를 제거 한다.
+	 * Object getDetails() 
+	 *      - 추가적으로 세부사항을 저장할 수 있는 정보. IP, 인증서 시리얼 넘버 같은 값.
+	 * Object getPrincipal()
+	 *      - 인증된 주체의 식별자, 인증정보를 가지고 있음.
+	 *      - 많은 인증 프로바이더들은 UserDetails 객체로 반환을 함.
+	 * boolean isAuthenticated()
+	 *      - 인증이 되었는지 안되어있는지 확인하는 메소드.
+	 * </pre>
+	 * 자주 사용하는 구현체는 UsernamePasswordAuthenticationToken 일 듯?
+	 * @param request
+	 * @return
+	 */
 	private boolean initUserInfo(HttpServletRequest request) {
-		String sessionId = request.getSession().getId();
+		HttpSession session = request.getSession();
+		String sessionId = session.getId();
 		log.debug("[H] [ Security     ] Session       : {}", sessionId);
 		
-		if(ObjectUtils.isEmpty(SessionUtil.getMgrInfo())) {
+		if(ObjectUtils.isEmpty(SessionUtil.getMgrInfo(session))) {
+			log.warn("[H] [ Security     ] Mgr Info Null");
 			return false;
 		}
 		
-		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getMgrInfo(), sessionId, new String[] {"CRET", "READ", "UPD", "DEL"}); 
+		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getMgrInfo(session), sessionId, new String[] {"CRET", "READ", "UPD", "DEL"});
 		SecurityContext context = SecurityContextHolder.createEmptyContext(); 
 		context.setAuthentication(authentication);
 		SecurityContextHolder.setContext(context); 
-		authentication.isAuthenticated();
+		
 		log.debug("[H] [ Security     ] Authenticated : {}", authentication.isAuthenticated());
 		log.debug("[H] [ Security     ] Principal     : {}", authentication.getPrincipal());
 		log.debug("[H] [ Security     ] Credentials   : {}", authentication.getCredentials());
