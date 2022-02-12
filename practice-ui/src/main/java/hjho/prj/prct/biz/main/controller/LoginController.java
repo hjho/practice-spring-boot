@@ -14,7 +14,6 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.interfazz.MethodFunction;
 import hjho.prj.prct.common.interfazz.MethodFunction.Function;
-import hjho.prj.prct.common.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -49,11 +48,19 @@ public class LoginController extends CommonController {
 	}
 	
 	@RequestMapping("/logout")
-	public ModelAndView mainLogOut() {
+	public ModelAndView mainLogOut(HttpServletRequest request) {
 		CommonMessage message = new CommonMessage();
-		SessionUtil.logout();
-		message.setOk();
-		message.setMessage("로그아웃 되었습니다. \n로그인페이지로 이동합니다.");
+		
+		boolean isLogout = loginService.logout(request);
+		
+		if(isLogout) {
+			message.setOk();
+			message.setMessage("로그아웃 되었습니다. \n로그인페이지로 이동합니다.");
+		} else {
+			message.setError();
+			message.setMessage("일시적인 오류가 발생했습니다. \n다시 시도해주세요.");
+		}
+		
 		return super.jsonView(message);
 	}
 	
