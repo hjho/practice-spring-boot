@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="test">
+			<br>	
+				<!-- 테이블 -->
+		  		<table class="table table-sm table-hover table-bordered" id="testTable">
+					<thead class="table-light">
+						<tr>
+							<th class="text-center">No</th>
+							<th class="text-center">테스트 이름</th>
+							<th class="text-center">PARAM</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-center">1</td>
+							<td class="text-left">Null Pointer Exception</td>
+							<td class="text-center">null</td>
+						</tr>
+					</tbody> 
+				</table>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="testScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('#testTable').on('click', 'tbody tr', function() {
+				var no = $(this).children().eq(0).text();
+				var name = $(this).children().eq(1).text();
+				var type = $(this).children().eq(2).text();
+				if(confirm(name + '을\n실행하시겠습니까?')) {
+					fnAjax(type);
+				}
+			})
+		});
+		// 등록, 수정, 삭제
+		function fnAjax(type) {
+			var obj = {
+					url : "/test/"+type,
+					param : "",
+					funcOk : function(data) {},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

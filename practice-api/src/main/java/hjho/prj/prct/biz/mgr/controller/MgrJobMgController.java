@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hjho.prj.prct.biz.mgr.model.MgrEmpMgPagingPVO;
 import hjho.prj.prct.biz.mgr.model.MgrJobMgPagingPVO;
 import hjho.prj.prct.biz.mgr.model.MgrJobMgPagingRVO;
 import hjho.prj.prct.biz.mgr.model.MgrJobMgVO;

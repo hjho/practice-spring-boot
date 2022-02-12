@@ -113,7 +113,10 @@ var DataTableUtils = function() {
 						return d;
 					},
 					"dataType": "JSON",
-					"dataSrc": "result"
+					"dataSrc": "result",
+					"error": function (xhr, error, code) {
+						AjaxUtils.error(xhr.responseJSON);
+					}
 				},
 				"columns" : data.columns
 			});
@@ -125,7 +128,6 @@ var DataTableUtils = function() {
 			}
 		},
 		isSeleted : function(tableId, tr) {
-			
 			if($(tr).attr('class').indexOf('selected') > -1) {
 				$(tr).removeClass('selected');
 				return true;
@@ -135,7 +137,6 @@ var DataTableUtils = function() {
 				$(tr).addClass('selected');
 				return false;
 			}
-			return false;
 		}
 	}
 }();

@@ -75,6 +75,15 @@ public class StringUtil {
 		}
 		return sb.toString();
 	}
+	
+	public static String camelToUnder(String str) {
+		if(StringUtils.isEmpty(str)) return null;
+		
+		String regex = "([a-z])([A-Z]+)";
+		String replacement = "$1_$2";
+		return str.replaceAll(regex, replacement).toLowerCase();
+	}
+
 	/**
 	 * 입력된 문자가 숫자인지 검증.
 	 */

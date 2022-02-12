@@ -50,4 +50,12 @@ public class LoginService extends CommonService {
 		return true;
 	}
 	
+	// 로그아웃!
+	public boolean logout(HttpServletRequest request) {
+		
+		boolean isLogout = SessionUtil.logout(request.getSession());
+		
+		return isLogout;
+	}
+	
 }

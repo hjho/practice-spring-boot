@@ -8,13 +8,14 @@
 	<!-- Bootstrap -->
 	<link th:href="@{/css/bootstrap-4.6.1/bootstrap.css}" rel="stylesheet" type="text/css" />
 	<link th:href="@{/css/bootstrap-4.6.1/error.css}" rel="stylesheet" type="text/css"/>
+	
 	<title>오류 페이지</title>
 </head>
 <body class="text-center"> 
 	<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
 		<div role="main" class="inner cover" style="margin-top: 150px;">
 	    	<h2 class="cover-heading">
-	    		해당 페이지에서 문제가 발생했습니다.<br>
+	    		해당 서버에서 문제가 발생했습니다.<br>
 	    		관리자에게 문의해주세요.
 	    	</h2>
 	        <p class="lead text-left">페이지 경로: [[${path}]]</p>
@@ -30,12 +31,12 @@
 	</div>
 </body>
 <script th:inline="javascript">
-	var path = /*[[${path}]]*/;
-	var error = /*[[${error}]]*/;
-	var message = /*[[${message}]]*/;
-	var errors = /*[[${errors}]]*/;
-	var status = /*[[${status}]]*/;
-	var timestamp = /*[[${timestamp}]]*/;
-	var exception = /*[[${exception}]]*/;
+	var path      = /*[[${path}]]*/"";
+	var error     = /*[[${error}]]*/"";
+	var message   = /*[[${message}]]*/"";
+	var errors    = /*[[${errors}]]*/"";
+	var status    = /*[[${status}]]*/"";
+	var timestamp = /*[[${timestamp}]]*/"";
+	var exception = /*[[${exception}]]*/"";
 </script>
 </html>

@@ -55,15 +55,39 @@ var AjaxUtils = function() {
 				}
 				
 			// Ajax Error	
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				var errorMsg = '요청 중 알수 없는 오류가 발생했습니다.';
-				if(jqXHR.responseJSON != undefined) {
-					errorMsg = jqXHR.responseJSON.status + ', ' 
-					         + jqXHR.responseJSON.error  + ', ' 
-					         + jqXHR.responseJSON.path;
-				}
-			    alert(errorMsg);
+			}).fail(function(jqXHR) {
+				var error = jqXHR.responseJSON;
+				AjaxUtils.error(error);
 			});
+		},
+		error : function(error) {
+			
+			var errorMsg = '요청 중 알수 없는 오류가 발생했습니다.';
+			if(error != null) {
+				var isLog = true;
+				if(isLog) {
+					var errorLog = 'AJAX ERROR : ';
+					errorLog += '(' + error.status + ') ' + error.error + ', ';
+					errorLog += error.message;
+					errorLog += ', URL [' + error.path + '], 시간 [' + DateUtils.longToDtmForm(error.timestamp) + ']';
+					console.log(errorLog);
+				}
+				if(StringUtils.isNotEmpty(error.message)) {
+					errorMsg = error.message;
+				}
+			}
+			
+			switch(error.status) {
+				case 503:
+					errorMsg += '\n로그인페이지로 이동하시겠습니까?'
+					if(confirm(errorMsg)) {
+						location.href = "/login/page";
+					}
+					break;
+				default :
+					alert(errorMsg);
+					break;
+			}
 		}
 	}
 }();
