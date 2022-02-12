@@ -50,7 +50,7 @@ public class SessionUtil implements HttpSessionListener {
 		HttpSession session = request.getSession();
 		session.removeAttribute(MGR_INFO);
 		session.setAttribute(MGR_INFO, MgrInfo);		// user
-		log.debug("[ >>>>> Session Set Mgr Ok ]");
+		log.debug("[ Session Attribute ] MGR  INFO OK, ID : {}", session.getId());
 	}
 	
 	/***
@@ -61,7 +61,7 @@ public class SessionUtil implements HttpSessionListener {
 		HttpSession session = request.getSession();
 		session.removeAttribute(TREE_MENU);
 		session.setAttribute(TREE_MENU, userAuthList);	// menu
-		log.debug("[ >>>>> Session Set Menu Ok ]");
+		log.debug("[ Session Attribute ] MENU INFO OK, ID : {}", session.getId());
 	}
 	
 	/***
@@ -88,7 +88,7 @@ public class SessionUtil implements HttpSessionListener {
 	}
 	
 	/***
-	 * Session 소멸 시간.
+	 * Session 소멸 예정 시간.
 	 * @return yyyy-MM-dd HH:mm:ss
 	 */
 	public static String getDestroyTime(HttpSession session) {
@@ -96,11 +96,36 @@ public class SessionUtil implements HttpSessionListener {
 			return "";
 		}
 		Calendar cal = Calendar.getInstance();
-		
-		cal.setTime(new Date(session.getCreationTime())); 
+		cal.setTime(new Date()); 
 		cal.add(Calendar.SECOND, session.getMaxInactiveInterval());
 		
 		return simpleDate.format(cal.getTime());
+	}
+	
+	/***
+	 * Session 소멸 설정 시간.
+	 * @return OO분
+	 */
+	public static String getDestroySetTime(HttpSession session) {
+		if(ObjectUtils.isEmpty(session)) {
+			return "";
+		}
+		
+		int minute =  session.getMaxInactiveInterval() / 60;
+		
+		return Integer.toString(minute).concat("분");
+	}
+	
+	/***
+	 * Session 최근 접근 시간.
+	 * @return yyyy-MM-dd HH:mm:ss
+	 */
+	public static String getLastAccessedTime(HttpSession session) {
+		if(ObjectUtils.isEmpty(session)) {
+			return "";
+		}
+		Date date = new Date(session.getLastAccessedTime());
+		return simpleDate.format(date);
 	}
 	
 	/***

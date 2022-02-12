@@ -26,7 +26,7 @@ public class TestController extends CommonController {
 	@Autowired
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
-	@ApiOperation(value="AES 복호화 테스트", notes="/api/test/aes/decrypt/aes/decrypt", response=String.class)
+	@ApiOperation(value="AES 복호화 테스트", notes="/api/test/aes/decrypt", response=String.class)
 	@GetMapping("/aes/decrypt")
 	public CommonMessage aesDecrypt(@RequestParam String encText) throws UserException {
 		super.parameterLog("Test[aesDecrypt]", encText);

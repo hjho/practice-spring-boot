@@ -1,7 +1,6 @@
 package hjho.prj.prct.biz.mgr.model;
 
 import hjho.prj.prct.biz.table.JobHistory;
-import hjho.prj.prct.biz.table.Jobs;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

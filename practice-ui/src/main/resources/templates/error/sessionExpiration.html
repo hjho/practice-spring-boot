@@ -14,8 +14,7 @@
 	<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
 		<div role="main" class="inner cover" style="margin-top: 150px;">
 	    	<h2 class="cover-heading">
-	    		해당 페이지에서 문제가 발생했습니다.<br>
-	    		관리자에게 문의해주세요.
+	    		세션이 만료되었습니다.
 	    	</h2>
 	        <p class="lead text-left">페이지 경로: [[${path}]]</p>
 	        <p class="lead text-left">오류: [[${error}]]</p>
@@ -23,7 +22,6 @@
 	        <p class="lead text-left">오류 메시지: [[${message}]]</p>
 	        <p class="lead text-left">발생 시간: [[${timestamp}]]</p>
 	        <p class="lead">
-	        	<a href="/main/page" class="btn btn-lg btn-secondary">메인 페이지 이동</a>
 	        	<a href="/login/page" class="btn btn-lg btn-secondary">로그인 페이지 이동</a>
 	        </p>
 		</div>
@@ -36,6 +34,5 @@
 	var errors    = /*[[${errors}]]*/"";
 	var status    = /*[[${status}]]*/"";
 	var timestamp = /*[[${timestamp}]]*/"";
-	var exception = /*[[${exception}]]*/"";
 </script>
 </html>

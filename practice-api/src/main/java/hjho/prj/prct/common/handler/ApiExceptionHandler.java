@@ -47,6 +47,7 @@ public class ApiExceptionHandler {
 		CommonMessage message = new CommonMessage();
 		message.setError();
 		message.setMessage(e.getMessage());
+		response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		
 		return this.logResonseEntity(message, request, response, e);
 	}
@@ -64,7 +65,11 @@ public class ApiExceptionHandler {
 		HttpStatus status = HttpStatus.valueOf(response.getStatus());
 		
 		log.debug("========================================");
-		log.debug("=== Cause       : {}", e.getCause());
+		for(StackTraceElement element : e.getStackTrace()) {
+			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
+				log.debug("=== Cause       : {} ({})", element.getClassName(), element.getLineNumber());
+			}
+		}
 		log.debug("=== Exception   : {}", e.getClass());
 		log.debug("=== Response    : {}", message);
 		log.debug("=== Http Value  : [{}] {}, {}", status.value(), status.getReasonPhrase(), status.series());

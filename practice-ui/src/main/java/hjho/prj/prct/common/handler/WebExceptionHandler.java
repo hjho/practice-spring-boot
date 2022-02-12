@@ -1,13 +1,16 @@
 package hjho.prj.prct.common.handler;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import hjho.prj.prct.common.clazz.CommonMessage;
+import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,58 +21,84 @@ public class WebExceptionHandler {
 	@ExceptionHandler(UserException.class)
 	public ModelAndView handlerUserException(HttpServletRequest request, HttpServletResponse response, UserException e) {
 		
-//		Enumeration<String> headers = request.getHeaderNames();
-//		while(headers.hasMoreElements()) {
-//			String headerName = headers.nextElement();
-//			log.debug("#### [ handlerUserException Header    : {}[{}]", headerName, request.getHeader(headerName));
-//		}
-		log.debug("[H] UserException Class   : {}", e.getClass());
-		log.debug("[H] UserException Message : {}", e.getMessage());
+		log.warn("[H] UserException Message : {}", e.getMessage());
+		this.errorMessage(e);
 		
-		String header = request.getHeader("user-agent");
+		ModelAndView mav = new ModelAndView();
 		
-		ModelAndView mav = null;
-		// message.setRspn(e.getCode());
-		CommonMessage message = new CommonMessage();
-		if(header != null && header.indexOf("HttpClient") > -1) {
-			mav = new ModelAndView("jsonView");
-			mav.addObject("code"   , message.getCode());
-			mav.addObject("message", message.getMessage());
-			
+		if(this.isRequestAjax(request)) {
+			mav.setViewName("jsonView");
+			mav.addObject("code"   , e.getCode());
+			mav.addObject("message", e.getMessage());
+			mav.setStatus(HttpStatus.OK);
 		}
 		
 		return mav;
+	}
+	
+	@ExceptionHandler(SessionExpirationException.class)
+	public ModelAndView handlerSessionExpirationException(HttpServletRequest request, HttpServletResponse response, SessionExpirationException e) {
+		
+		log.warn("[H] SessionExpirationException Message : {}", e.getMessage());
+		this.errorMessage(e);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(this.isRequestAjax(request)) {
+			mav.setViewName("jsonView");
+		} else {
+			mav.setViewName("/error/sessionExpiration");
+		}
+		
+		return this.returnMessageMapping(request, mav, e.getStatus(), e.getMessage());
 	}
 	
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handlerException(HttpServletRequest request, HttpServletResponse response, Exception e) {
 		
-//		Enumeration<String> headers = request.getHeaderNames();
-//		while(headers.hasMoreElements()) {
-//			String headerName = headers.nextElement();
-//			log.debug("#### [ handlerException Header    : {}[{}]", headerName, request.getHeader(headerName));
-//		}
-		log.debug("[H] Exception Class   : {}", e.getClass());
-		log.debug("[H] Exception Message : {}", e.getMessage());
+		log.error("[H] Exception Class   : {}", e.getClass());
+		log.error("[H] Exception Message : {}", e.getMessage());
+		this.errorMessage(e);
 		
-		return this.getErrorModelAndView(request, e);
+		ModelAndView mav = new ModelAndView();
+		
+		if(this.isRequestAjax(request)) {
+			mav.setViewName("jsonView");
+		} else {
+			mav.setViewName("/error/5xx");
+		}
+		
+		return this.returnMessageMapping(request, mav, HttpStatus.INTERNAL_SERVER_ERROR, "일시적인 오류가 발생했습니다.");
+	}
+
+	private void errorMessage(Exception e) {
+		for(StackTraceElement element : e.getStackTrace()) {
+			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
+				log.error("[H] Exception Cause   : {} ({})", element.getClassName(), element.getLineNumber());
+			}
+		}
 	}
 	
-	// HTML ERROR RETURN
-	private ModelAndView getErrorModelAndView(HttpServletRequest request, Exception e) {
-		
-		String header = request.getHeader("user-agent");
-		CommonMessage message = new CommonMessage();
-		message.setError();
-		
-		ModelAndView mav = null;
-		if(header != null && header.indexOf("HttpClient") > -1) {
-			mav = new ModelAndView("jsonView");
-			mav.addObject("code"   , message.getCode());
-			mav.addObject("message", message.getMessage());
-			
+	private boolean isRequestAjax(HttpServletRequest request) {
+		String ajaxHeaderName = "x-requested-with";
+		String ajaxHeader     = "XMLHttpRequest";
+		String header = request.getHeader(ajaxHeaderName);
+		if(header != null && ajaxHeader.equals(header)) {
+			return true;
 		}
+		return false;
+	}
+	
+	private ModelAndView returnMessageMapping(HttpServletRequest request, ModelAndView mav, HttpStatus status, String message) {
+		
+		mav.setStatus(status);
+		mav.addObject("message", message);
+		mav.addObject("path", request.getRequestURI());
+		mav.addObject("error", status.getReasonPhrase());
+		mav.addObject("status", status.value());
+		mav.addObject("timestamp", new Date());
 		
 		return mav;
 	}
+	
 }
