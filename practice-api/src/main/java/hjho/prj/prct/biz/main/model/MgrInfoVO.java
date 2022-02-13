@@ -14,4 +14,7 @@ public class MgrInfoVO {
 	@ApiModelProperty(name="mgrNm", value="관리자 명")
 	private String mgrNm;
 	
+	@ApiModelProperty(name="mgrGrpId", value="관리자 그룹 아이디")
+	private String mgrGrpId;
+	
 }

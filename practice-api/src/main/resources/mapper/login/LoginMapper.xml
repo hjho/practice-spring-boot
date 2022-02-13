@@ -22,9 +22,9 @@
         /* LOGIN 검증 */
         SELECT * 
           FROM (
-                SELECT '20220001' as mgr_id, 'a123456789' as mgr_pw, '테스터1' as mgr_nm FROM DUAL
+                SELECT '20220001' as mgr_id, 'a123456789' as mgr_pw, '테스터1' as mgr_nm, 'SUPER' as mgr_grp_id FROM DUAL
           UNION ALL
-                SELECT '20220002' as mgr_id, 'a123456789' as mgr_pw, '테스터2' as mgr_nm FROM DUAL
+                SELECT '20220002' as mgr_id, 'a123456789' as mgr_pw, '테스터2' as mgr_nm, 'LVEL1' as mgr_grp_id  FROM DUAL
                )
          WHERE mgr_id = #{userId, jdbcType=VARCHAR} 
            AND mgr_pw = #{userPw, jdbcType=VARCHAR}

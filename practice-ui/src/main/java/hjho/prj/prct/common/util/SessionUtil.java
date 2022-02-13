@@ -23,6 +23,8 @@ public class SessionUtil implements HttpSessionListener {
 	
 	public final static String MGR_INFO = "mgr";
 	
+	public final static String TOKEN = "token";
+	
 	private static SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@Override
@@ -54,6 +56,17 @@ public class SessionUtil implements HttpSessionListener {
 	}
 	
 	/***
+	 * Session에 저장된 관리자 정보.
+	 * @return
+	 */
+	public static MgrInfoVO getMgrInfo(HttpSession session) {
+		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.MGR_INFO))) {
+			return null;
+		} 
+		return (MgrInfoVO) VoUtil.objToVO(session.getAttribute(SessionUtil.MGR_INFO), MgrInfoVO.class);
+	}
+	
+	/***
 	 * Session Menu 저장. 
 	 * @param userAuthList (메뉴)
 	 */
@@ -65,14 +78,25 @@ public class SessionUtil implements HttpSessionListener {
 	}
 	
 	/***
-	 * Session에 저장된 관리자 정보.
+	 * Session Token 저장. 
+	 * @param Token (메뉴)
+	 */
+	public static void setToken(HttpServletRequest request, String token) {
+		HttpSession session = request.getSession();
+		session.removeAttribute(TOKEN);
+		session.setAttribute(TOKEN, token);				// token
+		log.debug("[ Session Attribute ] TOKEN OK, ID : {}", session.getId());
+	}
+	
+	/***
+	 * Session에 저장된 토큰 정보.
 	 * @return
 	 */
-	public static MgrInfoVO getMgrInfo(HttpSession session) {
-		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.MGR_INFO))) {
+	public static String getToken(HttpSession session) {
+		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.TOKEN))) {
 			return null;
 		} 
-		return (MgrInfoVO) VoUtil.objToVO(session.getAttribute(SessionUtil.MGR_INFO), MgrInfoVO.class);
+		return (String) session.getAttribute(SessionUtil.TOKEN);
 	}
 	
 	/***

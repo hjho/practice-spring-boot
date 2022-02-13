@@ -21,7 +21,6 @@ public class WebExceptionHandler {
 	@ExceptionHandler(UserException.class)
 	public ModelAndView handlerUserException(HttpServletRequest request, HttpServletResponse response, UserException e) {
 		
-		log.warn("[H] UserException Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -39,7 +38,6 @@ public class WebExceptionHandler {
 	@ExceptionHandler(SessionExpirationException.class)
 	public ModelAndView handlerSessionExpirationException(HttpServletRequest request, HttpServletResponse response, SessionExpirationException e) {
 		
-		log.warn("[H] SessionExpirationException Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -56,8 +54,6 @@ public class WebExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handlerException(HttpServletRequest request, HttpServletResponse response, Exception e) {
 		
-		log.error("[H] Exception Class   : {}", e.getClass());
-		log.error("[H] Exception Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -72,11 +68,15 @@ public class WebExceptionHandler {
 	}
 
 	private void errorMessage(Exception e) {
+		log.error("================== [ EXCEPTION ] ======================");
+		log.error("=== Class    : {}", e.getClass());
+		log.error("=== Message  : {}", e.getMessage());
 		for(StackTraceElement element : e.getStackTrace()) {
 			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
-				log.error("[H] Exception Cause   : {} ({})", element.getClassName(), element.getLineNumber());
+				log.error("=== Cause    : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}
+		log.error("=======================================================");
 	}
 	
 	private boolean isRequestAjax(HttpServletRequest request) {

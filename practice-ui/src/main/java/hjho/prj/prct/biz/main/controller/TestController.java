@@ -25,10 +25,6 @@ public class TestController extends CommonController {
 	@RequestMapping("/page")
 	public ModelAndView testPage() {
 		log.debug("[L] TEST PAGE MOVE");
-		// NullPointerException
-		// Map<String, String> nullMap = new HashMap<String, String>();
-		// nullMap.get("null").toString();
-		
 		return this.pageView("fragment", "test");
 	}
 	
@@ -36,9 +32,6 @@ public class TestController extends CommonController {
 	@RequestMapping("/{type}")
 	public ModelAndView nullPointer(@PathVariable("type") String type) {
 		log.debug("[L] Null Pointer Exception Test");
-		// NullPointerException
-		// Map<String, String> nullMap = new HashMap<String, String>();
-		// nullMap.get("null").toString();
 		
 		// null, 
 		String url = "/api/error/".concat(type);
