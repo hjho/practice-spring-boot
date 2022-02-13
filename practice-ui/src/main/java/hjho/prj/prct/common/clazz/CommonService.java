@@ -79,8 +79,12 @@ public class CommonService {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new ObjectMapper().convertValue(data, HashMap.class);
 		sb.append("?");
+		if(data instanceof String) {
+			sb.append(data);
+			return sb.toString();
+		}
+		Map<String, Object> map = new ObjectMapper().convertValue(data, HashMap.class);
 		for (String key : map.keySet()) {
 			if(map.get(key) != null) {
 				if(map.get(key) instanceof String) {

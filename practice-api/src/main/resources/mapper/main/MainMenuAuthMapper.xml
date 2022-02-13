@@ -12,6 +12,7 @@
              , menu_nm 
              , page_url 
              , icon_val 
+             , ord_by_cls
           FROM practice.sys_menu_info
          WHERE use_yn = 'Y'
            AND (hr_menu_id IS NULL OR hr_menu_id = '') 
@@ -27,6 +28,7 @@
              , menu_nm 
              , page_url 
              , icon_val 
+             , ord_by_cls
           FROM practice.sys_menu_info
          WHERE use_yn     = 'Y' 
            AND hr_menu_id = #{menuId, jdbcType=VARCHAR}

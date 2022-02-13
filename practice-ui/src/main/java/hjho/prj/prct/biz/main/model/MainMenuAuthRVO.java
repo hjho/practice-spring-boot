@@ -11,7 +11,5 @@ import lombok.ToString;
 @ToString(callSuper=true)
 public class MainMenuAuthRVO extends MenuAuthVO {
 
-	private static final long serialVersionUID = 1L;
-
-	private List<MenuAuthVO> menuLr;
+	private List<MenuAuthVO> menuLr;	
 }
