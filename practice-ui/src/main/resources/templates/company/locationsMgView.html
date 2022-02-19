@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="locationsMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-5 row">
+					   				<label for="inLocationId" class="col-3 col-form-label text-right">국가</label>
+							      	<select class="col-8 form-control change-start" id="inCountryId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxCunt}">
+							        	<option th:value=${item.countryId} th:text=${item.countryName}></option>
+							        </th:block>
+							      	</select>
+								</div>
+								<div class="col-4 row">
+									<label for="inDepartmentName" class="col-4 col-form-label text-right">도시명</label>
+			    					<input type="text" class="col-8 form-control enter-start" id="inCity">
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()"><span data-feather="search"></span>조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		부서 위치 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableLocations">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">위치번호</th>
+									<th class="text-center">국가명</th>
+									<th class="text-center">주(시/도)</th>
+									<th class="text-center">도시명(시/군/구)</th>
+									<th class="text-center">도로명</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 위치 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		부서 위치 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formLocations">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="locationId"><span class="req">*</span>위치번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="locationId" name="locationId" aria-describedby="locationIdText" placeholder="신규 시 자동 등록" onkeyup="EventUtils.numberFormat(this)" disabled>
+			    					<small id="locationIdText" class="form-text text-muted">
+	  									위치번호는 숫자 4자리(100단위)입니다.
+									</small>
+								</div>
+								<div class="col-4">
+									<label for="countryId">국가</label>
+			    					<select class="form-control form-control-sm" id="countryId" name="countryId">
+			    						<option value="">None</option>
+									<th:block th:each="item : ${boxCunt}">
+							        	<option th:value=${item.countryId} th:text=${item.countryName}></option>
+							        </th:block>
+									</select>
+								</div>
+								<div class="col-4">
+									<label for="postalCode">우편번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="postalCode" name="postalCode">
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="stateProvince">주(시/도)</label>
+			    					<input type="text" class="form-control form-control-sm" id="stateProvince" name="stateProvince">
+								</div>
+					  			<div class="col-4">
+									<label for="city"><span class="req">*</span>도시명(시/군/구)</label>
+			    					<input type="text" class="form-control form-control-sm" id="city" name="city">
+								</div>
+					  			<div class="col-4">
+									<label for="streetAddress">도로명</label>
+			    					<input type="text" class="form-control form-control-sm" id="streetAddress" name="streetAddress">
+								</div>
+	  						</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="locationsMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableLocations');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableLocations').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableLocations').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableLocations', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("위치 검색");
+			DataTableUtils.get({
+				tableId : "#tableLocations",
+				url : "/company/locations",
+				param : {
+					"city"      : $('#inCity').val(),
+					"countryId" : $('#inCountryId').val()
+				},
+				columns: [
+					{ "data": "rowNo"        , "class": "text-center"},
+		            { "data": "locationId"   , "class": "text-center"},
+		            { "data": "countryId"    , "class": "text-left"  },
+		            { "data": "stateProvince", "class": "text-left"  },
+		            { "data": "city"  		 , "class": "text-left"  },
+		            { "data": "streetAddress", "class": "text-left"  }
+		        ]
+			});
+		}
+		
+		
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 위치 번호
+			$('#formLocations').find('#locationId').val("");
+			// 도시ID
+			$('#formLocations').find('#countryId').val("");
+			// 우편번호
+			$('#formLocations').find('#postalCode').val("");
+			// 주(시/도)
+			$('#formLocations').find('#stateProvince').val("");
+			// 도시명(시/군/구)
+			$('#formLocations').find('#city').val("");
+			// 도로명
+			$('#formLocations').find('#streetAddress').val("");
+		}
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 위치 번호
+			$('#formLocations').find('#locationId').val(data.locationId);
+			// 도시ID
+			$('#formLocations').find('#countryId').val(data.countryId);
+			// 우편번호
+			$('#formLocations').find('#postalCode').val(data.postalCode);
+			// 주(시/도)
+			$('#formLocations').find('#stateProvince').val(data.stateProvince);
+			// 도시명(시/군/구)
+			$('#formLocations').find('#city').val(data.city);
+			// 도로명
+			$('#formLocations').find('#streetAddress').val(data.streetAddress);
+		}
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// alert("Method : " + method);
+			// 입력값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 부서 위치를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/company/locations"+method,
+					param : AjaxUtils.getParam(
+						"#formLocations",
+						function() {},
+						function(param) { return param; }
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableLocations');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(method != AjaxUtils.INS) {
+				if(StringUtils.isEmpty($('#locationId').val())) {
+					alert(message);
+					return '#locationId';
+				}
+			}
+			
+			if(StringUtils.isEmpty($('#city').val())) {
+				alert(message);
+				return '#city';
+			}
+			
+			return '';
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

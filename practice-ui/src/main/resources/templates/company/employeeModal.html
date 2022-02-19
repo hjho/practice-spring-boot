@@ -1,0 +1,96 @@
+		<!--================ START EMP MODAL START ================-->
+				<div class="modal fade" id="modalEmployee" tabindex="-1" role="dialog" aria-hidden="true">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">사원 선택</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">사원 목록</h5>
+								  	<div class="card-body">
+								  		<table class="table table-sm table-hover table-bordered" id="tableEmployee">
+											<thead class="table-light">
+												<tr>
+													<th class="text-center">No</th>
+													<th class="text-center">사원번호</th>
+													<th class="text-center">사원명</th>
+													<th class="text-center">입사일자</th>
+													<th class="text-center">부서명</th>
+													<th class="text-center">직책명</th>
+													<th class="text-center">연봉(만원)</th>
+												</tr>
+											</thead>
+										</table>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+					        	<button type="button" class="btn btn-secondary" onclick="fnNotChocEmp()">선택안함</button>
+					        	<button type="button" class="btn btn-primary" onclick="fnChocEmp()">선택</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+					$(document).ready(function() {
+						$('#tableEmployee').on('click', 'tbody tr', function() {
+							var data = $('#tableEmployee').dataTable().fnGetData(this);
+							if(StringUtils.isEmpty(data)) {
+								return;
+							}
+							
+							if(DataTableUtils.isSeleted('#tableEmployee', this)) {
+								return;
+							}
+						});
+					});
+					// 사원 조회
+					function fnGetMgrEmp() {
+						// alert("사원 검색");
+						DataTableUtils.get({
+							tableId : "#tableEmployee",
+							url : "/company/departments/emp",
+							columns: [
+					            { "data": "rowNo"         , "class": "text-center"},
+					            { "data": "employeeId"    , "class": "text-center"},
+					            { "data": "employeeName"  , "class": "text-left"  },
+					            { "data": "hireDate"      , "class": "text-center", "format": "date", "visible": false},
+					            { "data": "departmentName", "class": "text-left"  , "visible": false},
+					            { "data": "jobTitle"      , "class": "text-left"  },
+					            { "data": "salary"        , "class": "text-right" , "format": "money", "visible": false}
+					        ]
+						});
+					}
+					// 사원 선택
+					function fnChocEmp() {
+						var data = $('#tableEmployee').dataTable().fnGetData('#tableEmployee .selected');
+						if(StringUtils.isEmpty(data)) {
+							return alert("사원을 선택해주세요.");;
+						}
+						
+						var empName = data.firstName + " " + data.lastName;
+						var empId   = data.employeeId;
+						
+						var message =  empName + "(" +empId+ ")";
+						    message += "사원을 선택하시겠습니까?";
+						if(confirm(message)) {
+							// 관리자ID/명
+							// alert("사원 번호 : "+ empId + ", 사원 명 : " + empName);
+							$('#managerId').val(empId);
+							$('#managerName').val(empName);
+							$('#modalEmployee').modal('hide');
+						}
+					}
+					// 사원 선택 안함
+					function fnNotChocEmp() {
+						// 관리자ID/명
+						$('#managerId').val("");
+						$('#managerName').val("");
+						$('#modalEmployee').modal('hide');
+					}
+				</script>
+		<!--================ END EMP MODAL END ================-->
