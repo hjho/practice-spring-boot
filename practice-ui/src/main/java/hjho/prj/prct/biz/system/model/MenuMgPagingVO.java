@@ -1,4 +1,4 @@
-package hjho.prj.prct.biz.sys.model;
+package hjho.prj.prct.biz.system.model;
 
 import hjho.prj.prct.common.clazz.PagingModel;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
-public class SysMenuMgPagingVO extends PagingModel {
+public class MenuMgPagingVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
 	

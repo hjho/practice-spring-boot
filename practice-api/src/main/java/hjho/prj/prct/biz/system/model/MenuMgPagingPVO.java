@@ -1,4 +1,4 @@
-package hjho.prj.prct.biz.sys.model;
+package hjho.prj.prct.biz.system.model;
 
 import hjho.prj.prct.common.clazz.PagingModel;
 import io.swagger.annotations.ApiModel;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
 @ApiModel(value="SysMenuMgPagingPVO", description="시스템 메뉴 관리 페이징 INPUT")
-public class SysMenuMgPagingPVO extends PagingModel {
+public class MenuMgPagingPVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
 	

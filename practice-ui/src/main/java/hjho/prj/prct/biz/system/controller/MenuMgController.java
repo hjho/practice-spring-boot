@@ -1,4 +1,4 @@
-package hjho.prj.prct.biz.sys.controller;
+package hjho.prj.prct.biz.system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,19 +8,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import hjho.prj.prct.biz.sys.model.SysMenuMgPagingVO;
-import hjho.prj.prct.biz.sys.model.SysMenuMgVO;
+import hjho.prj.prct.biz.system.model.MenuMgPagingVO;
+import hjho.prj.prct.biz.system.model.MenuMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
+import hjho.prj.prct.common.clazz.PracticeUrl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/sys/menu")
-public class SysMenuMgController extends CommonController {
-	
-	private final String SYS_MENU_API_URL = "/api/sys/menu";
+@RequestMapping("/system/menu")
+public class MenuMgController extends CommonController {
 	
 	@Autowired 
 	private CommonService commonService;
@@ -32,33 +31,33 @@ public class SysMenuMgController extends CommonController {
 		
 		mav.addObject("menuTree", commonService.selectBox("/api/main/menu"));
 		
-		return super.pageView(mav, "sys", "sysMenuMg");
+		return super.pageView(mav, "system", "menuMg");
 	}
 	
 	@GetMapping()
-	public ModelAndView getSysMenu(SysMenuMgPagingVO sysMenuMgPagingVO) {
+	public ModelAndView getSysMenu(MenuMgPagingVO menuMgPagingVO) {
 		
-		CommonMessage output = commonService.get(SYS_MENU_API_URL, sysMenuMgPagingVO);
+		CommonMessage output = commonService.get(PracticeUrl.SYSTEM_MENU_API, menuMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postSysMenu(@PathVariable("method") String method, SysMenuMgVO sysMenuMgVO) {
+	public ModelAndView postSysMenu(@PathVariable("method") String method, MenuMgVO menuMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				sysMenuMgVO.setCretSysId("TEST_SYS");
-				sysMenuMgVO.setCretMgrId("TEST_MGR");
-				output = commonService.post(SYS_MENU_API_URL, sysMenuMgVO);
+				menuMgVO.setCretSysId("TEST_SYS");
+				menuMgVO.setCretMgrId("TEST_MGR");
+				output = commonService.post(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case UPD:
-				sysMenuMgVO.setUpdSysId("TEST_SYS");
-				sysMenuMgVO.setUpdMgrId("TEST_MGR");
-				output = commonService.put(SYS_MENU_API_URL, sysMenuMgVO);
+				menuMgVO.setUpdSysId("TEST_SYS");
+				menuMgVO.setUpdMgrId("TEST_MGR");
+				output = commonService.put(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(SYS_MENU_API_URL, sysMenuMgVO);
+				output = commonService.delete(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
 				break;
 			default:
 				output = new CommonMessage();

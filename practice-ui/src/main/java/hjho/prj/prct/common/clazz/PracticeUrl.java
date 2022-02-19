@@ -27,4 +27,11 @@ public class PracticeUrl {
 	public static final String COMPANY_EMPLOYEES_API    = "/api/company/employees";
 	
 	
+	/* 추가된 테이블 관리 */
+	
+	// 시스템관리 > 메뉴관리
+	public static final String SYSTEM_MENU_API          = "/api/system/menu";
+	
+	
+	
 }

@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 	</head> 
 	<body>
-			<th:block th:fragment="sysMenuMg">
+			<th:block th:fragment="menuMg">
 				<!-- 조회 조건 -->
 				<div class="card">
 				  	<div class="card-body">
@@ -140,11 +140,11 @@
 				  	</div>
 				</div>
 			<br>
-<th:block th:include="/sys/sysHrMenuModal"></th:block>
+<th:block th:include="/system/hrMenuModal"></th:block>
 			</th:block>
 			
 
-<th:block th:fragment="sysMenuMgScript">
+<th:block th:fragment="menuMgScript">
 	<script th:inline="javascript">
 		$(document).ready(function() {
 			// 테이블 초기화
@@ -180,7 +180,7 @@
 			fnDtlInit();
 			DataTableUtils.get({
 				tableId : "#tableSysMenu",
-				url : "/sys/menu",
+				url : "/system/menu",
 				param : {
 					"menuNm": $('#inMenuNm').val(),
 					"useYn" : $('#inUseYn').val()
@@ -279,7 +279,7 @@
 				return;
 			}
 			var obj = {
-					url : "/sys/menu"+method,
+					url : "/system/menu"+method,
 					param : AjaxUtils.getParam(
 						"#formSysMenu",
 						function() {},
