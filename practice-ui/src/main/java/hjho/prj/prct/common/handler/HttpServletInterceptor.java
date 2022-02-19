@@ -70,16 +70,18 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 
 		// 토큰 검증 및 재발급.
 		stopWatch.start("tokenCheck");
+		/*
 		if(mainService.isTokenVerifyFail(request)) {
 			throw new SessionExpirationException(); // 다른 EXCEPTION "유효하지 않은 토큰입니다."
-		}
+		}*/
 		stopWatch.stop();
 		
 		// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
 		stopWatch.start("authorityCheck");
+		/*
 		if(mainService.isMgrAuthorityFail(request)) {
 			throw new SessionExpirationException(); // 다른 EXCEPTION "해당 페이지의 OO권한이 없습니다."
-		}
+		}*/
 		stopWatch.stop();
 		
 		stopWatch.start("runningTime");

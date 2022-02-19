@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import hjho.prj.prct.biz.global.model.CountriesMgPagingVO;
 import hjho.prj.prct.biz.mgr.model.MgrLocMgPagingVO;
 import hjho.prj.prct.biz.mgr.model.MgrLocMgVO;
-import hjho.prj.prct.biz.place.model.PlaceCuntMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
+import hjho.prj.prct.common.clazz.PracticeUrl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MgrLocMgController extends CommonController {
 	
 	private final String MGR_LOC_API_URL = "/api/mgr/loc";
-	
-	private final String PLACE_CUNT_API_URL = "/api/place/cunt";
 	
 	@Autowired 
 	private CommonService commonService;
@@ -34,7 +33,7 @@ public class MgrLocMgController extends CommonController {
 		log.debug("[L] LOCATION PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL));
+		mav.addObject("boxCunt", commonService.selectBox(PracticeUrl.GLOBAL_COUNTRIES_API));
 		
 		return super.pageView(mav, "mgr", "mgrLocMg");
 	}
@@ -50,9 +49,9 @@ public class MgrLocMgController extends CommonController {
 	
 	/** 국가 목록 조회 API 호출 */
 	@GetMapping("/cunt")
-	public ModelAndView getPlaceCunt(PlaceCuntMgPagingVO cuntMgPagingVO) {
+	public ModelAndView getPlaceCunt(CountriesMgPagingVO cuntMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PLACE_CUNT_API_URL, cuntMgPagingVO);
+		CommonMessage output = commonService.get(PracticeUrl.GLOBAL_COUNTRIES_API, cuntMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}

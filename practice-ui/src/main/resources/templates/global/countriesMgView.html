@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="countriesMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-5 row">
+					   				<label for="inRegionId" class="col-3 col-form-label text-right">대륙</label>
+							      	<select class="col-8 form-control change-start" id="inRegionId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxRegi}">
+							        	<option th:value=${item.regionId} th:text=${item.regionName}></option>
+							        </th:block>
+							      	</select>
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()"><span data-feather="search"></span>조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		국가 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableCountries">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">국가 아이디</th>
+									<th class="text-center">국가 명</th>
+									<th class="text-center">대륙명</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 위치 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		국가 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formCountries">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="countryId"><span class="req">*</span>국가아이디</label>
+			    					<input type="text" class="form-control form-control-sm" id="countryId" name="countryId" aria-describedby="countryIdText">
+			    					<small id="countryIdText" class="form-text text-muted">
+	  									국가아이디는 영문 대문자 2자리 입니다.
+									</small>
+								</div>
+								<div class="col-4">
+									<label for="countryName">국가명</label>
+			    					<input type="text" class="form-control form-control-sm" id="countryName" name="countryName">
+								</div>
+								<div class="col-4">
+									<label for="regionId">대륙명</label>
+			    					<select class="form-control form-control-sm" id="regionId" name="regionId">
+			    						<option value="">None</option>
+									<th:block th:each="item : ${boxRegi}">
+							        	<option th:value=${item.regionId} th:text=${item.regionName}></option>
+							        </th:block>
+									</select>
+								</div>
+					  		</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="countriesMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableCountries');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableCountries').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableCountries').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableCountries', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("위치 검색");
+			DataTableUtils.get({
+				tableId : "#tableCountries",
+				url : "/global/countries",
+				param : {
+					"regionId" : $('#inRegionId').val()
+				},
+				columns: [
+					{ "data": "rowNo"      , "class": "text-center"},
+		            { "data": "countryId"  , "class": "text-center"},
+		            { "data": "countryName", "class": "text-left"  },
+		            { "data": "regionName" , "class": "text-left"  },
+		        ]
+			});
+		}
+		
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 국가 번호
+			$('#formCountries').find('#countryId').val("").attr("disabled", false);
+			// 국가 명
+			$('#formCountries').find('#countryName').val("");
+			// 대륙
+			$('#formCountries').find('#regionId').val("");
+		}
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 국가 번호
+			$('#formCountries').find('#countryId').val(data.countryId).attr("disabled", true);
+			// 국가 명
+			$('#formCountries').find('#countryName').val(data.countryName);
+			// 대륙
+			$('#formCountries').find('#regionId').val(data.regionId);
+		}
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// 입력값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 국가 정보를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/global/countries"+method,
+					param : AjaxUtils.getParam(
+						"#formCountries",
+						function() {},
+						function(param) { return param; }
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableCountries');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(StringUtils.isEmpty($('#countryId').val())) {
+				alert(message);
+				return '#countryId';
+			}
+			
+			return '';
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

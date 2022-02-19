@@ -20,6 +20,7 @@ import hjho.prj.prct.biz.mgr.model.MgrLocMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
+import hjho.prj.prct.common.clazz.PracticeUrl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,18 +34,15 @@ public class MgrDeptMgController extends CommonController {
 	
 	private final String PLACE_LOC_API_URL = "/api/mgr/loc";
 	
-	private final String PLACE_CUNT_API_URL = "/api/place/cunt";
-	
 	@Autowired 
 	private CommonService commonService;
-	
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
 		log.debug("[L] DEPARTMENT PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxCunt", commonService.selectBox(PLACE_CUNT_API_URL));
+		mav.addObject("boxCunt", commonService.selectBox(PracticeUrl.GLOBAL_COUNTRIES_API));
 		
 		return super.pageView(mav, "mgr", "mgrDeptMg");
 	}

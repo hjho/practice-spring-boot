@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="regionsMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+					   			<div class="col-4 row">
+									<label for="inRegionName" class="col-4 col-form-label text-right">대륙명</label>
+			    					<input type="text" class="col-8 form-control enter-start" id="inRegionName">
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()"><span data-feather="search"></span>조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		대륙 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableRegions">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">대륙 번호</th>
+									<th class="text-center">대륙명</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 위치 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		대륙 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formRegions">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="regionId"><span class="req">*</span>대륙번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="regionId" name="regionId" aria-describedby="regionIdText" onkeyup="EventUtils.numberFormat(this)">
+			    					<small id="regionIdText" class="form-text text-muted">
+	  									대륙번호는 숫자입니다.
+									</small>
+								</div>
+								<div class="col-4">
+									<label for="regionName">대륙명</label>
+			    					<input type="text" class="form-control form-control-sm" id="regionName" name="regionName">
+								</div>
+					  		</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="regionsMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableRegions');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableRegions').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableRegions').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableRegions', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("위치 검색");
+			DataTableUtils.get({
+				tableId : "#tableRegions",
+				url : "/global/regions",
+				param : {
+					"regionName" : $('#inRegionName').val()
+				},
+				columns: [
+					{ "data": "rowNo"      , "class": "text-center"},
+		            { "data": "regionId"   , "class": "text-center"},
+		            { "data": "regionName" , "class": "text-left"  },
+		        ]
+			});
+		}
+		
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 대륙 번호
+			$('#formRegions').find('#regionId').val("").attr("disabled", false);
+			// 대륙 명
+			$('#formRegions').find('#regionName').val("");
+		}
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 대륙 번호
+			$('#formRegions').find('#regionId').val(data.regionId).attr("disabled", true);
+			// 대륙 명
+			$('#formRegions').find('#regionName').val(data.regionName);
+		}
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// 입력값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 대륙 정보를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/global/regions"+method,
+					param : AjaxUtils.getParam(
+						"#formRegions",
+						function() {},
+						function(param) { return param; }
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableRegions');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(StringUtils.isEmpty($('#regionId').val())) {
+				alert(message);
+				return '#regionId';
+			}
+			
+			return '';
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+
