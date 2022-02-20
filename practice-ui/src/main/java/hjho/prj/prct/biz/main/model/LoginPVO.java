@@ -14,4 +14,6 @@ public class LoginPVO extends CommonModel {
 	
 	private String userPw;
 	
+	private String mgrGrpId;
+	
 }

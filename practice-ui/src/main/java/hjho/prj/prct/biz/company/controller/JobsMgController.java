@@ -13,7 +13,7 @@ import hjho.prj.prct.biz.company.model.JobsMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +35,7 @@ public class JobsMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getJobs(JobsMgPagingVO jobsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_JOBS_API, jobsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_JOBS_API, jobsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -45,13 +45,13 @@ public class JobsMgController extends CommonController {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.COMPANY_JOBS_API, jobsMgVO);
+				output = commonService.post(URI.COMPANY_JOBS_API, jobsMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.COMPANY_JOBS_API, jobsMgVO);
+				output = commonService.put(URI.COMPANY_JOBS_API, jobsMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.COMPANY_JOBS_API, jobsMgVO);
+				output = commonService.delete(URI.COMPANY_JOBS_API, jobsMgVO);
 				break;
 			default:
 				output = new CommonMessage();

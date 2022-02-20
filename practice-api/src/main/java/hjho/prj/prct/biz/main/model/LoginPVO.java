@@ -19,4 +19,7 @@ public class LoginPVO extends CommonModel {
 	@ApiModelProperty(name="userPw", value="패스워드")
 	private String userPw;
 	
+	@ApiModelProperty(name="mgrGrpId", value="관리자 그룹 아이디")
+	private String mgrGrpId;
+	
 }

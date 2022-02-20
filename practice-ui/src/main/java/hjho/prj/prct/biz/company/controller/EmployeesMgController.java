@@ -16,7 +16,7 @@ import hjho.prj.prct.biz.company.model.JobsMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,8 +32,8 @@ public class EmployeesMgController extends CommonController {
 		log.debug("[L] EMPLOYEES PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxDept", commonService.selectBox(PracticeUrl.COMPANY_DEPARTMENTS_API));
-		mav.addObject("boxJob", commonService.selectBox(PracticeUrl.COMPANY_JOBS_API));
+		mav.addObject("boxDept", commonService.selectBox(URI.COMPANY_DEPARTMENTS_API));
+		mav.addObject("boxJob", commonService.selectBox(URI.COMPANY_JOBS_API));
 		
 		return super.pageView(mav, "company", "employeesMg");
 	}
@@ -41,35 +41,35 @@ public class EmployeesMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getEmployees(EmployeesMgPagingVO employeesMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	@GetMapping("/dept")
 	public ModelAndView getDepartments(DepartmentsMgPagingVO departmentsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	@GetMapping("/job")
 	public ModelAndView getJobs(JobsMgPagingVO jobsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_JOBS_API, jobsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_JOBS_API, jobsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	@GetMapping("/job/hs")
 	public ModelAndView getJobsHs(JobsHsPagingVO jobsHsPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_JOBS_HISTORY_API, jobsHsPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_JOBS_HISTORY_API, jobsHsPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	@PostMapping("/job/hs/delete")
 	public ModelAndView postJobsHs(EmployeesMgVO employeesMgVO) {
 		
-		CommonMessage output = commonService.delete(PracticeUrl.COMPANY_JOBS_HISTORY_API, employeesMgVO);
+		CommonMessage output = commonService.delete(URI.COMPANY_JOBS_HISTORY_API, employeesMgVO);
 		
 		if("0002".equals(output.getCode())) {
 			output.setOk();
@@ -82,13 +82,13 @@ public class EmployeesMgController extends CommonController {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.COMPANY_EMPLOYEES_API, employeesMgVO);
+				output = commonService.post(URI.COMPANY_EMPLOYEES_API, employeesMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.COMPANY_EMPLOYEES_API, employeesMgVO);
+				output = commonService.put(URI.COMPANY_EMPLOYEES_API, employeesMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.COMPANY_EMPLOYEES_API, employeesMgVO);
+				output = commonService.delete(URI.COMPANY_EMPLOYEES_API, employeesMgVO);
 				break;
 			default:
 				output = new CommonMessage();

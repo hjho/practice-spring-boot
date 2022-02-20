@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper=true)
 @ApiModel(value="MainMenuAuthPVO", description="메인 메뉴 권한 INPUT")
-public class MainMenuAuthPVO {
+public class MenuAuthPVO {
 	
 	@ApiModelProperty(name="mgrId", value="관리자아이디")
 	private String mgrId;

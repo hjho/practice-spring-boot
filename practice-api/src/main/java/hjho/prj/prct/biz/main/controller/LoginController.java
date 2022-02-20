@@ -1,5 +1,7 @@
 package hjho.prj.prct.biz.main.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api/main/login")
 @Api(tags="Login", value="LOGIN", description="로그인 검증")
 public class LoginController extends CommonController {
 
@@ -30,7 +32,7 @@ public class LoginController extends CommonController {
 		this.parameterLog("LoginController[loginProc]", loginPVO);
 		CommonMessage message = new CommonMessage();
 		
-		MgrInfoVO returnVO = loginService.loginProc(loginPVO);
+		List<MgrInfoVO> returnVO = loginService.loginProc(loginPVO);
 		
 		message.setOk();
 		message.setData(returnVO);

@@ -13,7 +13,7 @@ import hjho.prj.prct.biz.global.model.CountriesMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,7 +29,7 @@ public class CountriesMgController extends CommonController {
 		log.debug("[L] COUNTRY PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxRegi", commonService.selectBox(PracticeUrl.GLOBAL_REGIONS_API));
+		mav.addObject("boxRegi", commonService.selectBox(URI.GLOBAL_REGIONS_API));
 		
 		mav.addObject("menuTree", commonService.selectBox("/api/main/menu"));
 		
@@ -39,7 +39,7 @@ public class CountriesMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getCountries(CountriesMgPagingVO countriesMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.GLOBAL_COUNTRIES_API, countriesMgPagingVO);
+		CommonMessage output = commonService.get(URI.GLOBAL_COUNTRIES_API, countriesMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -49,13 +49,13 @@ public class CountriesMgController extends CommonController {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.GLOBAL_COUNTRIES_API, countriesMgVO);
+				output = commonService.post(URI.GLOBAL_COUNTRIES_API, countriesMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.GLOBAL_COUNTRIES_API, countriesMgVO);
+				output = commonService.put(URI.GLOBAL_COUNTRIES_API, countriesMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.GLOBAL_COUNTRIES_API, countriesMgVO);
+				output = commonService.delete(URI.GLOBAL_COUNTRIES_API, countriesMgVO);
 				break;
 			default:
 				output = new CommonMessage();

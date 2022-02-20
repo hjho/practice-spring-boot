@@ -1,5 +1,8 @@
 package hjho.prj.prct.biz.main.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,22 +37,29 @@ public class LoginController extends CommonController {
 		return mav;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@MethodFunction(Function.R)
 	@PostMapping("/proc")
 	public ModelAndView proc(HttpServletRequest request, HttpServletResponse response, LoginPVO loginVO) {
 		log.debug("[L] MAIN LOGIN PROC : {}", loginVO);
-		CommonMessage rspnData = loginService.proc(loginVO);
+		CommonMessage message = loginService.proc(loginVO);
 		
-		if("0000".equals(rspnData.getCode())) {
-			// 유저 정보 설정
-			MgrInfoVO mgrInfoVO = (MgrInfoVO) VoUtil.objToVO(rspnData.getData(), MgrInfoVO.class);
-			loginService.setUser(request, mgrInfoVO);
-			// 메뉴 권한 정보 설정
-			loginService.setMenu(request, mgrInfoVO);
-			// 토큰 발급 및 저장.
-			loginService.setToken(request, mgrInfoVO);
-		}
-		return super.jsonView(rspnData);
+		if(message.isSuccess()) {
+			List<Object> list = (ArrayList<Object>) VoUtil.objToVO(message.getData(), ArrayList.class);
+			if(list.size() == 1) {
+				// 유저 정보 설정
+				MgrInfoVO mgrInfoVO = (MgrInfoVO) VoUtil.objToVO(list.get(0), MgrInfoVO.class);
+				
+				loginService.setUser(request, mgrInfoVO);
+				// 메뉴 권한 정보 설정
+				loginService.setMenu(request, mgrInfoVO);
+				// 토큰 발급 및 저장.
+				loginService.setToken(request, mgrInfoVO);
+			} else {
+				message.setMessage("관리자 그룹을 선택해주세요.");
+			}
+		} 
+		return super.jsonView(message);
 	}
 	
 	@RequestMapping("/logout")

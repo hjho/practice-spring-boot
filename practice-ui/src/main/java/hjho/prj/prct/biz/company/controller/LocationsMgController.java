@@ -14,7 +14,7 @@ import hjho.prj.prct.biz.global.model.CountriesMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,7 +31,7 @@ public class LocationsMgController extends CommonController {
 		log.debug("[L] LOCATION PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxCunt", commonService.selectBox(PracticeUrl.GLOBAL_COUNTRIES_API));
+		mav.addObject("boxCunt", commonService.selectBox(URI.GLOBAL_COUNTRIES_API));
 		
 		return super.pageView(mav, "company", "locationsMg");
 	}
@@ -40,7 +40,7 @@ public class LocationsMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getLocations(LocationsMgPagingVO locationsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_LOCATIONS_API, locationsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_LOCATIONS_API, locationsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -49,7 +49,7 @@ public class LocationsMgController extends CommonController {
 	@GetMapping("/cunt")
 	public ModelAndView getCountries(CountriesMgPagingVO cuntMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.GLOBAL_COUNTRIES_API, cuntMgPagingVO);
+		CommonMessage output = commonService.get(URI.GLOBAL_COUNTRIES_API, cuntMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -61,13 +61,13 @@ public class LocationsMgController extends CommonController {
 		
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.COMPANY_LOCATIONS_API, locationsMgVO);
+				output = commonService.post(URI.COMPANY_LOCATIONS_API, locationsMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.COMPANY_LOCATIONS_API, locationsMgVO);
+				output = commonService.put(URI.COMPANY_LOCATIONS_API, locationsMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.COMPANY_LOCATIONS_API, locationsMgVO);
+				output = commonService.delete(URI.COMPANY_LOCATIONS_API, locationsMgVO);
 				break;
 			default:
 				output = new CommonMessage();

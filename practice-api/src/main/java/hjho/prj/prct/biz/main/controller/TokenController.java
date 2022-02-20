@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/token")
+@RequestMapping("/api/main/token")
 @Api(tags="Token", value="TOKEN", description="토큰 발급 및 검증")
 public class TokenController extends CommonController {
 

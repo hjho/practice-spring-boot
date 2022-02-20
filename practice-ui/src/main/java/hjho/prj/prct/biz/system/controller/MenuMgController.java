@@ -13,7 +13,7 @@ import hjho.prj.prct.biz.system.model.MenuMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -37,7 +37,7 @@ public class MenuMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getSysMenu(MenuMgPagingVO menuMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.SYSTEM_MENU_API, menuMgPagingVO);
+		CommonMessage output = commonService.get(URI.SYSTEM_MENU_API, menuMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -49,15 +49,15 @@ public class MenuMgController extends CommonController {
 			case INS:
 				menuMgVO.setCretSysId("TEST_SYS");
 				menuMgVO.setCretMgrId("TEST_MGR");
-				output = commonService.post(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
+				output = commonService.post(URI.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case UPD:
 				menuMgVO.setUpdSysId("TEST_SYS");
 				menuMgVO.setUpdMgrId("TEST_MGR");
-				output = commonService.put(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
+				output = commonService.put(URI.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.SYSTEM_MENU_API, menuMgVO);
+				output = commonService.delete(URI.SYSTEM_MENU_API, menuMgVO);
 				break;
 			default:
 				output = new CommonMessage();

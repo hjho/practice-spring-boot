@@ -13,7 +13,7 @@ import hjho.prj.prct.biz.global.model.RegionsMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +33,7 @@ public class RegionsMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getRegions(RegionsMgPagingVO regionsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.GLOBAL_REGIONS_API, regionsMgPagingVO);
+		CommonMessage output = commonService.get(URI.GLOBAL_REGIONS_API, regionsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -43,13 +43,13 @@ public class RegionsMgController extends CommonController {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.GLOBAL_REGIONS_API, regionsMgVO);
+				output = commonService.post(URI.GLOBAL_REGIONS_API, regionsMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.GLOBAL_REGIONS_API, regionsMgVO);
+				output = commonService.put(URI.GLOBAL_REGIONS_API, regionsMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.GLOBAL_REGIONS_API, regionsMgVO);
+				output = commonService.delete(URI.GLOBAL_REGIONS_API, regionsMgVO);
 				break;
 			default:
 				output = new CommonMessage();

@@ -20,7 +20,7 @@ import hjho.prj.prct.biz.company.model.LocationsMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
-import hjho.prj.prct.common.clazz.PracticeUrl;
+import hjho.prj.prct.common.clazz.URI;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,7 +36,7 @@ public class DepartmentsMgController extends CommonController {
 		log.debug("[L] DEPARTMENT PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("boxCunt", commonService.selectBox(PracticeUrl.GLOBAL_COUNTRIES_API));
+		mav.addObject("boxCunt", commonService.selectBox(URI.GLOBAL_COUNTRIES_API));
 		
 		return super.pageView(mav, "company", "departmentsMg");
 	}
@@ -44,7 +44,7 @@ public class DepartmentsMgController extends CommonController {
 	@GetMapping()
 	public ModelAndView getDepartments(DepartmentsMgPagingVO departmentsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -52,7 +52,7 @@ public class DepartmentsMgController extends CommonController {
 	@GetMapping("/emp")
 	public ModelAndView getEmployees(EmployeesMgPagingVO employeesMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -60,7 +60,7 @@ public class DepartmentsMgController extends CommonController {
 	@GetMapping("/loc")
 	public ModelAndView getLocations(LocationsMgPagingVO locationsMgPagingVO) {
 		
-		CommonMessage output = commonService.get(PracticeUrl.COMPANY_LOCATIONS_API, locationsMgPagingVO);
+		CommonMessage output = commonService.get(URI.COMPANY_LOCATIONS_API, locationsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -79,13 +79,13 @@ public class DepartmentsMgController extends CommonController {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				output = commonService.post(PracticeUrl.COMPANY_DEPARTMENTS_API, departmentsMgVO);
+				output = commonService.post(URI.COMPANY_DEPARTMENTS_API, departmentsMgVO);
 				break;
 			case UPD:
-				output = commonService.put(PracticeUrl.COMPANY_DEPARTMENTS_API, departmentsMgVO);
+				output = commonService.put(URI.COMPANY_DEPARTMENTS_API, departmentsMgVO);
 				break;
 			case DEL:
-				output = commonService.delete(PracticeUrl.COMPANY_DEPARTMENTS_API, departmentsMgVO);
+				output = commonService.delete(URI.COMPANY_DEPARTMENTS_API, departmentsMgVO);
 				break;
 			default:
 				output = new CommonMessage();
@@ -111,7 +111,7 @@ public class DepartmentsMgController extends CommonController {
 		Map<String, List<DepartmentsMgVO>> map = new HashMap<>();
 		map.put("departmentsMgList", departmentsMgList);
 		
-		CommonMessage output = commonService.post(PracticeUrl.COMPANY_DEPARTMENTS_API.concat("/test"), map);
+		CommonMessage output = commonService.post(URI.COMPANY_DEPARTMENTS_API.concat("/test"), map);
 
 		return super.jsonView(output);
 	}

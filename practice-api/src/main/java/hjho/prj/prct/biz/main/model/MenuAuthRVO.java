@@ -11,7 +11,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper=true)
 @ApiModel(value="MainMenuAuthRVO", description="메인 메뉴 권한 OUTPUT")
-public class MainMenuAuthRVO extends MenuAuthVO {
+public class MenuAuthRVO extends MenuAuthVO {
 
 	private List<MenuAuthVO> menuLr;
 }
