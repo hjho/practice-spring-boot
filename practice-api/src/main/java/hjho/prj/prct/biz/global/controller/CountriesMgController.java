@@ -43,6 +43,15 @@ public class CountriesMgController extends CommonController {
 		return output;
 	}
 	
+	@GetMapping("/box")
+	@ApiOperation(value="getCountriesBox", notes="국가 조회(selectBox)", response=CountriesMgPagingRVO.class)
+	public CommonMessage getCountriesBox() {
+		CommonMessage output = new CommonMessage();
+		output.setOk();
+		output.setData(countriesMgService.getCountriesBox());
+		return output;
+	}
+	
 	@PostMapping()
 	@ApiOperation(value="postCountries", notes="국가 등록", response=Integer.class)
 	public CommonMessage postCountries(@RequestBody CountriesMgVO countriesMgVO) throws UserException {

@@ -44,6 +44,14 @@ public class DepartmentsMgController extends CommonController {
 		output.setData(listMgrDept);
 		return output;
 	}
+	@GetMapping("/box")
+	@ApiOperation(value="getDepartmentsBox", notes="자사 부서 조회(selectBox)", response=DepartmentsMgPagingRVO.class)
+	public CommonMessage getDepartmentsBox() {
+		CommonMessage output = new CommonMessage();
+		output.setOk();
+		output.setData(departmentsMgService.getDepartmentsBox());
+		return output;
+	}
 	
 	@PostMapping()
 	@ApiOperation(value="postDepartments", notes="자사 부서 등록", response=Integer.class)

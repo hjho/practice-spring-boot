@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import hjho.prj.prct.biz.main.model.MenuAuthRVO;
 import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
+import hjho.prj.prct.common.clazz.CommonService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -121,7 +122,8 @@ public class SessionUtil implements HttpSessionListener {
 				for (Object lrObj : lrList) {
 					// 하위 메뉴 URL 중..
 					MenuAuthVO menuLr = (MenuAuthVO) VoUtil.objToVO(lrObj, MenuAuthVO.class);
-					if(uri.startsWith(menuLr.getPageUrl())) {
+					String pageURI = CommonService.getPageURI(uri);
+					if(pageURI.equals(menuLr.getPageUrl())) {
 						// OK
 						return menuLr;
 					}

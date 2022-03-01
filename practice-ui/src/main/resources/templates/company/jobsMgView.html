@@ -119,7 +119,7 @@
 			// alert("부서 검색");
 			DataTableUtils.get({
 				tableId : "#tableJobs",
-				url : "/company/jobs",
+				url : "/company/jobs" + AjaxUtils.SEL,
 				param : {
 					"jobTitle" : $('#inJobTitle').val()
 				},

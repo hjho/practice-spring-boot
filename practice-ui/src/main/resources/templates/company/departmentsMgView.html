@@ -146,13 +146,13 @@
 			// 모달 팝업 초기화 (사원 검색)
 			$('#modalEmployee').on('show.bs.modal', function (e) {
 				// 사원 조회
-				fnGetMgrEmp();
+				fnGetMgrEmp('#managerId', '#managerName');
 			});
 			
 			// 모달 팝업 초기화 (위치 검색)
 			$('#modalLocation').on('show.bs.modal', function (e) {
 				// 위치 조회
-				fnGetLoc();
+				fnGetLoc('#locationId', '#locationName');
 			});
 		});
 		// 조회
@@ -161,7 +161,7 @@
 			// alert("부서 검색");
 			DataTableUtils.get({
 				tableId : "#tableDepartments",
-				url : "/company/departments",
+				url : "/company/departments" + AjaxUtils.SEL,
 				param : {
 					"departmentName" : $('#inDepartmentName').val(),
 					"countryId"      : $('#inCountryId').val()

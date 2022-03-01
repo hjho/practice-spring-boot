@@ -14,9 +14,7 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/company/jobs")
 public class JobsMgController extends CommonController {
@@ -26,14 +24,13 @@ public class JobsMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] JOBS PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
 		return super.pageView(mav, "company", "jobsMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getJobs(JobsMgPagingVO jobsMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(JobsMgPagingVO jobsMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.COMPANY_JOBS_API, jobsMgPagingVO);
 		
@@ -41,7 +38,7 @@ public class JobsMgController extends CommonController {
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postJobs(@PathVariable("method") String method, JobsMgVO jobsMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, JobsMgVO jobsMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:

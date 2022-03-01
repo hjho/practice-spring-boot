@@ -34,6 +34,9 @@
 				  	</div>
 				</div>
 				<script th:inline="javascript">
+					var modalJobNoObj = '';
+					var modalJobNmObj = '';
+						
 					$(document).ready(function() {
 						$('#tableJob').on('click', 'tbody tr', function() {
 							var data = $('#tableJob').dataTable().fnGetData(this);
@@ -47,10 +50,14 @@
 						});
 					});
 					// 조회
-					function fnGetMgrJob() {
+					function fnGetMgrJob(noObj, nmObj) {
+						
+						modalJobNoObj = noObj;
+						modalJobNmObj = nmObj;
+						
 						DataTableUtils.get({
 							tableId : "#tableJob",
-							url : "/company/employees/job",
+							url : "/company/jobs" + AjaxUtils.SEL,
 							columns: [
 					            { "data": "rowNo"    , "class": "text-center"},
 					            { "data": "jobId"    , "class": "text-center"},
@@ -74,8 +81,8 @@
 						    message += "직책을 선택하시겠습니까?";
 						if(confirm(message)) {
 							// 잭책ID/명
-							$('#jobId').val(no);
-							$('#jobTitle').val(nm);
+							$(modalJobNoObj).val(no);
+							$(modalJobNmObj).val(nm);
 							if(typeof isJobSA == 'function') {
 								if(isJobSA(no)) {
 									$('#commissionPct').attr('disabled', false);
@@ -90,8 +97,8 @@
 					// 선택 안함
 					function fnNotChocJob() {
 						// 잭책ID/명
-						$('#jobId').val("");
-						$('#jobTitle').val("");
+						$(modalJobNoObj).val("");
+						$(modalJobNmObj).val("");
 						$('#modalJob').modal('hide');
 					}
 				</script>

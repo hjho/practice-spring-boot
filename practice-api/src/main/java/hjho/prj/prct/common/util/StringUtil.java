@@ -7,6 +7,27 @@ import org.apache.commons.lang3.StringUtils;
 public class StringUtil {
 	
 	/**
+	 * Yn이 "Y"일 경우만 true 
+	 */
+	public static boolean isY(String yn) {
+		if(StringUtils.isEmpty(yn)) {
+			return false;
+		} 
+		
+		boolean isY = false;
+		if("Y".equals(yn)) {
+			isY = true;
+		}
+		return isY;
+	}
+	/**
+	 * Yn이 "Y"가 아닐 경우만 true 
+	 */
+	public static boolean isNotY(String yn) {
+		return !StringUtil.isY(yn);
+	}
+	
+	/**
 	 * str이 Null or "" 일 경우 ""
 	 */
 	public static String NVL(String str) {

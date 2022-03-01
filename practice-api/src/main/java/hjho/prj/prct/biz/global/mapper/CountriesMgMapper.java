@@ -13,6 +13,8 @@ public interface CountriesMgMapper {
 
 	List<CountriesMgPagingRVO> getCountries(CountriesMgPagingPVO countriesMgPagingPVO);
 
+	List<CountriesMgPagingRVO> getCountriesBox();
+	
 	int postCountries(CountriesMgVO countriesMgVO);
 
 	int putCountries(CountriesMgVO countriesMgVO);

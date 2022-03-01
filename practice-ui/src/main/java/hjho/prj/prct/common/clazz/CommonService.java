@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hjho.prj.prct.biz.main.model.MenuAuthVO;
-import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.util.SecurityUtil;
-import hjho.prj.prct.common.util.SessionUtil;
-import hjho.prj.prct.common.util.VoUtil;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public class CommonService {
 
@@ -54,12 +45,58 @@ public class CommonService {
 		return this.excute(HttpMethod.GET, url.concat("/box"), null).getData();
 	}
 	
-	private String getMethod(String originUri, String requestUri) {
-		return "";
+	public static String getMethod(String requestURI) {
+		String method = "";
+		// 조회, 페이지 이동.
+		if(requestURI.endsWith(CommonController.SEL) || requestURI.endsWith(CommonController.PAGE)) {
+			method = "READ";
+		// 등록
+		} else if(requestURI.endsWith(CommonController.INS)) {
+			method = "CRET";
+		// 수정
+		} else if(requestURI.endsWith(CommonController.UPD)) {
+			method = "UPD";
+		// 삭제
+		} else if(requestURI.endsWith(CommonController.DEL)) {
+			method = "DEL";
+		// 개인정보 조회
+		} else if(requestURI.endsWith(CommonController.PRIV)) {
+			method = "PRIV";
+		// 출력
+		} else if(requestURI.endsWith(CommonController.EXPT)) {
+			method = "EXPT";
+		// 없음.
+		} else {
+			method = "";
+		}
+		return method;
 	}
+	public static String getPageURI(String requestURI) {
+		// variable.substring(0, variable.indexOf("/put"));
+		String pageURI = "";
+		// 페이지 이동
+		if(requestURI.endsWith(CommonController.PAGE)) {
+			pageURI = requestURI.substring(0, requestURI.indexOf("/".concat(CommonController.PAGE)));
+		// 조회
+		} else if(requestURI.endsWith(CommonController.SEL)) {
+			pageURI = requestURI.substring(0, requestURI.indexOf("/".concat(CommonController.SEL)));
+		// 등록
+		} else if(requestURI.endsWith(CommonController.INS)) {
+			pageURI = requestURI.substring(0, requestURI.indexOf("/".concat(CommonController.INS)));
+		// 수정
+		} else if(requestURI.endsWith(CommonController.UPD)) {
+			pageURI = requestURI.substring(0, requestURI.indexOf("/".concat(CommonController.UPD)));
+		// 삭제
+		} else if(requestURI.endsWith(CommonController.DEL)) {
+			pageURI = requestURI.substring(0, requestURI.indexOf("/".concat(CommonController.DEL)));
+		// 없음.
+		} else {
+			pageURI = "";
+		}
+		return pageURI;
+	}
+	
 	public CommonMessage authCheck(HttpServletRequest request) {
-		MenuAuthVO menu = SessionUtil.getUriMenu(request.getSession(), request.getRequestURI());
-		
 		// Header
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
@@ -67,10 +104,10 @@ public class CommonService {
 		
 		// Body
 		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("requestUri", request.getRequestURI());
-		body.put("pageUri"   , menu.getPageUrl());
-		body.put("mgrId"     , SecurityUtil.getMgrInfo().getMgrId());
-		body.put("mgrGrpId"  , SecurityUtil.getMgrInfo().getMgrGrpId());
+		body.put("method"  , CommonService.getMethod(request.getRequestURI()));
+		body.put("pageUrl" , CommonService.getPageURI(request.getRequestURI()));
+		body.put("mgrId"   , SecurityUtil.getMgrInfo().getMgrId());
+		body.put("mgrGrpId", SecurityUtil.getMgrInfo().getMgrGrpId());
 		
 		// Entity
 		HttpEntity<Object> entity = new HttpEntity<Object>(body, header);
@@ -83,9 +120,6 @@ public class CommonService {
 	}
 	
 	private CommonMessage excute(HttpMethod method, String url, Object data) {
-		// Authorise Verify
-		// this.authVerifyCheck(method, url);
-		
 		// Set Header
 		HttpHeaders header = this.initHeader(data);
 		

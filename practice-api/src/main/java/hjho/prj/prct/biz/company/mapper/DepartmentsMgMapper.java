@@ -13,6 +13,8 @@ public interface DepartmentsMgMapper {
 
 	List<DepartmentsMgPagingRVO> getDepartments(DepartmentsMgPagingPVO departmentsMgPagingPVO);
 
+	List<DepartmentsMgPagingRVO> getDepartmentsBox();
+	
 	int postDepartments(DepartmentsMgVO departmentsMgVO);
 
 	int putDepartments(DepartmentsMgVO departmentsMgVO);

@@ -46,6 +46,11 @@
         <include refid="common.sql.page-foot"/>
     </select>
     
+    <select id="getDepartmentsBox" resultType="hjho.prj.prct.biz.company.model.DepartmentsMgPagingRVO">
+        /* 자사 부서 SELECT BOX */
+        SELECT department_id, department_name FROM hr.departments
+    </select>
+    
     <insert id="postMgrDept" parameterType="hjho.prj.prct.biz.company.model.DepartmentsMgVO">
         /* 자사 부서 관리 > 등록 */
         INSERT INTO hr.departments (

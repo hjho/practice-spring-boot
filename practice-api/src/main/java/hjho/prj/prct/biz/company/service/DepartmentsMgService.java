@@ -26,7 +26,12 @@ public class DepartmentsMgService {
 		
 		return departmentsMgMapper.getDepartments(departmentsMgPagingPVO);
 	}
-
+	
+	@Transactional(readOnly=true)
+	public List<DepartmentsMgPagingRVO> getDepartmentsBox() {
+		return departmentsMgMapper.getDepartmentsBox();
+	}
+	
 	@Transactional(rollbackFor={DataAccessException.class})
 	public int postDepartments(DepartmentsMgVO departmentsMgVO) throws UserException {
 		int insCnt = 0;
@@ -107,5 +112,5 @@ public class DepartmentsMgService {
 		
 		return (cnt == 1);
 	}
-	
+
 }

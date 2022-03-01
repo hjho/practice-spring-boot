@@ -6,8 +6,17 @@ import lombok.Data;
 @Data
 public class MgrAuthRVO {
 
+	@ApiModelProperty(name="mgrId", value="관리자 아이디")
+	private String mgrId;
+	
+	@ApiModelProperty(name="mgrGrpId", value="관리자 그룹 아이디")
+	private String mgrGrpId;
+	
 	@ApiModelProperty(name="menuId", value="메뉴 아이디")
 	private String menuId;
+	
+	@ApiModelProperty(name="menuNm", value="메뉴 명")
+	private String menuNm;
 	
 	@ApiModelProperty(name="cretAuthYn", value="등록 권한 여부")
 	private String cretAuthYn;

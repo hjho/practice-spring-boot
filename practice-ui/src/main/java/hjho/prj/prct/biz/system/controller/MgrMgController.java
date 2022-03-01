@@ -14,9 +14,7 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/system/mgr")
 public class MgrMgController extends CommonController {
@@ -26,14 +24,11 @@ public class MgrMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] MGR PAGE MOVE");
-		ModelAndView mav = super.getPageMav();
-		
-		return super.pageView(mav, "system", "mgrMg");
+		return super.pageView("system", "mgrMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getMgr(MgrMgPagingVO mgrMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(MgrMgPagingVO mgrMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.SYSTEM_MGR_API, mgrMgPagingVO);
 		
@@ -41,17 +36,13 @@ public class MgrMgController extends CommonController {
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postMgr(@PathVariable("method") String method, MgrMgVO mgrMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, MgrMgVO mgrMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				mgrMgVO.setCretSysId("TEST_SYS");
-				mgrMgVO.setCretMgrId("TEST_MGR");
 				output = commonService.post(URI.SYSTEM_MGR_API, mgrMgVO);
 				break;
 			case UPD:
-				mgrMgVO.setUpdSysId("TEST_SYS");
-				mgrMgVO.setUpdMgrId("TEST_MGR");
 				output = commonService.put(URI.SYSTEM_MGR_API, mgrMgVO);
 				break;
 			case DEL:

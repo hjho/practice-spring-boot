@@ -35,6 +35,10 @@
 				  	</div>
 				</div>
 				<script th:inline="javascript">
+								
+					var modalHrMenuNoObj = '';
+					var modalHrMenuNmObj = '';
+					
 					$(document).ready(function() {
 						$('#tableHrMenu').on('click', 'tbody tr', function() {
 							var data = $('#tableHrMenu').dataTable().fnGetData(this);
@@ -48,10 +52,14 @@
 						});
 					});
 					// 조회
-					function fnGetHrMenu() {
+					function fnGetHrMenu(noObj, nmObj) {
+						
+						modalHrMenuNoObj = noObj;
+						modalHrMenuNmObj = nmObj;
+						
 						DataTableUtils.get({
 							tableId : "#tableHrMenu",
-							url : "/system/menu",
+							url : "/system/menu" + AjaxUtils.SEL,
 							param : {
 								"hrMenuYn": "Y"
 							},
@@ -79,15 +87,15 @@
 						var message =  nm + "(" +no+ ")";
 						    message += "메뉴 선택하시겠습니까?";
 						if(confirm(message)) {
-							$('#hrMenuId').val(no);
-							$('#hrMenuNm').val(nm);
+							$(modalHrMenuNoObj).val(no);
+							$(modalHrMenuNmObj).val(nm);
 							$('#modalHrMenu').modal('hide');
 						}
 					}
 					// 선택 안함
 					function fnNotChocHrMenu() {
-						$('#hrMenuId').val("");
-						$('#hrMenuNm').val("");
+						$(modalHrMenuNoObj).val("");
+						$(modalHrMenuNmObj).val("");
 						$('#modalHrMenu').modal('hide'); 
 					}
 				</script>

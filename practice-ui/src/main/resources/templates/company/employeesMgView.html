@@ -200,15 +200,15 @@
 			
 			// 모달 팝업 초기화 (사원 검색)
 			$('#modalEmployee').on('show.bs.modal', function (e) {
-				fnGetMgrEmp();
+				fnGetMgrEmp('#managerId', '#managerName');
 			});
 			// 모달 팝업 초기화 (부서 검색)
 			$('#modalDepartment').on('show.bs.modal', function (e) {
-				fnGetMgrDept();
+				fnGetMgrDept('#departmentId', '#departmentName');
 			});
 			// 모달 팝업 초기화 (직책 검색)
 			$('#modalJob').on('show.bs.modal', function (e) {
-				fnGetMgrJob();
+				fnGetMgrJob('#jobId', '#jobTitle');
 			});
 			// 모달 팝업 초기화 (변경 히스토리)
 			$('#modalJobHs').on('show.bs.modal', function (e) {
@@ -226,7 +226,7 @@
 			// alert("부서 검색");
 			DataTableUtils.get({
 				tableId : "#tableEmployees",
-				url : "/company/employees",
+				url : "/company/employees" + AjaxUtils.SEL,
 				param : {
 					"departmentId" : $('#inDepartmentId').val(),
 					"jobId"        : $('#inJobId').val()

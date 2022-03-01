@@ -6,6 +6,9 @@ import lombok.Data;
 @Data
 public class MgrAuthPVO {
 
+	@ApiModelProperty(name="method", value="유형")
+	private String method;
+	
 	@ApiModelProperty(name="pageUrl", value="페이지 URL")
 	private String pageUrl;
 	

@@ -107,7 +107,7 @@
 			// alert("위치 검색");
 			DataTableUtils.get({
 				tableId : "#tableRegions",
-				url : "/global/regions",
+				url : "/global/regions" + AjaxUtils.SEL,
 				param : {
 					"regionName" : $('#inRegionName').val()
 				},
@@ -154,7 +154,7 @@
 				return;
 			}
 			var obj = {
-					url : "/global/regions"+method,
+					url : "/global/regions" + method,
 					param : AjaxUtils.getParam(
 						"#formRegions",
 						function() {},

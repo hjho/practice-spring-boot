@@ -2,22 +2,19 @@ package hjho.prj.prct.biz.global.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import hjho.prj.prct.biz.global.model.RegionsMgPagingVO;
 import hjho.prj.prct.biz.global.model.RegionsMgVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/global/regions")
 public class RegionsMgController extends CommonController {
@@ -27,13 +24,12 @@ public class RegionsMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] REGION PAGE MOVE");
 		return super.pageView("global", "regionsMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView get(ModelMap input) {
-		CommonMessage output = commonService.get(URI.GLOBAL_REGIONS_API, input);
+	@GetMapping("/get")
+	public ModelAndView get(RegionsMgPagingVO regionsMgPagingVO) {
+		CommonMessage output = commonService.get(URI.GLOBAL_REGIONS_API, regionsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}

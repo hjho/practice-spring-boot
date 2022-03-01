@@ -38,6 +38,11 @@
     <include refid="common.sql.page-foot"/>
     </select>
     
+    <select id="getCountriesBox" resultType="hjho.prj.prct.biz.global.model.CountriesMgPagingRVO">
+        /* 국가 SELECT BOX */
+        SELECT country_id, country_name FROM hr.countries
+    </select>
+    
     <insert id="postCountries" parameterType="hjho.prj.prct.biz.global.model.CountriesMgVO">
         /* 국가 관리 > 등록 */
         INSERT INTO hr.countries (

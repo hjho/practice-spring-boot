@@ -8,18 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import hjho.prj.prct.biz.company.model.DepartmentsMgPagingVO;
 import hjho.prj.prct.biz.company.model.EmployeesMgPagingVO;
 import hjho.prj.prct.biz.company.model.EmployeesMgVO;
 import hjho.prj.prct.biz.company.model.JobsHsPagingVO;
-import hjho.prj.prct.biz.company.model.JobsMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/company/employees")
 public class EmployeesMgController extends CommonController {
@@ -29,7 +25,6 @@ public class EmployeesMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] EMPLOYEES PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
 		mav.addObject("boxDept", commonService.selectBox(URI.COMPANY_DEPARTMENTS_API));
@@ -38,24 +33,10 @@ public class EmployeesMgController extends CommonController {
 		return super.pageView(mav, "company", "employeesMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getEmployees(EmployeesMgPagingVO employeesMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(EmployeesMgPagingVO employeesMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
-		
-		return super.pagingJsonView(output);
-	}
-	@GetMapping("/dept")
-	public ModelAndView getDepartments(DepartmentsMgPagingVO departmentsMgPagingVO) {
-		
-		CommonMessage output = commonService.get(URI.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
-		
-		return super.pagingJsonView(output);
-	}
-	@GetMapping("/job")
-	public ModelAndView getJobs(JobsMgPagingVO jobsMgPagingVO) {
-		
-		CommonMessage output = commonService.get(URI.COMPANY_JOBS_API, jobsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
@@ -78,7 +59,7 @@ public class EmployeesMgController extends CommonController {
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postMgrDept(@PathVariable("method") String method, EmployeesMgVO employeesMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, EmployeesMgVO employeesMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:

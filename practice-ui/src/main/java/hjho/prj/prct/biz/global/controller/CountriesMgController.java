@@ -14,9 +14,7 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/global/countries")
 public class CountriesMgController extends CommonController {
@@ -26,7 +24,6 @@ public class CountriesMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] COUNTRY PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
 		mav.addObject("boxRegi", commonService.selectBox(URI.GLOBAL_REGIONS_API));
@@ -34,8 +31,8 @@ public class CountriesMgController extends CommonController {
 		return super.pageView(mav, "global", "countriesMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getCountries(CountriesMgPagingVO countriesMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(CountriesMgPagingVO countriesMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.GLOBAL_COUNTRIES_API, countriesMgPagingVO);
 		
@@ -43,7 +40,7 @@ public class CountriesMgController extends CommonController {
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postCountries(@PathVariable("method") String method, CountriesMgVO countriesMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, CountriesMgVO countriesMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:

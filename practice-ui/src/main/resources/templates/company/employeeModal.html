@@ -36,6 +36,10 @@
 				  	</div>
 				</div>
 				<script th:inline="javascript">
+								
+					var modalEmpNoObj = '';
+					var modalEmpNmObj = '';
+					
 					$(document).ready(function() {
 						$('#tableEmployee').on('click', 'tbody tr', function() {
 							var data = $('#tableEmployee').dataTable().fnGetData(this);
@@ -49,11 +53,14 @@
 						});
 					});
 					// 사원 조회
-					function fnGetMgrEmp() {
+					function fnGetMgrEmp(noObj, nmObj) {
+						modalEmpNoObj = noObj;
+						modalEmpNmObj = nmObj;
+						
 						// alert("사원 검색");
 						DataTableUtils.get({
 							tableId : "#tableEmployee",
-							url : "/company/departments/emp",
+							url : "/company/employees" + AjaxUtils.SEL,
 							columns: [
 					            { "data": "rowNo"         , "class": "text-center"},
 					            { "data": "employeeId"    , "class": "text-center"},
@@ -80,16 +87,16 @@
 						if(confirm(message)) {
 							// 관리자ID/명
 							// alert("사원 번호 : "+ empId + ", 사원 명 : " + empName);
-							$('#managerId').val(empId);
-							$('#managerName').val(empName);
+							$(modalEmpNoObj).val(empId);
+							$(modalEmpNmObj).val(empName);
 							$('#modalEmployee').modal('hide');
 						}
 					}
 					// 사원 선택 안함
 					function fnNotChocEmp() {
 						// 관리자ID/명
-						$('#managerId').val("");
-						$('#managerName').val("");
+						$(modalEmpNoObj).val("");
+						$(modalEmpNmObj).val("");
 						$('#modalEmployee').modal('hide');
 					}
 				</script>

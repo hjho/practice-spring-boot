@@ -9,11 +9,11 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.util.SessionUtil;
+import hjho.prj.prct.common.util.StringUtil;
 import hjho.prj.prct.common.util.VoUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public class MainService extends CommonService {
 			log.warn("[V] 마지막 접속이후 {}이 지났습니다.", SessionUtil.getDestroySetTime(session));
 			return true;
 		} else {
-			log.debug("[V] Session And Mgr Ok");
+			log.debug("[V] Verify Session Ok");
 		}
 		return false;
 	}
@@ -95,30 +95,30 @@ public class MainService extends CommonService {
 			}
 		}
 		if(isFail) {
-			log.debug("[V] Token Verify Fail");
+			log.debug("[V] Verify Token Fail");
 		} else {
-			log.debug("[V] Token Verify Ok");
+			log.debug("[V] Verify Token Ok");
 		}
 		return isFail;
 	}
 
 	public boolean isMgrAuthorityFail(HttpServletRequest request) {
-		CommonMessage message = super.authCheck(request);
-		log.debug("[V] Message : {}", message);
+		boolean isFail = true;
 		
-		MenuAuthVO menu = SessionUtil.getUriMenu(request.getSession(), request.getRequestURI());
-		log.debug("[V] Menu Page : {}", menu);
-		if(ObjectUtils.isNotEmpty(menu)) {
-			if("Y".equals(menu.getAuthYn())) {
-				log.debug("[V] Menu Page Verify Ok");
-				return false;
-			} else {
-				log.error("[V] {}의 조회 권한이 없습니다.", menu.getMenuNm());
-				return true;
+		CommonMessage message = super.authCheck(request);
+		
+		if(message.isSuccess()) {
+			String yn = (String) message.getData();
+			if(StringUtil.isY(yn)) {
+				isFail = false;
 			}
 		}
-		log.error("[V] {}의 조회 권한이 없습니다.", request.getRequestURI());
-		return true;
+		if(isFail) {
+			log.debug("[V] Verify Auth Fail : {}", message.getMessage());
+		} else {
+			log.debug("[V] Verify Auth Ok");
+		}
+		return isFail;
 	}
 
 }

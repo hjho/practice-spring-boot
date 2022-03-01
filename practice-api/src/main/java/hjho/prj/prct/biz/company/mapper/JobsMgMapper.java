@@ -13,6 +13,8 @@ public interface JobsMgMapper {
 
 	List<JobsMgPagingRVO> getJobs(JobsMgPagingPVO jobsMgPagingPVO);
 
+	List<JobsMgPagingRVO> getJobsBox();
+	
 	int postJobs(JobsMgVO jobsMgVO);
 
 	int putJobs(JobsMgVO jobsMgVO);

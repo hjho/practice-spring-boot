@@ -14,9 +14,7 @@ import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/system/menu")
 public class MenuMgController extends CommonController {
@@ -26,16 +24,11 @@ public class MenuMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] MENU PAGE MOVE");
-		ModelAndView mav = super.getPageMav();
-		
-		mav.addObject("menuTree", commonService.selectBox(URI.SYSTEM_MENU_API));
-		
-		return super.pageView(mav, "system", "menuMg");
+		return super.pageView("system", "menuMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getSysMenu(MenuMgPagingVO menuMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(MenuMgPagingVO menuMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.SYSTEM_MENU_API, menuMgPagingVO);
 		
@@ -43,17 +36,13 @@ public class MenuMgController extends CommonController {
 	}
 	
 	@PostMapping("/{method}")
-	public ModelAndView postSysMenu(@PathVariable("method") String method, MenuMgVO menuMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, MenuMgVO menuMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
-				menuMgVO.setCretSysId("TEST_SYS");
-				menuMgVO.setCretMgrId("TEST_MGR");
 				output = commonService.post(URI.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case UPD:
-				menuMgVO.setUpdSysId("TEST_SYS");
-				menuMgVO.setUpdMgrId("TEST_MGR");
 				output = commonService.put(URI.SYSTEM_MENU_API, menuMgVO);
 				break;
 			case DEL:

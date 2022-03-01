@@ -26,7 +26,11 @@ public class JobsMgService {
 		
 		return jobsMgMapper.getJobs(jobsMgPagingPVO);
 	}
-
+	@Transactional(readOnly=true)
+	public List<JobsMgPagingRVO> getJobsBox() {
+		return jobsMgMapper.getJobsBox();
+	}
+	
 	@Transactional(rollbackFor={DataAccessException.class})
 	public int postJobs(JobsMgVO jobsMgVO) throws UserException {
 		int insCnt = 0;
@@ -118,5 +122,5 @@ public class JobsMgService {
 		
 		return (cnt == 1);
 	}
-	
+
 }

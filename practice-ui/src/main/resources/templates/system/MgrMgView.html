@@ -169,7 +169,7 @@
 			fnDtlInit();
 			DataTableUtils.get({
 				tableId : "#tableSysMgr",
-				url : "/system/mgr",
+				url : "/system/mgr" + AjaxUtils.SEL,
 				param : {
 					"mgrNm": $('#inMgrNm').val(),
 					"sysMgrStatCd" : $('#inSysMgrStatCd').val()

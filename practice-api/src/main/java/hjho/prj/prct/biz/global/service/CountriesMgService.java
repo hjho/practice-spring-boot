@@ -25,6 +25,11 @@ public class CountriesMgService {
 		return countriesMgMapper.getCountries(countriesMgPagingPVO);
 	}
 	
+	@Transactional(readOnly=true)
+	public List<CountriesMgPagingRVO> getCountriesBox() {
+		return countriesMgMapper.getCountriesBox();
+	}
+	
 	@Transactional(rollbackFor={DataAccessException.class})
 	public int postCountries(CountriesMgVO countriesMgVO) throws UserException {
 		int insCnt = 0;
@@ -103,5 +108,5 @@ public class CountriesMgService {
 		
 		return (cnt == 1);
 	}
-	
+
 }

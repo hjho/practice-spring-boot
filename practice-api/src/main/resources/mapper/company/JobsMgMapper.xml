@@ -35,6 +35,11 @@
         <include refid="common.sql.page-foot"/>
     </select>
     
+    <select id="getJobsBox" resultType="hjho.prj.prct.biz.company.model.JobsMgPagingRVO">
+        /* 자사 직책 SELECT BOX */
+        SELECT job_id, job_title FROM hr.jobs
+    </select>
+    
     <insert id="postJobs" parameterType="hjho.prj.prct.biz.company.model.JobsMgVO">
         /* 자사 직책 관리 > 등록 */
         INSERT INTO hr.jobs (

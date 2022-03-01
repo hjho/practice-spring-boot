@@ -172,7 +172,7 @@
 			
 			// 모달 팝업 초기화 (메뉴 검색)
 			$('#modalHrMenu').on('show.bs.modal', function (e) {
-				fnGetHrMenu();
+				fnGetHrMenu('#hrMenuId', '#hrMenuNm');
 			});
 		});
 		// 조회
@@ -180,7 +180,7 @@
 			fnDtlInit();
 			DataTableUtils.get({
 				tableId : "#tableSysMenu",
-				url : "/system/menu",
+				url : "/system/menu" + AjaxUtils.SEL,
 				param : {
 					"menuNm": $('#inMenuNm').val(),
 					"useYn" : $('#inUseYn').val()

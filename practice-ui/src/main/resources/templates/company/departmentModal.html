@@ -36,6 +36,10 @@
 				  	</div>
 				</div>
 				<script th:inline="javascript">
+				
+					var modalDeptNoObj = '';
+					var modalDeptNmObj = '';
+						
 					$(document).ready(function() {
 						$('#tableDepartment').on('click', 'tbody tr', function() {
 							var data = $('#tableDepartment').dataTable().fnGetData(this);
@@ -49,10 +53,13 @@
 						});
 					});
 					// 조회
-					function fnGetMgrDept() {
+					function fnGetMgrDept(noObj, nmObj) {
+						modalDeptNoObj = noObj;
+						modalDeptNmObj = nmObj;
+						
 						DataTableUtils.get({
 							tableId : "#tableDepartment",
-							url : "/company/employees/dept",
+							url : "/company/departments" + AjaxUtils.SEL,
 							columns: [
 					            { "data": "rowNo"         , "class": "text-center"},
 					            { "data": "departmentId"  , "class": "text-center"},
@@ -79,16 +86,16 @@
 						if(confirm(message)) {
 							// 부서ID/명
 							// alert("사원 번호 : "+ empId + ", 사원 명 : " + empName);
-							$('#departmentId').val(no);
-							$('#departmentName').val(nm);
+							$(modalDeptNoObj).val(no);
+							$(modalDeptNmObj).val(nm);
 							$('#modalDepartment').modal('hide');
 						}
 					}
 					// 선택 안함
 					function fnNotChocDept() {
 						// 부서ID/명
-						$('#departmentId').val("");
-						$('#departmentName').val("");
+						$(modalDeptNoObj).val("");
+						$(modalDeptNmObj).val("");
 						$('#modalDepartment').modal('hide'); 
 					}
 				</script>

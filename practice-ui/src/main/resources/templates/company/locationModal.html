@@ -35,6 +35,10 @@
 				  	</div>
 				</div>
 				<script th:inline="javascript">
+				
+					var modalLocNoObj = '';
+					var modalLocNmObj = '';
+					
 					$(document).ready(function() {
 						$('#tableLocation').on('click', 'tbody tr', function() {
 							var data = $('#tableLocation').dataTable().fnGetData(this);
@@ -48,10 +52,13 @@
 						});
 					});
 					// 위치 조회
-					function fnGetLoc() {
+					function fnGetLoc(noObj, nmObj) {
+						modalLocNoObj = noObj;
+						modalLocNmObj = nmObj;
+						
 						DataTableUtils.get({
 							tableId : "#tableLocation",
-							url : "/company/departments/loc",
+							url : "/company/locations" + AjaxUtils.SEL,
 							columns: [
 					            { "data": "rowNo"        , "class": "text-center"},
 					            { "data": "locationId"   , "class": "text-center", "visible": false},
@@ -78,16 +85,16 @@
 						    message += "위 위치로 선택하시겠습니까?";
 						if(confirm(message)) {
 							// 위치번호/도시명
-							$('#locationId').val(locationId);
-							$('#locationName').val(locationIdName);
+							$(modalLocNoObj).val(locationId);
+							$(modalLocNmObj).val(locationIdName);
 							$('#modalLocation').modal('hide');
 						}
 					}
 					// 위치 선택 안함
 					function fnNotChocLoc() {
 						// 위치번호/도시명
-						$('#locationId').val("");
-						$('#locationName').val("");
+						$(modalLocNoObj).val("");
+						$(modalLocNmObj).val("");
 						$('#modalLocation').modal('hide');
 					}
 				</script>

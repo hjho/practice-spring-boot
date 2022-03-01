@@ -54,4 +54,36 @@
          ORDER BY menu.ord_by_cls
     </select>
     
+    <select id = "getMgrAuth" 
+            parameterType = "hjho.prj.prct.biz.main.model.MgrAuthPVO" 
+            resultType    = "hjho.prj.prct.biz.main.model.MgrAuthRVO">
+        /* 권한 조회 */
+        SELECT mgr.mgr_id 
+             , grp.mgr_grp_id 
+             , menu.menu_id 
+             , menu.menu_nm 
+             , auth.cret_auth_yn 
+             , auth.read_auth_yn 
+             , auth.upd_auth_yn 
+             , auth.del_auth_yn 
+             , auth.priv_data_read_auth_yn 
+             , auth.expt_auth_yn 
+               FROM practice.sys_mgr            mgr
+         INNER JOIN practice.sys_mgr_role       rol
+            ON mgr.mgr_id     = rol.mgr_id
+         INNER JOIN practice.sys_mgr_grp        grp
+            ON grp.mgr_grp_id = rol.mgr_grp_id 
+         INNER JOIN practice.sys_mgr_auth       auth
+            ON grp.mgr_grp_id = auth.mgr_grp_id 
+         INNER JOIN practice.sys_menu_info      menu
+            ON auth.menu_id   = menu.menu_id 
+         WHERE grp.use_yn     = 'Y'
+           AND rol.use_yn     = 'Y'
+           AND menu.use_yn    = 'Y'
+           AND auth.use_yn    = 'Y'
+           AND mgr.mgr_id     = #{mgrId   , jdbcType=VARCHAR}
+           AND grp.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+           AND menu.page_url  = #{pageUrl , jdbcType=VARCHAR}
+    </select>
+    
 </mapper> 

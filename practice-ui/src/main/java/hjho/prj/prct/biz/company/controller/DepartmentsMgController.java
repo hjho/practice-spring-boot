@@ -1,5 +1,6 @@
 package hjho.prj.prct.biz.company.controller;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import hjho.prj.prct.biz.company.model.DepartmentsMgPagingVO;
 import hjho.prj.prct.biz.company.model.DepartmentsMgVO;
-import hjho.prj.prct.biz.company.model.EmployeesMgPagingVO;
-import hjho.prj.prct.biz.company.model.LocationsMgPagingVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.clazz.URI;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/company/departments")
 public class DepartmentsMgController extends CommonController {
@@ -33,7 +30,6 @@ public class DepartmentsMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		log.debug("[L] DEPARTMENT PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
 		mav.addObject("boxCunt", commonService.selectBox(URI.GLOBAL_COUNTRIES_API));
@@ -41,29 +37,14 @@ public class DepartmentsMgController extends CommonController {
 		return super.pageView(mav, "company", "departmentsMg");
 	}
 	
-	@GetMapping()
-	public ModelAndView getDepartments(DepartmentsMgPagingVO departmentsMgPagingVO) {
+	@GetMapping("/get")
+	public ModelAndView get(DepartmentsMgPagingVO departmentsMgPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.COMPANY_DEPARTMENTS_API, departmentsMgPagingVO);
 		
 		return super.pagingJsonView(output);
 	}
 	
-	@GetMapping("/emp")
-	public ModelAndView getEmployees(EmployeesMgPagingVO employeesMgPagingVO) {
-		
-		CommonMessage output = commonService.get(URI.COMPANY_EMPLOYEES_API, employeesMgPagingVO);
-		
-		return super.pagingJsonView(output);
-	}
-	
-	@GetMapping("/loc")
-	public ModelAndView getLocations(LocationsMgPagingVO locationsMgPagingVO) {
-		
-		CommonMessage output = commonService.get(URI.COMPANY_LOCATIONS_API, locationsMgPagingVO);
-		
-		return super.pagingJsonView(output);
-	}
 	/**
 	 * <pre>
 	 * Http Method 를 @GetMapping, @PostMapping 만 사용 하는 이유 <br>
@@ -75,7 +56,7 @@ public class DepartmentsMgController extends CommonController {
 	 * @return
 	 */
 	@PostMapping("/{method}")
-	public ModelAndView postDepartments(@PathVariable("method") String method, DepartmentsMgVO departmentsMgVO) {
+	public ModelAndView post(@PathVariable("method") String method, DepartmentsMgVO departmentsMgVO) {
 		CommonMessage output = null;
 		switch(method) {
 			case INS:
@@ -106,8 +87,6 @@ public class DepartmentsMgController extends CommonController {
 	 */
 	@PostMapping("/test")
 	public ModelAndView test(@RequestBody List<DepartmentsMgVO> departmentsMgList) {
-		log.debug("[L] JSON TEST DATA : {}", departmentsMgList);
-		
 		Map<String, List<DepartmentsMgVO>> map = new HashMap<>();
 		map.put("departmentsMgList", departmentsMgList);
 		

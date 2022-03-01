@@ -43,6 +43,15 @@ public class JobsMgController extends CommonController {
 		return output;
 	}
 	
+	@GetMapping("/box")
+	@ApiOperation(value="getJobsBox", notes="자사 직책 조회(selectBox)", response=JobsMgPagingRVO.class)
+	public CommonMessage getJobsBox() {
+		CommonMessage output = new CommonMessage();
+		output.setOk();
+		output.setData(jobsMgService.getJobsBox());
+		return output;
+	}
+	
 	@PostMapping()
 	@ApiOperation(value="postJobs", notes="자사 직책 등록", response=Integer.class)
 	public CommonMessage postJobs(@RequestBody JobsMgVO jobsMgVO) throws UserException {

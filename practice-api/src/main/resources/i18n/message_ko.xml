@@ -5,6 +5,8 @@
 	<!-- DEFAULT MESSAGE -->
 	<entry key="0000">정상적으로 처리 되었습니다.</entry>
 	<entry key="9999">일시적인 오류가 발생했습니다.</entry>
+	<entry key="9998">{}의 {}권한이 없습니다.</entry>
+	<entry key="9997">권한이 없습니다.</entry>
 	
 	<entry key="0001">변경 건수는 {0}건 입니다.</entry>
 	<entry key="0002">삭제 건수는 {0}건 입니다.</entry>
