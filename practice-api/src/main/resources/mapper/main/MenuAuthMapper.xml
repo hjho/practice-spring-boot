@@ -7,32 +7,51 @@
             parameterType = "hjho.prj.prct.biz.main.model.MenuAuthPVO" 
             resultType    = "hjho.prj.prct.biz.main.model.MenuAuthRVO">
         /* 상위 메뉴 */
-        SELECT menu_id 
-             , hr_menu_id 
-             , menu_nm 
-             , page_url 
-             , icon_val 
-             , ord_by_cls
-          FROM practice.sys_menu_info
-         WHERE use_yn = 'Y'
-           AND (hr_menu_id IS NULL OR hr_menu_id = '') 
-         ORDER BY ord_by_cls
+        SELECT menu.menu_id 
+             , menu.hr_menu_id 
+             , menu.menu_nm 
+             , menu.page_url 
+             , menu.icon_val 
+             , auth.read_auth_yn AS auth_yn
+             , auth.cret_auth_yn
+             , auth.read_auth_yn
+             , auth.upd_auth_yn
+             , auth.del_auth_yn
+             , auth.expt_auth_yn
+             , auth.priv_data_read_auth_yn
+          FROM practice.sys_menu_info menu
+         INNER JOIN practice.sys_mgr_auth auth
+            ON menu.menu_id      = auth.menu_id 
+         WHERE menu.use_yn       = 'Y'
+           AND (hr_menu_id IS NULL OR hr_menu_id = '')
+           AND auth.mgr_grp_id   = #{mgrGrpId, jdbcType=VARCHAR}
+           AND auth.read_auth_yn = 'Y'
+         ORDER BY menu.ord_by_cls
     </select>
     
     <select id = "getMenuAuthLr" 
-            parameterType = "hjho.prj.prct.biz.main.model.MenuAuthRVO" 
+            parameterType = "hjho.prj.prct.biz.main.model.MenuAuthPVO" 
             resultType    = "hjho.prj.prct.biz.main.model.MenuAuthVO">
         /* 하위 메뉴 */
-        SELECT menu_id 
-             , hr_menu_id 
-             , menu_nm 
-             , page_url 
-             , icon_val 
-             , ord_by_cls
-          FROM practice.sys_menu_info
-         WHERE use_yn     = 'Y' 
-           AND hr_menu_id = #{menuId, jdbcType=VARCHAR}
-         ORDER BY ord_by_cls
+        SELECT menu.menu_id 
+             , menu.hr_menu_id 
+             , menu.menu_nm 
+             , menu.page_url 
+             , menu.icon_val 
+             , auth.read_auth_yn AS auth_yn
+             , auth.cret_auth_yn
+             , auth.read_auth_yn
+             , auth.upd_auth_yn
+             , auth.del_auth_yn
+             , auth.expt_auth_yn
+             , auth.priv_data_read_auth_yn
+          FROM practice.sys_menu_info menu
+         INNER JOIN practice.sys_mgr_auth auth
+            ON menu.menu_id    = auth.menu_id 
+         WHERE menu.use_yn     = 'Y'
+           AND menu.hr_menu_id = #{menuId  , jdbcType=VARCHAR}
+           AND auth.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+         ORDER BY menu.ord_by_cls
     </select>
     
 </mapper> 

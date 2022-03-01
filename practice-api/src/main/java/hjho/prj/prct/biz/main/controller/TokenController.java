@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
+import hjho.prj.prct.biz.system.service.MgrMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
@@ -27,8 +28,8 @@ public class TokenController extends CommonController {
 	@Autowired
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
-//	@Autowired
-//	private SysMgrMgService sysMgrMgService;
+	@Autowired
+	private MgrMgService mgrMgService;
 	
 	@PostMapping("/issue")
 	@ApiOperation(value="issue", notes="토큰 발급", response=String.class)
@@ -47,10 +48,9 @@ public class TokenController extends CommonController {
 		String refreshToken = jsonWebTokenUtils.createRefreshJWT();
 		
 		// Refresh Token Value Save
-		/*
-		if(sysMgrMgService.tokenSave(mgrInfoVO, refreshToken)) {
+		if(mgrMgService.tokenSave(mgrInfoVO, refreshToken)) {
 			log.debug("[TOKEN] 발급 및 저장 완료 : {}, {}", mgrInfoVO.getMgrId(), mgrInfoVO.getMgrGrpId());
-		}*/
+		}
 		
 		message.setOk();
 		message.setData(accessToken);

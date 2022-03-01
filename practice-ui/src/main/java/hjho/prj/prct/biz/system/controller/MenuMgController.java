@@ -29,7 +29,7 @@ public class MenuMgController extends CommonController {
 		log.debug("[L] MENU PAGE MOVE");
 		ModelAndView mav = super.getPageMav();
 		
-		mav.addObject("menuTree", commonService.selectBox("/api/main/menu"));
+		mav.addObject("menuTree", commonService.selectBox(URI.SYSTEM_MENU_API));
 		
 		return super.pageView(mav, "system", "menuMg");
 	}

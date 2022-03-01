@@ -21,7 +21,8 @@ public class URI {
 	private static final String EMPLOYEES    = "/employees";
 
 	private static final String LOGIN_PROC   = "/login/proc";
-	private static final String MENU_AUTH    = "/menu/auth";
+	private static final String AUTH_MENU    = "/auth/menu";
+	private static final String AUTH_MANAGER = "/auth/mgr";
 	private static final String TOKEN_ISSUE  = "/token/issue";
 	
 	private static final String MENU         = "/menu";
@@ -63,7 +64,9 @@ public class URI {
 	// 로그인 검증.
 	public static final String MAIN_LOGIN_PROC_API      = DEF.concat(MAIN).concat(LOGIN_PROC);
 	// 메뉴 권한 조회.
-	public static final String MAIN_MENU_AUTH_API       = DEF.concat(MAIN).concat(MENU_AUTH);
+	public static final String MAIN_MENU_AUTH_API       = DEF.concat(MAIN).concat(AUTH_MENU);
+	// 관리자 권한 조회.
+	public static final String MAIN_MGR_AUTH_API        = DEF.concat(MAIN).concat(AUTH_MANAGER);
 	// 토큰 발급.
 	public static final String MAIN_TOKEN_ISSUE_API     = DEF.concat(MAIN).concat(TOKEN_ISSUE);
 	

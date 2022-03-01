@@ -12,6 +12,8 @@ import hjho.prj.prct.biz.global.model.RegionsMgVO;
 public interface RegionsMgMapper {
 
 	List<RegionsMgPagingRVO> getRegions(RegionsMgPagingPVO regionsMgPagingPVO);
+	
+	List<RegionsMgPagingRVO> getRegionsBox();
 
 	int postRegions(RegionsMgVO regionsMgVO);
 

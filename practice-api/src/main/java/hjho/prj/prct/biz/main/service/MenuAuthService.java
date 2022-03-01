@@ -9,6 +9,8 @@ import hjho.prj.prct.biz.main.mapper.MenuAuthMapper;
 import hjho.prj.prct.biz.main.model.MenuAuthPVO;
 import hjho.prj.prct.biz.main.model.MenuAuthRVO;
 import hjho.prj.prct.biz.main.model.MenuAuthVO;
+import hjho.prj.prct.biz.main.model.MgrAuthPVO;
+import hjho.prj.prct.biz.main.model.MgrAuthRVO;
 
 @Service
 public class MenuAuthService { 
@@ -21,11 +23,23 @@ public class MenuAuthService {
 		List<MenuAuthRVO> menuHrList = menuAuthMapper.getMenuAuthHr(menuAuthPVO);
 		
 		for (MenuAuthRVO mainMenuAuthVO : menuHrList) {
-			List<MenuAuthVO> menuLr = menuAuthMapper.getMenuAuthLr(mainMenuAuthVO);
+			// 상위 메뉴 아이디.
+			menuAuthPVO.setMenuId(mainMenuAuthVO.getMenuId());
+			List<MenuAuthVO> menuLr = menuAuthMapper.getMenuAuthLr(menuAuthPVO);
 			mainMenuAuthVO.setMenuLr(menuLr);
 		}
 		
 		return menuHrList;
+	}
+
+	public MgrAuthRVO getMgrAuth(MgrAuthPVO mgrAuthPVO) {
+		String mgrGrpId = mgrAuthPVO.getMgrGrpId();
+		String mgrId    = mgrAuthPVO.getMgrId();
+		String pageUrl  = mgrAuthPVO.getPageUrl();
+		
+		MgrAuthRVO mgrAuthRVO = menuAuthMapper.getMgrAuth(mgrAuthPVO);
+		
+		return mgrAuthRVO;
 	}
 	
 }

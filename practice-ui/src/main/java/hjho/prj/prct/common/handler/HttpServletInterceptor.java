@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import hjho.prj.prct.biz.main.service.MainService;
+import hjho.prj.prct.common.exception.AuthVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.util.SessionUtil;
 import hjho.prj.prct.common.util.StringUtil;
@@ -78,10 +79,10 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		
 		// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
 		stopWatch.start("authorityCheck");
-		/*
+		/**/
 		if(mainService.isMgrAuthorityFail(request)) {
-			throw new SessionExpirationException(); // 다른 EXCEPTION "해당 페이지의 OO권한이 없습니다."
-		}*/
+			throw new AuthVerifyException(); // "권한이 없습니다."
+		}
 		stopWatch.stop();
 		
 		stopWatch.start("runningTime");
@@ -117,15 +118,15 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		Enumeration<String> sessionNames = session.getAttributeNames();
 		log.debug("============= [SESSION LOG START] ================");
-		log.debug("=== {} : {}", StringUtil.RPAD("session-id", 20, ""), session.getId());
-		log.debug("=== {} : {}", StringUtil.RPAD("creation-time", 20, ""), SessionUtil.getCreationTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("session-id"        , 20, ""), session.getId());
+		log.debug("=== {} : {}", StringUtil.RPAD("creation-time"     , 20, ""), SessionUtil.getCreationTime(session));
 		log.debug("=== {} : {}", StringUtil.RPAD("last-accessed-time", 20, ""), SessionUtil.getLastAccessedTime(session));
-		log.debug("=== {} : {}", StringUtil.RPAD("destroy-time", 20, ""), SessionUtil.getDestroyTime(session));
-		log.debug("=== {} : {}", StringUtil.RPAD("destroy-set-time", 20, ""), SessionUtil.getDestroySetTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("destroy-time"      , 20, ""), SessionUtil.getDestroyTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("destroy-set-time"  , 20, ""), SessionUtil.getDestroySetTime(session));
 		while(sessionNames.hasMoreElements()) {
 			String sessionName = sessionNames.nextElement();
 			Object sessionObj = session.getAttribute(sessionName);
-			log.debug("=== {} : {}", StringUtil.RPAD(sessionName, 20, ""), sessionObj);
+			log.debug("=== {} : {}", StringUtil.RPAD(sessionName     , 20, ""), sessionObj);
 		}
 		log.debug("============= [SESSION LOG END]===================");
 	}

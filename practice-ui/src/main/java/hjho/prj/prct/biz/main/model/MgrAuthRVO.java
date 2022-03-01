@@ -3,20 +3,9 @@ package hjho.prj.prct.biz.main.model;
 import lombok.Data;
 
 @Data
-public class MenuAuthVO {
+public class MgrAuthRVO {
 
-	private String authYn;
-	
 	private String menuId;
-	
-	private String hrMenuId;
-	
-	private String menuNm;
-	
-	private String pageUrl;
-	
-	private String iconVal;
-	
 	
 	private String cretAuthYn;
 	

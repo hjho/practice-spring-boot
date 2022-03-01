@@ -33,6 +33,11 @@
     <include refid="common.sql.page-foot"/>
     </select>
     
+    <select id="getRegionsBox" resultType="hjho.prj.prct.biz.global.model.RegionsMgPagingRVO">
+        /* 대륙 SELECT BOX */
+        SELECT region_id, region_name FROM hr.regions
+    </select>
+    
     <insert id="postRegions" parameterType="hjho.prj.prct.biz.global.model.RegionsMgVO">
         /* 대륙 관리 > 등록 */
         INSERT INTO hr.regions (

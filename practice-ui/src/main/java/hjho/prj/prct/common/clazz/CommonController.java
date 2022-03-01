@@ -9,10 +9,10 @@ public class CommonController {
 	
 	public final String PAGE = "/page";
 	
-	public final String SEL = "get";
-	public final String INS = "post";
-	public final String UPD = "put";
-	public final String DEL = "delete";
+	public final String SEL  = "get"; 		// 다건 조회(페이징)
+	public final String INS  = "post";		// 등록
+	public final String UPD  = "put";		// 수정
+	public final String DEL  = "delete";	// 삭제
 	
 //	protected final String MAIN_PAGE = "index";
 	public final String MAIN_PAGE = "mainPage";
@@ -22,6 +22,10 @@ public class CommonController {
 	public final String JSON_VIEW = "jsonView";
 	
 	private final String REPONSE_DATA = "result";
+	
+	public static void getAuth() {
+		
+	}
 	
 	/**
 	 * use page move 

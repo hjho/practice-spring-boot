@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import hjho.prj.prct.biz.main.model.LoginPVO;
-import hjho.prj.prct.biz.main.model.MainMenuAuthRVO;
-import hjho.prj.prct.biz.main.model.MainMenuAuthVO;
+import hjho.prj.prct.biz.main.model.MenuAuthPVO;
+import hjho.prj.prct.biz.main.model.MenuAuthRVO;
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
@@ -37,11 +37,11 @@ public class LoginService extends CommonService {
 	// 메뉴 설정!
 	@SuppressWarnings("unchecked")
 	public boolean setMenu(HttpServletRequest request, MgrInfoVO mgrInfoVO) {
-		MainMenuAuthVO userAuthVO = new MainMenuAuthVO();
-		userAuthVO.setMgrId(mgrInfoVO.getMgrId());
+		MenuAuthPVO input = new MenuAuthPVO();
+		input.setMgrGrpId(mgrInfoVO.getMgrGrpId());
 		
-		CommonMessage message = super.get(URI.MAIN_MENU_AUTH_API, userAuthVO);
-		List<MainMenuAuthRVO> authList = (List<MainMenuAuthRVO>) message.getData();
+		CommonMessage message = super.get(URI.MAIN_MENU_AUTH_API, input);
+		List<MenuAuthRVO> authList = (List<MenuAuthRVO>) message.getData();
 		
 		SessionUtil.setTreeMenu(request, authList);
 		

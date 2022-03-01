@@ -18,22 +18,17 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 	throws IOException 
 	{
-		log.debug("======= Request [Rest Template] ========");
-		log.debug("=== Uri    : ({}) {}{}", request.getMethodValue(), request.getURI().getAuthority(), request.getURI().getPath());
+		log.debug("=========== [Rest Template START] ============");
 		if("GET".equals(request.getMethodValue())) {
-			log.debug("=== Query  : {}", request.getURI().getQuery());
+			log.debug(">>>>> Request  : {}", request.getURI().getQuery());
 		} else {
-			log.debug("=== Body   : {}", new String(body).toString());
+			log.debug(">>>>> Request  : {}", new String(body).toString());
 		}
-		log.debug("========================================");
-		
+		log.debug("===== EXCUTE   : ({}) {}{}", request.getMethodValue(), request.getURI().getAuthority(), request.getURI().getPath());
 		ClientHttpResponse clientHttpResponse = execution.execute(request, body);
 		
-		log.debug("======= Response [Rest Template] =======");
-		log.debug("=== Uri    : ({}) {}{}", request.getMethodValue(), request.getURI().getAuthority(), request.getURI().getPath());
-		log.debug("=== Code   : {}", clientHttpResponse.getRawStatusCode());
-		log.debug("=== Body   : {}", this.getBody(clientHttpResponse));
-		log.debug("========================================");
+		log.debug("<<<<< Response : ({}) {}", clientHttpResponse.getRawStatusCode(), this.getBody(clientHttpResponse));
+		log.debug("=========== [Rest Template END  ] ============");
 		
 		return clientHttpResponse;
 	}

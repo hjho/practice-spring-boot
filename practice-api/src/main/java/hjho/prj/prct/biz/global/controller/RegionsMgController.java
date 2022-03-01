@@ -43,6 +43,15 @@ public class RegionsMgController extends CommonController {
 		return output;
 	}
 	
+	@GetMapping("/box")
+	@ApiOperation(value="getRegionsBox", notes="대륙 조회(selectBox)", response=RegionsMgPagingRVO.class)
+	public CommonMessage getRegionsBox() {
+		CommonMessage output = new CommonMessage();
+		output.setOk();
+		output.setData(regionsMgService.getRegionsBox());
+		return output;
+	}
+	
 	@PostMapping()
 	@ApiOperation(value="postRegions", notes="대륙 등록", response=Integer.class)
 	public CommonMessage postRegions(@RequestBody RegionsMgVO regionsMgVO) throws UserException {

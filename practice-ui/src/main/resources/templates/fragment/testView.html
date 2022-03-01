@@ -5,31 +5,31 @@
 	</head> 
 	<body>
 			<th:block th:fragment="test">
+				<div class="card">
+				  	<h6 class="card-header">
+				  		테스트 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="testTable">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">테스트 이름</th>
+									<th class="text-center">PARAM</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
 			<br>	
-				<!-- 테이블 -->
-		  		<table class="table table-sm table-hover table-bordered" id="testTable">
-					<thead class="table-light">
-						<tr>
-							<th class="text-center">No</th>
-							<th class="text-center">테스트 이름</th>
-							<th class="text-center">PARAM</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="text-center">1</td>
-							<td class="text-left">Null Pointer Exception</td>
-							<td class="text-center">null</td>
-						</tr>
-					</tbody> 
-				</table>
-			<br>
 			</th:block>
 			
 
 <th:block th:fragment="testScript">
 	<script th:inline="javascript">
 		$(document).ready(function() {
+
+			/*
 			$('#testTable').on('click', 'tbody tr', function() {
 				var no = $(this).children().eq(0).text();
 				var name = $(this).children().eq(1).text();
@@ -37,7 +37,24 @@
 				if(confirm(name + '을\n실행하시겠습니까?')) {
 					fnAjax(type);
 				}
-			})
+			})*/
+			$('#testTable').on('click', 'tbody tr', function() {
+				var data = $('#testTable').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#testTable', this)) {
+					return;
+				}
+				
+				if(confirm(data.title + '을\n실행하시겠습니까?')) {
+					var type = data.type;
+					fnAjax(type);
+				}
+			});
+			
+			InitTestTable();
 		});
 		// 등록, 수정, 삭제
 		function fnAjax(type) {
@@ -50,6 +67,41 @@
 			AjaxUtils.run(obj);
 		}
 		
+		function InitTestTable() {
+			
+			var data = initTestList();
+			
+			$('#testTable').dataTable( {
+				"serverSide": false,
+			    "paging": false,
+			    "autoWidth": false,
+			    "ordering": false,
+			    "select": "single",
+			    "searching" : false,
+			    "data": data,
+			    "columns": [
+		            { "data": "rowNo" , "class": "text-center"},
+		            { "data": "title" , "class": "text-left"},
+		            { "data": "type"  , "class": "text-left"  },
+		        ]
+			});
+		}
+		
+		function initTestList() {
+			var list = [
+				{
+					"rowNo": 1,
+					"title": "Null Pointer Exception",
+					"type" : "null"
+				}, {
+					"rowNo": 2,
+					"title": "Example",
+					"type" : "exam"
+				}
+			];
+			
+			return list;
+		}
 	</script>
 </th:block>
 	</body>

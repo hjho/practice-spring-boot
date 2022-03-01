@@ -25,6 +25,11 @@ public class RegionsMgService {
 		return regionsMgMapper.getRegions(regionsMgPagingPVO);
 	}
 	
+	@Transactional(readOnly=true)
+	public List<RegionsMgPagingRVO> getRegionsBox() {
+		return regionsMgMapper.getRegionsBox();
+	}
+	
 	@Transactional(rollbackFor={DataAccessException.class})
 	public int postRegions(RegionsMgVO regionsMgVO) throws UserException {
 		int insCnt = 0;

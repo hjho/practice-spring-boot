@@ -9,6 +9,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
@@ -44,7 +45,7 @@ public class MainService extends CommonService {
 		}
 		
 		// 1. Access Token Verify.
-		CommonMessage atkMsg = this.post("/api/token/verify", token);
+		CommonMessage atkMsg = super.post("/api/token/verify", token);
 		String atkMsgCode = atkMsg.getCode();
 		
 		// 2. Access Token Verify OK.
@@ -63,10 +64,10 @@ public class MainService extends CommonService {
 				
 				log.debug("[V] Access Token Expiration");
 				// 5. Get Refresh Token Value.
-				CommonMessage mgrMsg = this.post("/api/sys/mgr/getToken", sessMgrId);
+				CommonMessage mgrMsg = super.post("/api/sys/mgr/getToken", sessMgrId);
 				
 				// 6. Refresh Token Verify.
-				CommonMessage rtkMsg = this.post("/api/token/reverify", mgrMsg.getData());
+				CommonMessage rtkMsg = super.post("/api/token/reverify", mgrMsg.getData());
 				String rtkMsgCode = rtkMsg.getCode();
 				
 				// 7. Refresh Token Verify OK.
@@ -102,8 +103,22 @@ public class MainService extends CommonService {
 	}
 
 	public boolean isMgrAuthorityFail(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return false;
+		CommonMessage message = super.authCheck(request);
+		log.debug("[V] Message : {}", message);
+		
+		MenuAuthVO menu = SessionUtil.getUriMenu(request.getSession(), request.getRequestURI());
+		log.debug("[V] Menu Page : {}", menu);
+		if(ObjectUtils.isNotEmpty(menu)) {
+			if("Y".equals(menu.getAuthYn())) {
+				log.debug("[V] Menu Page Verify Ok");
+				return false;
+			} else {
+				log.error("[V] {}의 조회 권한이 없습니다.", menu.getMenuNm());
+				return true;
+			}
+		}
+		log.error("[V] {}의 조회 권한이 없습니다.", request.getRequestURI());
+		return true;
 	}
 
 }

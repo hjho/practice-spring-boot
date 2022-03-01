@@ -1,5 +1,7 @@
 package hjho.prj.prct.biz.main.model;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -7,8 +9,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper=true)
-public class MainMenuAuthVO {
+public class MenuAuthRVO extends MenuAuthVO {
 
-	private String mgrId;
-	
+	private List<MenuAuthVO> menuLr;	
 }

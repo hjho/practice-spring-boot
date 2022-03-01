@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MgrMgMapper">
+
+    <update id="tokenSave" 
+            parameterType="string">
+        /* REFRESH TOKEN SAVE */
+        UPDATE practice.sys_mgr
+           SET upd_sys_id = 'TK_SAVE'
+             , upd_mgr_id = 'LOGIN'
+             , upd_dtm    = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+             , rfsh_tk    = #{refreshToken , jdbcType=VARCHAR}
+             , tk_iss_dtm = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         WHERE mgr_id     = #{mgrId        , jdbcType=VARCHAR}
+    </update>
+	
+</mapper> 

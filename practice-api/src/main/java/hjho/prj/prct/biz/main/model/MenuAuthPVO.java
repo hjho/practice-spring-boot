@@ -12,7 +12,10 @@ import lombok.ToString;
 @ApiModel(value="MainMenuAuthPVO", description="메인 메뉴 권한 INPUT")
 public class MenuAuthPVO {
 	
-	@ApiModelProperty(name="mgrId", value="관리자아이디")
-	private String mgrId;
+	@ApiModelProperty(name="mgrGrpId", value="관리자그룹아이디")
+	private String mgrGrpId;
+	
+	@ApiModelProperty(name="menuId", value="메뉴아이디")
+	private String menuId;
 	
 }
