@@ -89,7 +89,7 @@ public class WebExceptionHandler {
 		log.error("=== Class    : {}", e.getClass());
 		log.error("=== Message  : {}", e.getMessage());
 		for(StackTraceElement element : e.getStackTrace()) {
-			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
+			if(element.getClassName().startsWith("hjho.prj.prct")) {
 				log.error("=== Cause    : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}

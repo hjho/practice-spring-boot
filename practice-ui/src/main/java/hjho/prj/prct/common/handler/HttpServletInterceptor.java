@@ -79,10 +79,10 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		
 		// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
 		stopWatch.start("authorityCheck");
-		/**/
+		/*
 		if(mainService.isMgrAuthorityFail(request)) {
 			throw new AuthVerifyException(); // "권한이 없습니다."
-		}
+		}*/
 		stopWatch.stop();
 		
 		stopWatch.start("runningTime");

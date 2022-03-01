@@ -35,9 +35,6 @@ public class CommonService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	@Autowired
-	private CommonController commonController;
-	
 	@Value("${url.practice-api}")
 	private String API_URL;
 	
@@ -58,15 +55,6 @@ public class CommonService {
 	}
 	
 	private String getMethod(String originUri, String requestUri) {
-		// "/page"
-		// "/put"
-		// "/page"
-		// "/page"
-		String page   = commonController.PAGE;
-		String get    = "/".concat(commonController.SEL);
-		String post   = "/".concat(commonController.INS);
-		String put    = "/".concat(commonController.UPD);
-		String delete = "/".concat(commonController.DEL);
 		return "";
 	}
 	public CommonMessage authCheck(HttpServletRequest request) {
@@ -122,7 +110,7 @@ public class CommonService {
 	private HttpHeaders initHeader(Object data) {
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
-		header.set("Authorization", "Bearer ".concat(SecurityUtil.getToken()));
+		// header.set("Authorization", "Bearer ".concat(SecurityUtil.getToken()));
 		if(data instanceof CommonModel) {
 			CommonModel headerVO = (CommonModel) data;
 			header.add("functionYn", headerVO.getFunctionYn());
