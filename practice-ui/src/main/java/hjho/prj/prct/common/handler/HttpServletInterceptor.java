@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.service.MainService;
 import hjho.prj.prct.common.exception.AuthVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
@@ -156,10 +158,22 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 	private boolean initUserInfo(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		
+		// 메뉴 조회.
+		String requestUri = request.getRequestURI();
+		String menuId = "NONE";
+		String pageUri = "EMPTY";
+		String[] uri = request.getHeader("referer").split(request.getHeader("host"));
+		if(uri.length > 1 && uri[1].endsWith("/page")) {
+			MenuAuthVO menu = SessionUtil.getUriMenu(session, uri[1]);
+			if(ObjectUtils.isNotEmpty(menu)) {
+				menuId = menu.getMenuId();
+				pageUri = menu.getPageUrl();
+			}
+		}
 		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getMgrInfo(session)
 				                                                     , SessionUtil.getToken(session)
-				                                                     , new String[] {"CRET", "READ", "UPD", "DEL"});
-		
+				                                                     , new String[] {menuId, pageUri, requestUri});
+
 		SecurityContext context = SecurityContextHolder.createEmptyContext(); 
 		context.setAuthentication(authentication);
 		SecurityContextHolder.setContext(context);

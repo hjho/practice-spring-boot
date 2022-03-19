@@ -87,15 +87,23 @@
 					  		</div>
 					  	<hr>
 					  		<div class="row">
+					  			<div class="col-4">
+									<label for="menuCd">메뉴코드</label>
+			    					<select class="form-control form-control-sm" id="menuCd" name="menuCd">
+			    						<option value="M" selected>MENU</option>
+			    						<option value="P">PAGE</option>
+			    						<option value="A">API</option>
+									</select>
+								</div>
 								<div class="col-4">
 									<label for="pageUrl"><span class="req">*</span>페이지URL</label>
 			    					<input type="text" class="form-control form-control-sm" id="pageUrl" name="pageUrl">
 								</div>
-								<div class="col-4">
+								<div class="col-2">
 									<label for="iconVal">아이콘값</label>
 			    					<input type="text" class="form-control form-control-sm" id="iconVal" name="iconVal">
 								</div>
-								<div class="col-4">
+								<div class="col-2">
 									<label for="ordByCls"><span class="req">*</span>계층별순서</label>
 			    					<input type="text" class="form-control form-control-sm text-right" id="ordByCls" name="ordByCls">
 								</div>
@@ -219,6 +227,8 @@
 			// 상위메뉴ID/명
 			$('#formSysMenu').find('#hrMenuId').val("");
 			$('#formSysMenu').find('#hrMenuNm').val("");
+			// 메뉴코드
+			$('#formSysMenu').find('#menuCd').val("M");
 			// 페이지URL
 			$('#formSysMenu').find('#pageUrl').val("");
 			// 아이콘값
@@ -251,6 +261,8 @@
 			// 상위메뉴ID/명
 			$('#formSysMenu').find('#hrMenuId').val(data.hrMenuId);
 			$('#formSysMenu').find('#hrMenuNm').val(data.hrMenuNm);
+			// 메뉴코드
+			$('#formSysMenu').find('#menuCd').val(data.menuCd);
 			// 페이지URL
 			$('#formSysMenu').find('#pageUrl').val(data.pageUrl);
 			// 아이콘값

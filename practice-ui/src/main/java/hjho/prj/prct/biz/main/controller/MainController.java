@@ -14,12 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/")
 public class MainController extends CommonController {
 
-	/* */
-	@RequestMapping()
-	public ModelAndView rootPage() {
-		return this.mainPage();
-	}
-	
 	@MethodFunction(Function.M)
 	@RequestMapping("/main/page")
 	public ModelAndView mainPage() {

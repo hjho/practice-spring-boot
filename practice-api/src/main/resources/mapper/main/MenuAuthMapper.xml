@@ -23,7 +23,7 @@
          INNER JOIN practice.sys_mgr_auth auth
             ON menu.menu_id      = auth.menu_id 
          WHERE menu.use_yn       = 'Y'
-           AND (hr_menu_id IS NULL OR hr_menu_id = '')
+           AND menu.menu_cd      = 'M'
            AND auth.mgr_grp_id   = #{mgrGrpId, jdbcType=VARCHAR}
            AND auth.read_auth_yn = 'Y'
          ORDER BY menu.ord_by_cls
@@ -49,6 +49,7 @@
          INNER JOIN practice.sys_mgr_auth auth
             ON menu.menu_id    = auth.menu_id 
          WHERE menu.use_yn     = 'Y'
+           AND menu.menu_cd    = 'P'
            AND menu.hr_menu_id = #{menuId  , jdbcType=VARCHAR}
            AND auth.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
          ORDER BY menu.ord_by_cls

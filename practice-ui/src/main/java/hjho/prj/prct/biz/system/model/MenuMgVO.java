@@ -20,6 +20,8 @@ public class MenuMgVO extends CommonModel {
 	
 	private String menuCtnt;
 	
+	private String menuCd;
+	
 	private String pageUrl;
 	
 	private Long   ordByCls;

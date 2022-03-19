@@ -40,7 +40,7 @@ public class EmployeesMgController extends CommonController {
 		
 		return super.pagingJsonView(output);
 	}
-	@GetMapping("/job/hs")
+	@GetMapping("/job/hs/get")
 	public ModelAndView getJobsHs(JobsHsPagingVO jobsHsPagingVO) {
 		
 		CommonMessage output = commonService.get(URI.COMPANY_JOBS_HISTORY_API, jobsHsPagingVO);

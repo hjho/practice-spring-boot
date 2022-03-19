@@ -12,4 +12,8 @@ public class MgrMgPagingVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
 	
+	private String mgrNm;
+	
+	private String sysMgrStatCd;
+	
 }

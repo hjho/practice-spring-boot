@@ -1,7 +1,5 @@
 package hjho.prj.prct.biz.main.controller;
 
-import static org.junit.Assert.assertThrows;
-
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;

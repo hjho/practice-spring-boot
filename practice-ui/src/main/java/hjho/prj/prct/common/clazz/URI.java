@@ -17,7 +17,7 @@ public class URI {
 	private static final String LOCATIONS    = "/locations";
 	private static final String DEPARTMENTS  = "/departments";
 	private static final String JOBS         = "/jobs";
-	private static final String JOBS_HISTORY = "/jobs/";
+	private static final String JOBS_HISTORY = "/jobs/history";
 	private static final String EMPLOYEES    = "/employees";
 
 	private static final String LOGIN_PROC   = "/login/proc";

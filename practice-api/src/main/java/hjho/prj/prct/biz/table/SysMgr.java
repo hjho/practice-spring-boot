@@ -11,10 +11,10 @@ public class SysMgr extends CommonModel {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(name="mgrId", value="관리자 아이디")
+	@ApiModelProperty(name="mgrId", value="관리자 아이디", required=true, allowableValues = "length=10, second, third")
 	private String mgrId;
 	
-	@ApiModelProperty(name="empId", value="사원 아이디")
+	@ApiModelProperty(name="empId", value="사원 아이디", required=true, allowableValues = "first, length=3, third")
 	private Long   empId;
 	
 	@ApiModelProperty(name="mgrPw", value="관리자 비밀번호")

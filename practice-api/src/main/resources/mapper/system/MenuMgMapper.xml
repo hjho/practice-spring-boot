@@ -32,7 +32,8 @@
                           FROM practice.sys_menu_info smi2
                          WHERE smi2.menu_id = smi.hr_menu_id) AS hr_menu_nm
                      , menu_nm 
-                     , menu_ctnt 
+                     , menu_ctnt
+                     , menu_cd 
                      , page_url 
                      , ord_by_cls 
                      , icon_val 
@@ -71,7 +72,8 @@
                     menu_id 
                   , hr_menu_id 
                   , menu_nm 
-                  , menu_ctnt 
+                  , menu_ctnt
+                  , menu_cd 
                   , page_url 
                   , ord_by_cls 
                   , icon_val 
@@ -84,6 +86,7 @@
                   , #{hrMenuId  , jdbcType=VARCHAR}
                   , #{menuNm    , jdbcType=VARCHAR}
                   , #{menuCtnt  , jdbcType=VARCHAR}
+                  , #{menuCd    , jdbcType=VARCHAR}
                   , #{pageUrl   , jdbcType=VARCHAR}
                   , #{ordByCls  , jdbcType=NUMERIC}
                   , #{iconVal   , jdbcType=VARCHAR}
@@ -100,7 +103,8 @@
         UPDATE practice.sys_menu_info
            SET hr_menu_id = #{hrMenuId , jdbcType=VARCHAR}            
              , menu_nm    = #{menuNm   , jdbcType=VARCHAR}            
-             , menu_ctnt  = #{menuCtnt , jdbcType=VARCHAR}            
+             , menu_ctnt  = #{menuCtnt , jdbcType=VARCHAR}    
+             , menu_cd    = #{menuCd   , jdbcType=VARCHAR}
              , page_url   = #{pageUrl  , jdbcType=VARCHAR}            
              , ord_by_cls = #{ordByCls , jdbcType=NUMERIC}            
              , icon_val   = #{iconVal  , jdbcType=VARCHAR}            
