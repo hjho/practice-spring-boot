@@ -8,11 +8,10 @@ import lombok.ToString;
 @Data
 @ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
-public class MgrGrpMgPagingVO extends PagingModel {
+public class MgrAuthMgPagingVO extends PagingModel {
 
 	private static final long serialVersionUID = 1L;
 
-	private String mgrGrpNm;
+	private String mgrGrpId;
 	
-	private String useYn;
 }

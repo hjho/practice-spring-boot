@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 public class SysMgrRole extends CommonModel {
 
 	private static final long serialVersionUID = 1L;
+	
 	@ApiModelProperty(name="mgrGrpId", value="관리자 그룹 아이디")
 	private String mgrGrpId;
 	

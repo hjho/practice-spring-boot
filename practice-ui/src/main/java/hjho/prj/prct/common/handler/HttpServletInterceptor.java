@@ -41,6 +41,8 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 	
 	private final boolean isSecurityLog = true;
 	
+	private final boolean isTestMode = true;
+	
 	@Autowired
 	private MainService mainService;
 	
@@ -61,32 +63,35 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		if(isSessionLog) this.sessionLog(request);
 		stopWatch.stop();
 		
-		// 세션 만료 검증. >> 로그인 OK or 사용자 SET
-		stopWatch.start("loginSessionCheck");
-		if(mainService.isSessionFail(request)) {
-			throw new SessionExpirationException();
+		if(isTestMode) {
+			log.info("============= Is Test Mode ================");
 		} else {
-			// Set User Info
-			this.initUserInfo(request);
+			// 세션 만료 검증. >> 로그인 OK or 사용자 SET
+			stopWatch.start("loginSessionCheck");
+			if(mainService.isSessionFail(request)) {
+				throw new SessionExpirationException();
+			} else {
+				// Set User Info
+				this.initUserInfo(request);
+			}
+			stopWatch.stop();
+			
+			// 토큰 검증 및 재발급.
+			stopWatch.start("tokenCheck");
+			/*
+			if(mainService.isTokenVerifyFail(request)) {
+				throw new SessionExpirationException(); // 다른 EXCEPTION "유효하지 않은 토큰입니다."
+			}*/
+			stopWatch.stop();
+			
+			// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
+			stopWatch.start("authorityCheck");
+			/**/
+			if(mainService.isMgrAuthorityFail(request)) {
+				throw new AuthVerifyException(); // "권한이 없습니다."
+			}
+			stopWatch.stop();
 		}
-		stopWatch.stop();
-
-		// 토큰 검증 및 재발급.
-		stopWatch.start("tokenCheck");
-		/*
-		if(mainService.isTokenVerifyFail(request)) {
-			throw new SessionExpirationException(); // 다른 EXCEPTION "유효하지 않은 토큰입니다."
-		}*/
-		stopWatch.stop();
-		
-		// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
-		stopWatch.start("authorityCheck");
-		/**/
-		if(mainService.isMgrAuthorityFail(request)) {
-			throw new AuthVerifyException(); // "권한이 없습니다."
-		}
-		stopWatch.stop();
-		
 		stopWatch.start("runningTime");
 		request.setAttribute("STOP_WATCH", stopWatch);
 		return true;
@@ -110,8 +115,10 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 	private void cookieLog(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		log.debug("============= [COOKIE LOG START] ================");
-		for (Cookie cookie : cookies) {
-			log.debug("=== {} : {}", StringUtil.RPAD(cookie.getName(), 20, ""), cookie.getValue());
+		if(cookies != null) {
+			for (Cookie cookie : cookies) {
+				log.debug("=== {} : {}", StringUtil.RPAD(cookie.getName(), 20, ""), cookie.getValue());
+			}
 		}
 		log.debug("============= [COOKIE LOG END]===================");
 	}

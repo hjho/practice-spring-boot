@@ -1,11 +1,7 @@
 package hjho.prj.prct.biz.system.controller;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +19,7 @@ import hjho.prj.prct.biz.system.service.MgrMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
-import hjho.prj.prct.common.util.VoUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -37,7 +31,7 @@ public class MgrMgController extends CommonController {
 	private MgrMgService mgrMgService;
 	
 	@GetMapping()
-	@ApiOperation(value="getSysMgr", notes="시스템 메뉴 조회", response=MgrMgPagingRVO.class)
+	@ApiOperation(value="getSysMgr", notes="시스템 관리자 조회", response=MgrMgPagingRVO.class)
 	public CommonMessage getSysMgr(@ModelAttribute MgrMgPagingPVO mgrMgPagingPVO) throws UserException {
 		this.parameterLog("SysMgrMg[getSysMgr]", mgrMgPagingPVO);
 		CommonMessage message = new CommonMessage();

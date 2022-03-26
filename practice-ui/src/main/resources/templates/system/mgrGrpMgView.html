@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="mgrGrpMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-4 row">
+								<label class="col-4 col-form-label text-right" for="inMgrGrpNm">그룹명</label>
+		    					<input type="text" class="col-8 form-control enter-start" id="inMgrGrpNm">
+							</div>
+							<div class="col-4 row">
+									<label for="inUseYn" class="col-6 col-form-label text-right">사용여부</label>
+							      	<select class="col-6 form-control change-start" id="inUseYn">
+							        	<option value="" selected>전체</option>
+							        	<option value="Y">사용</option>
+							        	<option value="N">미사용</option>
+							      	</select>
+								</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()"><span data-feather="search"></span>조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		관리자 그룹 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableSysMgrGrp">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">그룹아이디</th>
+									<th class="text-center">그룹명</th>
+									<th class="text-center">사용여부</th>
+									<th class="text-center">사원수</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 상세 정보 -->
+				<div class="card">
+				  	<div class="card-body">
+						<nav>
+						  	<div class="nav nav-tabs" id="mgrGrpTab" role="tablist">
+						    	<a tabType="grp"  class="nav-link active" id="nav-grp-tab" data-toggle="tab" href="#nav-grp" role="tab" aria-controls="nav-grp" aria-selected="true">그룹 정보</a>
+						    	<a tabType="role" class="nav-link" id="nav-role-tab" data-toggle="tab" href="#nav-role" role="tab" aria-controls="nav-role" aria-selected="false">소속 관리자</a>
+						    	<a tabType="auth" class="nav-link" id="nav-auth-tab" data-toggle="tab" href="#nav-auth" role="tab" aria-controls="nav-auth" aria-selected="false">권한 정보</a>
+						  </div>
+						</nav>
+					<!-- 관리자 그룹 정보 -->
+						<div class="tab-content" id="nav-tabContent">
+						  	<div class="tab-pane fade show active" id="nav-grp" role="tabpanel" aria-labelledby="nav-grp-tab">
+						  	<br>
+								<form id="formMgrGrp">
+									<div class="row">
+							  			<div class="col-4">
+											<label for="mgrGrpId"><span class="req">*</span>그륩아이디</label>
+					    					<input type="text" class="form-control form-control-sm" id="mgrGrpId" name="mgrGrpId" aria-describedby="mgrGrpIdText">
+					    					<small id="mgrGrpIdText" class="form-text text-muted">
+			  									그룹아이디는 영문 대문자 5자리 입니다.
+											</small>
+										</div>
+							  			
+							  			<div class="col-4">
+											<label for="mgrGrpNm">그룹명</label>
+					    					<input type="text" class="form-control form-control-sm" id="mgrGrpNm" name="mgrGrpNm">
+										</div>
+										
+										<div class="col-4">
+											<label for="useYn"><span class="req">*</span>사용여부</label>
+					    					<div class="form-check">
+											  	<input class="form-check-input" type="checkbox" id="useYn" onclick="EventUtils.checkBoxVal(this)">
+											  	<label class="form-check-label" for="useYn">
+											    	이 그룹을 사용합니다.
+											  	</label>
+											</div>
+										</div>
+							  		</div>
+							  	<hr>
+							  		<div class="row">
+								  		<div class="col-12">
+											<label for="mgrGrpInfo">그룹정보</label>
+					    					<input type="text" class="form-control form-control-sm" id="mgrGrpInfo" name="mgrGrpInfo">
+										</div>
+							  		</div>
+							  	<hr>
+									<div class="row">
+										<div class="col-4">
+											<label for="cretDtm">등록일시</label>
+					    					<input type="text" class="form-control form-control-sm" id="cretDtm" disabled>
+										</div>
+								  		<div class="col-4">
+											<label for="updDtm">수정일시</label>
+											<input type="text" class="form-control form-control-sm" id="updDtm" disabled>
+										</div>
+							  		</div>
+							  	</form>
+						  	</div>
+						<!-- 그룹 소속 관리자 -->
+						  	<div class="tab-pane fade" id="nav-role" role="tabpanel" aria-labelledby="nav-role-tab">
+						  	<br>
+						  		<table class="table table-sm table-hover table-bordered" id="tableMgrRole">
+									<thead class="table-light">
+										<tr>
+											<th class="text-center">선택</th>
+											<th class="text-center">관리자아이디</th>
+											<th class="text-center">관리자명</th>
+											<th class="text-center">소속일시</th>
+											<th class="text-center">만료일시</th>
+											<th class="text-center">사용여부</th>
+										</tr>
+									</thead>
+								</table>
+						  	</div>
+						<!-- 그룹 권한 -->
+						  	<div class="tab-pane fade" id="nav-auth" role="tabpanel" aria-labelledby="nav-auth-tab">
+						  	<br>
+						  		<table class="table table-sm table-hover table-bordered" id="tableMgrAuth">
+									<thead class="table-light">
+										<tr>
+											<th class="text-center">선택</th>
+											<th class="text-center">메뉴아이디</th>
+											<th class="text-center">메뉴명</th>
+											<th class="text-center">조회</th>
+											<th class="text-center">등록</th>
+											<th class="text-center">수정</th>
+											<th class="text-center">삭제</th>
+											<th class="text-center">출력</th>
+											<th class="text-center">개인정보</th>
+											<th class="text-center">사용여부</th>
+										</tr>
+									</thead>
+								</table>
+						  	</div>
+						</div>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+			</th:block>
+			
+
+<th:block th:fragment="mgrGrpMgScript">
+	<script th:inline="javascript">
+	
+		var tabType = 'mgr';
+		
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableSysMgrGrp');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableSysMgrGrp').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableSysMgrGrp').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableSysMgrGrp', this)) {
+					return;
+				}
+				
+				// 관리자 그룹 정보
+				fnDtlData(data);
+				
+			});
+			
+			$('#mgrGrpTab a').on('click', function (event) {
+			  	event.preventDefault();
+			  	tabType = $(event.target).attr('tabType');
+			});
+			
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			DataTableUtils.get({
+				tableId : "#tableSysMgrGrp",
+				url : "/system/mgr/grp" + AjaxUtils.SEL,
+				param : {
+					"mgrGrpNm": $('#inMgrGrpNm').val(),
+					"useYn"   : $('#inUseYn').val()
+				},
+				columns: [
+					{ "data": "rowNo"   , "class": "text-center"},
+		            { "data": "mgrGrpId", "class": "text-center"},
+		            { "data": "mgrGrpNm", "class": "text-left"  },
+		            { "data": "useYn"   , "class": "text-center"},
+		            { "data": "mgrCnt"  , "class": "text-center"}
+		        ]
+			});
+		}
+		
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 그룹아이디
+			$('#formMgrGrp').find('#mgrGrpId').val("").attr('disabled', false);
+			// 그룹명
+			$('#formMgrGrp').find('#mgrGrpNm').val("");
+			// 그룹정보
+			$('#formMgrGrp').find('#mgrGrpInfo').val("");
+			// 사용여부 
+			$('#formMgrGrp').find('#useYn').val("Y").attr('checked', true);
+			// 등록일시
+			$('#formMgrGrp').find('#cretDtm').val("");
+			// 수정일시 
+			$('#formMgrGrp').find('#updDtm').val("");
+			
+			// 소속 관리자
+			DataTableUtils.init('#tableMgrRole');
+			// 그룹 권한
+			DataTableUtils.init('#tableMgrAuth');
+		}
+		
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);	
+			
+			// 그룹아이디
+			$('#formMgrGrp').find('#mgrGrpId').val(data.mgrGrpId).attr('disabled', true);
+			// 그룹명
+			$('#formMgrGrp').find('#mgrGrpNm').val(data.mgrGrpNm);
+			// 그룹정보
+			$('#formMgrGrp').find('#mgrGrpInfo').val(data.mgrGrpInfo);
+			// 사용여부 
+			$('#formMgrGrp').find('#useYn').val(data.useYn).attr('checked', StringUtils.isYn(data.useYn));	
+			// 등록일시
+			$('#formMgrGrp').find('#cretDtm').val(data.cretDtm);
+			// 수정일시 
+			$('#formMgrGrp').find('#updDtm').val(data.updDtm);
+			
+			// 소속 관리자
+			fnRoleInit(data);
+			// 그룹 권한
+			fnAuthInit(data);
+		}
+		function fnRoleInit(data) {
+			DataTableUtils.get({
+				tableId : "#tableMgrRole",
+				url : "/system/mgr/role" + AjaxUtils.SEL,
+				param : {
+					"mgrGrpId": data.mgrGrpId
+				},
+				columns: [
+					{ "data": ""        , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"check\">';
+					}},
+		            { "data": "mgrId"   , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"mgrId\" value=\"'+data+'\" disabled>';
+					}},
+		            { "data": "mgrNm"   , "class": "text-left"  ,
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"mgrNm\" value=\"'+data+'\" disabled>';
+					}},
+		            { "data": "apitDtm" , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"apitDtm\" value=\"'+data+'\">';
+					}},
+		            { "data": "exprDtm" , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"exprDtm\" value=\"'+data+'\">';
+					}},
+		            { "data": "useYn"   , "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"useYn\" '+checked+'>';
+					}}
+		        ],
+		        callback : function(settings) {
+					// alert(settings);
+					new DateTime($('input[name=apitDtm]'), {
+			   			format: 'YYYY-MM-DD HH:mm:ss' // 'YYYY-MM-DD HH:mm:ss'
+					});
+					new DateTime($('input[name=exprDtm]'), {
+			   			format: 'YYYY-MM-DD HH:mm:ss' // 'YYYY-MM-DD HH:mm:ss'
+					});
+				}
+			});
+		}
+		function fnAuthInit(data) {
+			DataTableUtils.get({
+				tableId : "#tableMgrAuth",
+				url : "/system/mgr/auth" + AjaxUtils.SEL,
+				param : {
+					"mgrGrpId": data.mgrGrpId
+				},
+				columns: [
+					{ "data": ""          , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"check\">';
+					}},
+		            { "data": "menuId"    , "class": "text-center",
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"menuId\" value=\"'+data+'\" disabled>';
+					}},
+		            { "data": "menuNm"    , "class": "text-left"  ,
+						"render": function(data, type, row) {
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"menuNm\" value=\"'+data+'\" disabled>';
+					}},
+		            { "data": "readAuthYn", "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"readAuthYn\" '+checked+'>';
+					}},
+		            { "data": "cretAuthYn", "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"cretAuthYn\" '+checked+'>';
+					}},
+		            { "data": "updAuthYn" , "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"updAuthYn\" '+checked+'>';
+					}},
+		            { "data": "delAuthYn", "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"delAuthYn\" '+checked+'>';
+					}},
+		            { "data": "exptAuthYn", "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"exptAuthYn\" '+checked+'>';
+					}},
+		            { "data": "privDataReadAuthYn", "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"privDataReadAuthYn\" '+checked+'>';
+					}},
+		            { "data": "useYn"     , "class": "text-center",
+						"render": function(data, type, row) {
+							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
+							return '<input type=\"checkbox\" class=\"form-check-input\" name=\"useYn\" '+checked+'>';
+					}},
+		        ]
+			});
+		}
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			
+			// 관리자 그룹 정보
+			if('grp' == tabType) {
+				fnAjaxGrp(method);
+				
+			// 소속 관리자
+			} else if('role' == tabType) {
+				fnAjaxRole(method);
+			
+			// 권한 정보
+			} else if('auth' == tabType) {
+				fnAjaxAuth(method);
+			}
+		}
+		
+		function fnAjaxGrp(method) {
+			// 입력값 확인.
+			if(reqValCheckFail('#formMgrGrp')) {
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 그룹을 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/system/mgr/grp"+method,
+					param : AjaxUtils.getParam(
+						'#formMgrGrp',
+						function() {},
+						function(param) { 
+							param += "&useYn="+$('#formMgrGrp').find('#useYn').val();
+							return param; 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableSysMgrGrp');
+					},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
+		}
+		function fnAjaxRole(method) {
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("선택한 관리자를 제외 하시겠습니까?")) {
+				return;
+			}
+		}
+		function fnAjaxAuth(method) {
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("선택한 권한을 해제 하시겠습니까?")) {
+				return;
+			}
+		}
+		function reqValCheckFail(formId) {
+			var isFail = false;
+			var reqObj = $(formId).find('.req');
+			$.each(reqObj, function(index, item) {
+				var reqId   = $(reqObj).eq(index).parent().attr('for');
+				var reqText = $(reqObj).eq(index).parent().text();
+				if(StringUtils.isNotEmpty(reqId)) {
+					if(StringUtils.isEmpty($('#'+reqId).val())) {
+						alert(reqText + '은(는) 필수 입력 입니다.');
+						$('#'+reqId).focus();
+						isFail = true;
+						return false;
+					}
+				}
+			});
+			return isFail;
+		}
+	</script>
+</th:block>
+	</body>
+</html>
