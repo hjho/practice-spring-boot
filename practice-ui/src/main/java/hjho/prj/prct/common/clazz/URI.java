@@ -25,6 +25,7 @@ public class URI {
 	private static final String AUTH_MANAGER = "/auth/mgr";
 	private static final String TOKEN_ISSUE  = "/token/issue";
 	
+	private static final String CODE         = "/code";
 	private static final String MENU         = "/menu";
 	private static final String MANAGER      = "/mgr";
 	private static final String GROUP        = "/grp";
@@ -49,15 +50,17 @@ public class URI {
 	public static final String COMPANY_EMPLOYEES_API    = DEF.concat(COMPANY).concat(EMPLOYEES);
 
 /* Add Table */
+	// 시스템관리 > 공통코드관리
+	public static final String SYSTEM_CODE_API          = DEF.concat(SYSTEM).concat(CODE);
 	// 시스템관리 > 메뉴관리
 	public static final String SYSTEM_MENU_API          = DEF.concat(SYSTEM).concat(MENU);
 	// 시스템관리 > 관리자관리
 	public static final String SYSTEM_MGR_API           = DEF.concat(SYSTEM).concat(MANAGER);
 	// 시스템관리 > 관리자그룹관리
 	public static final String SYSTEM_MGR_GRP_API       = DEF.concat(SYSTEM).concat(MANAGER).concat(GROUP);
-	// 시스템관리 > 관리자역할관리
+	// 시스템관리 > 관리자그룹관리 > 관리자역할관리
 	public static final String SYSTEM_MGR_ROLE_API      = DEF.concat(SYSTEM).concat(MANAGER).concat(ROLE);
-	// 시스템관리 > 관리자권한관리
+	// 시스템관리 > 관리자그룹관리 > 관리자권한관리
 	public static final String SYSTEM_MGR_AUTH_API      = DEF.concat(SYSTEM).concat(MANAGER).concat(AUTHORISE);
 	
 /* Main Service */

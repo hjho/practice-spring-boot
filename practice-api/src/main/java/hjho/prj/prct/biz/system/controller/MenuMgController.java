@@ -32,7 +32,7 @@ public class MenuMgController extends CommonController {
 	private MenuMgService menuMgService;
 	
 	@GetMapping()
-	@ApiOperation(value="getSysMenu", notes="시스템 메뉴 조회", response=LoginRVO.class)
+	@ApiOperation(value="getSysMenu", notes="시스템 메뉴 조회", response=MenuMgPagingRVO.class)
 	public CommonMessage getSysMenu(@ModelAttribute MenuMgPagingPVO menuMgPagingPVO) throws UserException {
 		this.parameterLog("SysMenuMg[getSysMenu]", menuMgPagingPVO);
 		CommonMessage message = new CommonMessage();
