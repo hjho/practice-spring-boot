@@ -7,12 +7,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class CommonController {
 	
-	public final String PAGE = "/page";
-	
-	public final String SEL = "get";
-	public final String INS = "post";
-	public final String UPD = "put";
-	public final String DEL = "delete";
+	public final static String PAGE = "page";		// 페이지 이동.
+	public final static String SEL  = "get"; 		// 다건 조회(데이터테이블)
+	public final static String INS  = "post";		// 등록
+	public final static String UPD  = "put";		// 수정
+	public final static String DEL  = "delete";		// 삭제
+	public final static String PRIV = "priv";		// 개인정보 조회
+	public final static String EXPT = "expt";		// 출력
+
 	
 //	protected final String MAIN_PAGE = "index";
 	public final String MAIN_PAGE = "mainPage";

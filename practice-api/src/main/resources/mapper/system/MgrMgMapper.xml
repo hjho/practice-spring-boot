@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MgrMgMapper">
+	<sql id="order-system-mgr">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>mgr_id</when>
+            <when test='sortCol == 1'>mgr_id</when>
+            <when test='sortCol == 2'>mgr_nm</when>
+            <when test='sortCol == 3'>sys_mgr_stat_cd</when>
+            <when test='sortCol == 4'>rcnt_acc_dtm</when>
+            <otherwise>mgr_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , mgr_id asc
+    </sql>
+    
+    <update id="tokenSave" 
+            parameterType="string">
+        /* REFRESH TOKEN SAVE */
+        UPDATE practice.sys_mgr
+           SET upd_sys_id   = 'TK_SAVE'
+             , upd_mgr_id   = 'LOGIN'
+             , upd_dtm      = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+             , rfsh_tk      = #{refreshToken , jdbcType=VARCHAR}
+             , tk_iss_dtm   = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+             , rcnt_acc_dtm = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         WHERE mgr_id       = #{mgrId        , jdbcType=VARCHAR}
+    </update>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO" resultType="int">
+        /* 관리자 PK CHECK */
+        SELECT COUNT(*) FROM practice.sys_mgr WHERE mgr_id = #{mgrId, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getSysMgr" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrMgPagingRVO">
+        /* 관리자 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT mgr_id
+             , emp_id
+             -- , mgr_pw
+             , mgr_nm
+             , sys_mgr_stat_cd
+             , pw_err_cnt
+             , pw_chag_dtm
+             , temp_pw_iss_dtm
+             , rcnt_acc_dtm
+             -- , rfsh_tk
+             , tk_iss_dtm
+             , cret_dtm
+             , upd_dtm
+          FROM practice.sys_mgr
+    <where>
+        <if test='mgrNm != null and mgrNm != ""'>
+           AND mgr_nm LIKE '%'||#{mgrNm, jdbcType=VARCHAR}||'%'
+        </if>
+        <if test='sysMgrStatCd != null and sysMgrStatCd != ""'>
+           AND sys_mgr_stat_cd = #{sysMgrStatCd, jdbcType=VARCHAR}
+        </if>
+    </where>
+    <include refid="hjho.prj.prct.biz.system.mapper.MgrMgMapper.order-system-mgr"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <select id="getSysMgrId" resultType="string">
+        /* 관리자 관리 > 관리자아이디 채번 */
+        SELECT NVL(TO_CHAR(MAX(mgr_id)+1), TO_CHAR(SYSDATE, 'YYYY')||'0001') FROM practice.sys_mgr WHERE mgr_id LIKE TO_CHAR(SYSDATE, 'YYYY')||'%'
+    </select>
+    
+    <insert id="postSysMgr" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 등록 */
+        INSERT INTO practice.sys_mgr (
+                    mgr_id
+                  , emp_id
+                  , mgr_pw
+                  , mgr_nm
+                  , sys_mgr_stat_cd
+                  , pw_err_cnt
+                  , pw_chag_dtm
+                  , temp_pw_iss_dtm
+                  , rcnt_acc_dtm
+                  , rfsh_tk
+                  , tk_iss_dtm
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{mgrId       , jdbcType=VARCHAR}
+                  , #{empId       , jdbcType=VARCHAR}
+                  , #{mgrPw       , jdbcType=VARCHAR}
+                  , #{mgrNm       , jdbcType=VARCHAR}
+                  , #{sysMgrStatCd, jdbcType=VARCHAR}
+                  , 0
+                  , NULL
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                  , NULL
+                  , NULL
+                  , NULL
+                  , #{cretSysId , jdbcType=VARCHAR}
+                  , #{cretMgrId , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         )
+    </insert>
+    
+    <update id="putSysMgr" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 수정 */
+        UPDATE practice.sys_mgr
+           SET mgr_id          = #{mgrId        , jdbcType=VARCHAR}
+             , emp_id          = #{empId        , jdbcType=VARCHAR}
+             , mgr_nm          = #{mgrNm        , jdbcType=VARCHAR}
+             , sys_mgr_stat_cd = #{sysMgrStatCd , jdbcType=VARCHAR}
+             , upd_sys_id      = #{updSysId     , jdbcType=VARCHAR}            
+             , upd_mgr_id      = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm         = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_id          = #{mgrId, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="chngSysMgrPw" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 수정(비밀번호변경) */
+        UPDATE practice.sys_mgr
+           SET mgr_pw          = #{mgrPW        , jdbcType=VARCHAR}
+             , pw_err_cnt      = 0
+             , pw_chag_dtm     = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+             , temp_pw_iss_dtm = NULL
+             , upd_sys_id      = 'CHNG_PW'            
+             , upd_mgr_id      = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm         = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_id          = #{mgrId, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="tempSysMgrPw" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 수정(임시비밀번호발급) */
+        UPDATE practice.sys_mgr
+           SET mgr_pw          = #{mgrPW        , jdbcType=VARCHAR}
+             , pw_err_cnt      = 0
+             , pw_chag_dtm     = NULL
+             , temp_pw_iss_dtm = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+             , upd_sys_id      = 'TEMP_PW'            
+             , upd_mgr_id      = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm         = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_id          = #{mgrId, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="errSysMgrPw" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 수정(비밀번호오류) */
+        UPDATE practice.sys_mgr
+           SET pw_err_cnt = pw_err_cnt + 1
+             , upd_sys_id = 'ERR_PW'
+             , upd_dtm    = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_id     = #{mgrId, jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysMgr" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
+        /* 관리자 관리 > 삭제 */
+    </delete>
+	
+</mapper> 

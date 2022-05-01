@@ -33,7 +33,8 @@ public class SimpleXssFilter {
 			cleanVal = cleanVal.replaceAll("(?i)onload", "_onload_");
 			cleanVal = cleanVal.replaceAll("(?i)onerror", "_onerror_");
 			cleanVal = cleanVal.replaceAll("(?i)function", "_function_");
-			cleanVal = cleanVal.replaceAll("(?i)location", "_location_");
+			// 2022-03-01 메뉴....
+			// cleanVal = cleanVal.replaceAll("(?i)location", "_location_");
 			cleanVal = cleanVal.replaceAll("(?i)window", "_window_");
 			cleanVal = cleanVal.replaceAll("(?i)cookie", "_cookie_");
 			

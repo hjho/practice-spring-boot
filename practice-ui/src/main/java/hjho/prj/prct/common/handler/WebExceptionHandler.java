@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import hjho.prj.prct.common.exception.AuthVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,22 @@ public class WebExceptionHandler {
 		}
 		
 		return mav;
+	}
+	
+	@ExceptionHandler(AuthVerifyException.class)
+	public ModelAndView handlerAuthVerifyException(HttpServletRequest request, HttpServletResponse response, AuthVerifyException e) {
+		
+		this.errorMessage(e);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(this.isRequestAjax(request)) {
+			mav.setViewName("jsonView");
+		} else {
+			mav.setViewName("/error/authVerify");
+		}
+		
+		return this.returnMessageMapping(request, mav, e.getStatus(), e.getMessage());
 	}
 	
 	@ExceptionHandler(SessionExpirationException.class)
@@ -72,7 +89,7 @@ public class WebExceptionHandler {
 		log.error("=== Class    : {}", e.getClass());
 		log.error("=== Message  : {}", e.getMessage());
 		for(StackTraceElement element : e.getStackTrace()) {
-			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
+			if(element.getClassName().startsWith("hjho.prj.prct")) {
 				log.error("=== Cause    : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}

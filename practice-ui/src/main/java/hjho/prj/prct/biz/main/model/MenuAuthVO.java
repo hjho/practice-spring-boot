@@ -5,20 +5,31 @@ import lombok.Data;
 @Data
 public class MenuAuthVO {
 
+	private String authYn;
+	
 	private String menuId;
+	
+	private String menuCd;
 	
 	private String hrMenuId;
 	
 	private String menuNm;
 	
-	private String menuCtnt;
-	
 	private String pageUrl;
-	
-	private Long   ordByCls;
 	
 	private String iconVal;
 	
-	private String useYn;
+	
+	private String cretAuthYn;
+	
+	private String readAuthYn;
+	
+	private String updAuthYn;
+	
+	private String delAuthYn;
+	
+	private String exptAuthYn;
+	
+	private String privDataReadAuthYn;
 	
 }

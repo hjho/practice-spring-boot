@@ -8,26 +8,57 @@
             resultType    = "int">
         /* ID 검증 */
         SELECT COUNT(*) AS id_cnt
-          FROM (
-                SELECT '20220001' as mgr_id FROM DUAL
-          UNION ALL
-                SELECT '20220002' as mgr_id FROM DUAL
-               )
+          FROM practice.sys_mgr
          WHERE mgr_id = #{userId, jdbcType=VARCHAR} 
+    </select>
+    
+    <select id = "pwCheck" 
+            parameterType = "hjho.prj.prct.biz.main.model.LoginPVO" 
+            resultType    = "int">
+        /* PW 검증 */
+        SELECT COUNT(*) AS pw_cnt
+          FROM practice.sys_mgr
+         WHERE mgr_id = #{userId, jdbcType=VARCHAR} 
+           AND mgr_pw = #{userPw, jdbcType=VARCHAR} 
     </select>
     
     <select id = "loginProc" 
             parameterType = "hjho.prj.prct.biz.main.model.LoginPVO" 
             resultType    = "hjho.prj.prct.biz.main.model.MgrInfoVO">
         /* LOGIN 검증 */
-        SELECT * 
-          FROM (
-                SELECT '20220001' as mgr_id, 'a123456789' as mgr_pw, '테스터1' as mgr_nm, 'SUPER' as mgr_grp_id FROM DUAL
-          UNION ALL
-                SELECT '20220002' as mgr_id, 'a123456789' as mgr_pw, '테스터2' as mgr_nm, 'LVEL1' as mgr_grp_id  FROM DUAL
-               )
-         WHERE mgr_id = #{userId, jdbcType=VARCHAR} 
-           AND mgr_pw = #{userPw, jdbcType=VARCHAR}
+        SELECT grp.mgr_grp_id 
+             , grp.mgr_grp_nm
+             , mgr.mgr_id 
+             , mgr.mgr_nm 
+             , mgr.sys_mgr_stat_cd 
+             , rol.apit_dtm 
+             , rol.expr_dtm  
+          FROM (SELECT in_mgr.mgr_id 
+                     , in_mgr.mgr_nm 
+                     , in_mgr.sys_mgr_stat_cd 
+                  FROM practice.sys_mgr in_mgr
+                 WHERE in_mgr.mgr_id = #{userId, jdbcType=VARCHAR}
+                   AND in_mgr.mgr_pw = #{userPw, jdbcType=VARCHAR}
+                   AND in_mgr.sys_mgr_stat_cd IN (SELECT cd_val 
+                                            FROM practice.sys_comm_cd_bs bs 
+                                           INNER JOIN practice.sys_comm_cd_dt dt
+                                              ON bs.comm_cd_id = dt.comm_cd_id
+                                           WHERE bs.use_yn      = 'Y'
+                                             AND dt.use_yn      = 'Y'
+                                             AND dt.comm_cd_id  = 'SYS_MGR_STAT_CD'
+                                             AND dt.addt_cd_val = 'Y')
+               ) mgr
+         INNER JOIN practice.sys_mgr_role rol
+            ON mgr.mgr_id     = rol.mgr_id 
+         INNER JOIN practice.sys_mgr_grp grp
+            ON rol.mgr_grp_id = grp.mgr_grp_id
+         WHERE rol.apit_dtm <![CDATA[<=]]> TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss')
+           AND rol.expr_dtm <![CDATA[> ]]> TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss')
+           AND rol.use_yn     =  'Y'
+           AND grp.use_yn     =  'Y'
+       <if test='mgrGrpId != null and mgrGrpId != ""'>
+           AND grp.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+       </if>
     </select>
     
 </mapper> 

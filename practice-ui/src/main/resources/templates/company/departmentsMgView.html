@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="departmentsMg">
+				<!-- 조회 조건 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-5 row">
+					   				<label for="inLocationId" class="col-3 col-form-label text-right">국가</label>
+							      	<select class="col-8 form-control change-start" id="inCountryId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxCunt}">
+							        	<option th:value=${item.countryId} th:text=${item.countryName}></option>
+							        </th:block>
+							      	</select>
+								</div>
+								<div class="col-4 row">
+									<label for="inDepartmentName" class="col-4 col-form-label text-right">부서명</label>
+			    					<input type="text" class="col-8 form-control enter-start" id="inDepartmentName">
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()">조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 부서 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		부서 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableDepartments">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">부서번호</th>
+									<th class="text-center">부서명</th>
+									<th class="text-center">위치번호</th>
+									<th class="text-center">도시명</th>
+									<th class="text-center">관리자아이디</th>
+									<th class="text-center">관리자명</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				</div>
+			<br>
+				<!-- 부서 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		부서 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formDepartments">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="departmentId"><span class="req">*</span>부서번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="departmentId" name="departmentId" aria-describedby="departmentIdText" placeholder="신규 시 자동 등록" onkeyup="EventUtils.numberFormat(this)" disabled>
+			    					<small id="departmentIdText" class="form-text text-muted">
+	  									부서번호는 10 단위 입니다.
+									</small>
+								</div>
+					  			<div class="col-4">
+									<label for="departmentName"><span class="req">*</span>부서명</label>
+			    					<input type="text" class="form-control form-control-sm" id="departmentName" name="departmentName">
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+					  			<div class="col-4">
+					  				<label for="managerId">팀장ID/명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalEmployee" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="managerId" name="managerId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="managerName" name="managerName" readonly>
+										</div>
+									</div>
+								</div>
+					  			<div class="col-4">
+					  				<label for="locationId">위치ID/도시명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalLocation" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="locationId" name="locationId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="locationName" name="locationName" readonly>
+										</div>
+									</div>
+								</div>
+	  						</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+<th:block th:include="/company/employeeModal"></th:block>
+<th:block th:include="/company/locationModal"></th:block>
+			</th:block>
+
+<th:block th:fragment="departmentsMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableDepartments');
+			DataTableUtils.init('#tableEmployee');
+			DataTableUtils.init('#tableLocation');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableDepartments').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableDepartments').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableDepartments', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+			// 모달 팝업 초기화 (사원 검색)
+			$('#modalEmployee').on('show.bs.modal', function (e) {
+				// 사원 조회
+				fnGetMgrEmp('#managerId', '#managerName');
+			});
+			
+			// 모달 팝업 초기화 (위치 검색)
+			$('#modalLocation').on('show.bs.modal', function (e) {
+				// 위치 조회
+				fnGetLoc('#locationId', '#locationName');
+			});
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("부서 검색");
+			DataTableUtils.get({
+				tableId : "#tableDepartments",
+				url : "/company/departments" + AjaxUtils.SEL,
+				param : {
+					"departmentName" : $('#inDepartmentName').val(),
+					"countryId"      : $('#inCountryId').val()
+				},
+				columns: [
+		            { "data": "rowNo"         , "class": "text-center"},
+		            { "data": "departmentId"  , "class": "text-center"},
+		            { "data": "departmentName", "class": "text-left"  },
+		            { "data": "locationId"    , "class": "text-center"},
+		            { "data": "locationName"  , "class": "text-left"  },
+		            { "data": "managerId"     , "class": "text-center"},
+		            { "data": "managerName"   , "class": "text-left"  }
+		        ]
+			});
+		}
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			// 부서 번호
+			$('#formDepartments').find('#departmentId').val("");
+			// 부서 명
+			$('#formDepartments').find('#departmentName').val("");
+			// 관리자ID/명
+			$('#formDepartments').find('#managerId').val("");
+			$('#formDepartments').find('#managerName').val("");
+			// 지역ID/명
+			$('#formDepartments').find('#locationId').val("");
+			$('#formDepartments').find('#locationName').val("");
+		}
+		
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 부서 번호
+			$('#formDepartments').find('#departmentId').val(data.departmentId);
+			// 부서 명
+			$('#formDepartments').find('#departmentName').val(data.departmentName);
+			// 관리자ID/명
+			$('#formDepartments').find('#managerId').val(data.managerId);
+			$('#formDepartments').find('#managerName').val(data.managerName);
+			// 지역ID/명
+			$('#formDepartments').find('#locationId').val(data.locationId);
+			$('#formDepartments').find('#locationName').val(data.locationName);
+		}
+		
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// alert("Method : " + method);
+			// 입력 값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 부서를 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/company/departments"+method,
+					param : AjaxUtils.getParam(
+						"#formDepartments",
+						function() {},
+						function(param) { return param; }
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableDepartments');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(method != AjaxUtils.INS) {
+				if(StringUtils.isEmpty($('#departmentId').val())) {
+					alert(message);
+					return '#departmentId';
+				}
+			}
+			
+			if(StringUtils.isEmpty($('#departmentName').val())) {
+				alert(message);
+				return '#departmentName';
+			}
+			
+			return '';
+		}
+		
+		// 테스트
+		function fnListDataTest() {
+			// alert("지역 검색");
+			var arr = [];
+			for(var i=0; i<3; i++) {
+				var map = {
+						"departmentId" : i,
+						"departmentName" : i + "테스트"
+				}
+				arr.push(map);
+			}
+			var obj = {
+					url : "/company/departments/test",
+					contentType : "application/json",
+					param : AjaxUtils.getParam(
+						"#formDepartments",
+						function() {},
+						function(param) { 
+							console.log(JSON.stringify(arr));
+							return JSON.stringify(arr); 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableDepartments');
+					},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
+		}
+		
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

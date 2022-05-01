@@ -4,7 +4,7 @@ server:
   servlet:
     register-default-servlet: true
     session:
-      timeout: 600
+      timeout: 3600 # 10분:600, 60분:3600
       cookie:
         http-only: true
         #max-age: 43200m    # 60m * 24h * 30d

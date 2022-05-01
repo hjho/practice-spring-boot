@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/test")
+@RequestMapping("/practice/test")
 public class TestController extends CommonController {
 
 	@Autowired

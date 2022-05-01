@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.company.mapper.JobsHsMapper">
+	
+    <select id="getJobsHs" parameterType="hjho.prj.prct.biz.company.model.JobsHsPagingPVO" resultType="hjho.prj.prct.biz.company.model.JobsHsPagingRVO">
+        /* 자사 직책 히스토리 관리 > 조회 */
+        <include refid="common.sql.page-head"/>
+        SELECT employee_id
+             , (SELECT e.first_name||' '||e.last_name
+                  FROM hr.employees e
+                 WHERE e.employee_id = jh.employee_id)       AS manager_name
+             , start_date 
+             , end_date 
+             , job_id
+             , (SELECT j.job_title 
+                  FROM hr.jobs j 
+                 WHERE j.job_id = jh.job_id)                 AS job_title 
+             , department_id 
+             , (SELECT d.department_name 
+                  FROM hr.departments d 
+                 WHERE d.department_id = jh.department_id)   AS department_name
+          FROM hr.job_history jh
+         WHERE employee_id = #{employeeId, jdbcType=NUMERIC}
+        <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <delete id="deleteJobsHs" parameterType="hjho.prj.prct.biz.company.model.EmployeesMgVO">
+        /* 자사 직책 히스토리 관리 > 삭제 */
+        DELETE 
+          FROM hr.job_history
+         WHERE employee_id = #{employeeId, jdbcType=NUMERIC}
+    </delete>
+    
+</mapper> 

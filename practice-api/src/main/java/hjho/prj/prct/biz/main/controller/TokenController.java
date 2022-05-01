@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
-import hjho.prj.prct.biz.sys.service.SysMgrMgService;
+import hjho.prj.prct.biz.system.service.MgrMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/token")
+@RequestMapping("/api/main/token")
 @Api(tags="Token", value="TOKEN", description="토큰 발급 및 검증")
 public class TokenController extends CommonController {
 
@@ -29,7 +29,7 @@ public class TokenController extends CommonController {
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
 	@Autowired
-	private SysMgrMgService sysMgrMgService;
+	private MgrMgService mgrMgService;
 	
 	@PostMapping("/issue")
 	@ApiOperation(value="issue", notes="토큰 발급", response=String.class)
@@ -48,7 +48,7 @@ public class TokenController extends CommonController {
 		String refreshToken = jsonWebTokenUtils.createRefreshJWT();
 		
 		// Refresh Token Value Save
-		if(sysMgrMgService.tokenSave(mgrInfoVO, refreshToken)) {
+		if(mgrMgService.tokenSave(mgrInfoVO, refreshToken)) {
 			log.debug("[TOKEN] 발급 및 저장 완료 : {}, {}", mgrInfoVO.getMgrId(), mgrInfoVO.getMgrGrpId());
 		}
 		

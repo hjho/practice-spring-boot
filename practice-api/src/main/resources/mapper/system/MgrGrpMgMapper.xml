@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MgrGrpMgMapper">
+	<sql id="order-system-mgr-grp">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>mgr_grp_id</when>
+            <when test='sortCol == 1'>mgr_grp_id</when>
+            <when test='sortCol == 2'>mgr_grp_nm</when>
+            <when test='sortCol == 3'>use_yn</when>
+            <when test='sortCol == 4'>mgr_cnt</when>
+            <otherwise>mgr_grp_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , mgr_grp_id asc
+    </sql>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MgrGrpMgVO" resultType="int">
+        /* 관리자 그룹 PK CHECK */
+        SELECT COUNT(*) FROM practice.sys_mgr_grp WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getSysMgrGrp" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrGrpMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrGrpMgPagingRVO">
+        /* 관리자 그룹 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT grp.mgr_grp_id
+             , grp.mgr_grp_nm
+             , grp.mgr_grp_info
+             , grp.use_yn
+             , (SELECT COUNT(*)
+                  FROM practice.sys_mgr_auth auth
+                 WHERE auth.mgr_grp_id = grp.mgr_grp_id) as mgr_cnt
+             , grp.cret_dtm
+             , grp.upd_dtm
+          FROM practice.sys_mgr_grp grp
+    <where>
+        <if test='mgrGrpNm != null and mgrGrpNm != ""'>
+           AND mgr_grp_nm LIKE '%'||#{mgrGrpNm, jdbcType=VARCHAR}||'%'
+        </if>
+        <if test='useYn != null and useYn != ""'>
+           AND useYn = #{useYn, jdbcType=VARCHAR}
+        </if>
+    </where>
+    <include refid="hjho.prj.prct.biz.system.mapper.MgrGrpMgMapper.order-system-mgr-grp"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postSysMgrGrp" parameterType="hjho.prj.prct.biz.system.model.MgrGrpMgVO">
+        /* 관리자 그룹 관리 > 등록 */
+        INSERT INTO practice.sys_mgr_grp (
+                    mgr_grp_id
+                  , mgr_grp_nm
+                  , mgr_grp_info
+                  , use_yn
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{mgrGrpId     , jdbcType=VARCHAR}
+                  , #{mgrGrpNm     , jdbcType=VARCHAR}
+                  , #{mgrGrpInfo   , jdbcType=VARCHAR}
+                  , #{useYn        , jdbcType=VARCHAR}
+                  , #{cretSysId    , jdbcType=VARCHAR}
+                  , #{cretMgrId    , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         )
+    </insert>
+    
+    <update id="putSysMgrGrp" parameterType="hjho.prj.prct.biz.system.model.MgrGrpMgVO">
+        /* 관리자 그룹 관리 > 수정 */
+        UPDATE practice.sys_mgr_grp
+           SET mgr_grp_id   = #{mgrGrpId     , jdbcType=VARCHAR}
+             , mgr_grp_nm   = #{mgrGrpNm     , jdbcType=VARCHAR}
+             , mgr_grp_info = #{mgrGrpInfo   , jdbcType=VARCHAR}
+             , use_yn       = #{useYn        , jdbcType=VARCHAR}
+             , upd_sys_id   = #{updSysId     , jdbcType=VARCHAR}            
+             , upd_mgr_id   = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm      = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_grp_id   = #{mgrGrpId     , jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysMgrGrp" parameterType="hjho.prj.prct.biz.system.model.MgrGrpMgVO">
+        /* 관리자 그룹 관리 > 삭제 */
+        DELETE
+          FROM practice.sys_mgr_grp
+         WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+    </delete>
+	
+</mapper> 

@@ -55,6 +55,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 			"/html/**",				// static
 			"/css/**",				// static
 			"/login/**",			// login page
+			"/main/page",			// main  page
 			"/error/**",			// error page
 			"/favicon.*"
 	};

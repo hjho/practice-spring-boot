@@ -1,14 +1,13 @@
 package hjho.prj.prct.common.filter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import hjho.prj.prct.common.clazz.CommonModel;
+import hjho.prj.prct.common.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -16,8 +15,8 @@ public class ParameterResolver implements HandlerMethodArgumentResolver {
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		log.debug("[F] Parameter Resolver Class : {}", parameter.getParameterType());
-		return false; // methodParameter.getParameterType().equals(HashMap.class);
+		this.isCommonModel(parameter.getParameterType());
+		return false;
 	}
 
 	@Override
@@ -27,10 +26,27 @@ public class ParameterResolver implements HandlerMethodArgumentResolver {
 			                    , WebDataBinderFactory binderFactory)
     throws Exception 
 	{
-		String 이런느낌 = webRequest.getParameter("이런느낌");
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("이런느낌", 이런느낌);
-		return null; // map
+		// TODO
+		String[] menuId = new String[] {SecurityUtil.getAuthoritie().get("menuId")};
+		String[] mgrId  = new String[] {SecurityUtil.getMgrInfo().getMgrId()};
+		webRequest.setAttribute("cretSysId", menuId[0], 0);
+		webRequest.setAttribute("updSysId", mgrId[0], 0);
+		webRequest.setAttribute("cretMgrId", mgrId[0], 0);
+		webRequest.setAttribute("updMgrId", mgrId[0], 0);
+		return parameter;
+	}
+	
+	private boolean isCommonModel(Class<?> paramClass) {
+		log.debug("[F] Parameter Resolver Class : {}", paramClass);
+		if(Object.class.equals(paramClass)) {
+			return false;
+		}
+		
+		if(CommonModel.class.equals(paramClass)) {
+			return true;
+		}
+		
+		return this.isCommonModel(paramClass.getSuperclass());
 	}
 
 }

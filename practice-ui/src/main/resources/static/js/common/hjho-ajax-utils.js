@@ -3,6 +3,7 @@
  */
 var AjaxUtils = function() {
 	return {
+		SEL : "/get",
 		INS : "/post",
 		UPD : "/put",
 		DEL : "/delete",

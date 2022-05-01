@@ -13,6 +13,7 @@ import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
 import hjho.prj.prct.common.util.SessionUtil;
+import hjho.prj.prct.common.util.StringUtil;
 import hjho.prj.prct.common.util.VoUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,11 +23,11 @@ public class MainService extends CommonService {
 
 	public boolean isSessionFail(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		if(ObjectUtils.isEmpty(SessionUtil.getMgrInfo(session))) {
+		if(ObjectUtils.isEmpty(SessionUtil.getUser(session))) {
 			log.warn("[V] 마지막 접속이후 {}이 지났습니다.", SessionUtil.getDestroySetTime(session));
 			return true;
 		} else {
-			log.debug("[V] Session And Mgr Ok");
+			log.debug("[V] Verify Session Ok");
 		}
 		return false;
 	}
@@ -34,7 +35,7 @@ public class MainService extends CommonService {
 	public boolean isTokenVerifyFail(HttpServletRequest request) {
 		boolean isFail = true;
 		HttpSession session = request.getSession();
-		MgrInfoVO mgrInfoVO = SessionUtil.getMgrInfo(session);
+		MgrInfoVO mgrInfoVO = SessionUtil.getUser(session);
 		String sessMgrId = mgrInfoVO.getMgrId();
 		String token = SessionUtil.getToken(session);
 		
@@ -44,7 +45,7 @@ public class MainService extends CommonService {
 		}
 		
 		// 1. Access Token Verify.
-		CommonMessage atkMsg = this.post("/api/token/verify", token);
+		CommonMessage atkMsg = super.post("/api/token/verify", token);
 		String atkMsgCode = atkMsg.getCode();
 		
 		// 2. Access Token Verify OK.
@@ -63,10 +64,10 @@ public class MainService extends CommonService {
 				
 				log.debug("[V] Access Token Expiration");
 				// 5. Get Refresh Token Value.
-				CommonMessage mgrMsg = this.post("/api/sys/mgr/getToken", sessMgrId);
+				CommonMessage mgrMsg = super.post("/api/sys/mgr/getToken", sessMgrId);
 				
 				// 6. Refresh Token Verify.
-				CommonMessage rtkMsg = this.post("/api/token/reverify", mgrMsg.getData());
+				CommonMessage rtkMsg = super.post("/api/token/reverify", mgrMsg.getData());
 				String rtkMsgCode = rtkMsg.getCode();
 				
 				// 7. Refresh Token Verify OK.
@@ -94,16 +95,30 @@ public class MainService extends CommonService {
 			}
 		}
 		if(isFail) {
-			log.debug("[V] Token Verify Fail");
+			log.debug("[V] Verify Token Fail");
 		} else {
-			log.debug("[V] Token Verify Ok");
+			log.debug("[V] Verify Token Ok");
 		}
 		return isFail;
 	}
 
 	public boolean isMgrAuthorityFail(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean isFail = true;
+		
+		CommonMessage message = super.authCheck(request);
+		
+		if(message.isSuccess()) {
+			String yn = (String) message.getData();
+			if(StringUtil.isY(yn)) {
+				isFail = false;
+			}
+		}
+		if(isFail) {
+			log.debug("[V] Verify Auth Fail : {}", message.getMessage());
+		} else {
+			log.debug("[V] Verify Auth Ok");
+		}
+		return isFail;
 	}
 
 }

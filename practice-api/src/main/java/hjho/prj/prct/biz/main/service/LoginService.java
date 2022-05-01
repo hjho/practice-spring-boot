@@ -1,5 +1,7 @@
 package hjho.prj.prct.biz.main.service;
 
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,8 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
-	public MgrInfoVO loginProc(LoginPVO loginPVO) throws UserException {
-		MgrInfoVO returnVO = null;
+	public List<MgrInfoVO>  loginProc(LoginPVO loginPVO) throws UserException {
+		List<MgrInfoVO>  returnVO = null;
 		
 		// 입력 값 검증
 		if(this.isParamCheckOk(loginPVO)) {
@@ -31,21 +33,25 @@ public class LoginService {
 		
 		return returnVO;
 	}
-	private MgrInfoVO loginCheck(LoginPVO loginPVO) throws UserException {
-		MgrInfoVO returnVO = null;
-		
-		// ID 검즘
+	private List<MgrInfoVO> loginCheck(LoginPVO loginPVO) throws UserException {
+		List<MgrInfoVO> grpList = null;
+		// ID 검즘.
 		int idCnt = loginMapper.idCheck(loginPVO);
 		if(idCnt == 0) {
 			throw new UserException("9100");
 		}
-		// 비밀번호 검증
-		returnVO = loginMapper.loginProc(loginPVO);
-		if(ObjectUtils.isEmpty(returnVO)) {
+		// 비밀번호 검증.
+		int pwCnt = loginMapper.pwCheck(loginPVO);
+		if(pwCnt == 0) {
 			throw new UserException("9101");
 		}
+		// 역할 검증.
+		grpList = loginMapper.loginProc(loginPVO);
+		if(ObjectUtils.isEmpty(grpList)) {
+			throw new UserException("9102");
+		}
 		
-		return returnVO;
+		return grpList;
 	}
 	
 	private boolean isParamCheckOk(LoginPVO loginPVO) throws UserException {

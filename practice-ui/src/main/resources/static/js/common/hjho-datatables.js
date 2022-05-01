@@ -39,6 +39,7 @@ var DataTableUtils = function() {
 		 */
 		init : function(tableId) {
 			$(tableId).dataTable( {
+				"destroy": true,
 				"serverSide": false,
 			    "paging": true,
 			    "lengthMenu": lengthMenu,
@@ -118,14 +119,21 @@ var DataTableUtils = function() {
 						AjaxUtils.error(xhr.responseJSON);
 					}
 				},
-				"columns" : data.columns
+				"columns" : data.columns,
+				"drawCallback": function(settings) {
+					if(typeof data.callback == "function") {
+	     			   	data.callback(settings);
+					}
+    			}
 			});
 		},
 		refrash : function(tableId) {
 			var pages = $(tableId).dataTable().api().page.info().pages;
 			if(pages != 0) {
 				$(tableId).dataTable().api().ajax.reload(null, false);
-			}
+			} else {
+				$(tableId).dataTable().api().ajax.reload(null, false);
+			} 
 		},
 		isSeleted : function(tableId, tr) {
 			if($(tr).attr('class').indexOf('selected') > -1) {

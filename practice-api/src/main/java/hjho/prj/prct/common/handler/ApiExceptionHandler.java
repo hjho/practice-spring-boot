@@ -66,8 +66,8 @@ public class ApiExceptionHandler {
 		
 		log.error("================== [ EXCEPTION ] ======================");
 		for(StackTraceElement element : e.getStackTrace()) {
-			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
-				log.debug("=== Cause       : {} ({})", element.getClassName(), element.getLineNumber());
+			if(element.getClassName().startsWith("hjho.prj.prct")) {
+				log.error("=== Cause       : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}
 		log.error("=== Exception   : {}", e.getClass());

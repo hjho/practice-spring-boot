@@ -5,10 +5,18 @@ import lombok.Data;
 @Data
 public class MgrInfoVO {
 
+	private String mgrGrpId;
+	
+	private String mgrGrpNm;
+	
 	private String mgrId;
 	
 	private String mgrNm;
 	
-	private String mgrGrpId;
+	private String sysMgrStatCd;
+	
+	private String apitDtm;
+	
+	private String exprDtm;
 	
 }
