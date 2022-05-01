@@ -1,0 +1,101 @@
+		<!--================ START LOCATION MODAL START ================-->
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modalLocation">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">부서 위치 선택</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">부서 위치 목록</h5>
+								  	<div class="card-body">
+								  		<table class="table table-sm table-hover table-bordered" id="tableLocation">
+											<thead class="table-light">
+												<tr>
+													<th class="text-center">No</th>
+													<th class="text-center">위치번호</th>
+													<th class="text-center">국가명</th>
+													<th class="text-center">주(시/도)</th>
+													<th class="text-center">도시명(시/군/구)</th>
+													<th class="text-center">도로명</th>
+												</tr>
+											</thead>
+										</table>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+					        	<button type="button" class="btn btn-secondary" onclick="fnNotChocLoc()">선택안함</button>
+					        	<button type="button" class="btn btn-primary" onclick="fnChocLoc()">선택</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+				
+					var modalLocNoObj = '';
+					var modalLocNmObj = '';
+					
+					$(document).ready(function() {
+						$('#tableLocation').on('click', 'tbody tr', function() {
+							var data = $('#tableLocation').dataTable().fnGetData(this);
+							if(StringUtils.isEmpty(data)) {
+								return;
+							}
+							
+							if(DataTableUtils.isSeleted('#tableLocation', this)) {
+								return;
+							}
+						});
+					});
+					// 위치 조회
+					function fnGetLoc(noObj, nmObj) {
+						modalLocNoObj = noObj;
+						modalLocNmObj = nmObj;
+						
+						DataTableUtils.get({
+							tableId : "#tableLocation",
+							url : "/company/locations" + AjaxUtils.SEL,
+							columns: [
+					            { "data": "rowNo"        , "class": "text-center"},
+					            { "data": "locationId"   , "class": "text-center", "visible": false},
+					            { "data": "countryName"  , "class": "text-left"  },
+					            { "data": "stateProvince", "class": "text-left"  },
+					            { "data": "city"  		 , "class": "text-left"  },
+					            { "data": "streetAddress", "class": "text-left"  }
+					        ]
+						});
+					}
+					// 위치 선택
+					function fnChocLoc() {
+						var data = $('#tableLocation').dataTable().fnGetData('#tableLocation .selected');
+						if(StringUtils.isEmpty(data)) {
+							return alert("위치를 선택해주세요.");;
+						}
+						
+						var locationId     = data.locationId;
+						var locationIdName = data.city;
+						
+						var message =  "";
+						    message += "(" + locationId + ")" + data.countryName + " " + data.stateProvince + " " + locationIdName + " " + data.streetAddress;
+						    message += "\n";
+						    message += "위 위치로 선택하시겠습니까?";
+						if(confirm(message)) {
+							// 위치번호/도시명
+							$(modalLocNoObj).val(locationId);
+							$(modalLocNmObj).val(locationIdName);
+							$('#modalLocation').modal('hide');
+						}
+					}
+					// 위치 선택 안함
+					function fnNotChocLoc() {
+						// 위치번호/도시명
+						$(modalLocNoObj).val("");
+						$(modalLocNmObj).val("");
+						$('#modalLocation').modal('hide');
+					}
+				</script>
+		<!--================ END LOCATION MODAL END ================-->

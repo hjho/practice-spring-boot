@@ -106,11 +106,11 @@
 		});
 		
 		function initMenu() {
-			var treeMenu = /*[[${session.menu}]]*/[]; 
+			const treeMenu = /*[[${session.menu}]]*/[]; 
 			
 			$.each(treeMenu, function(index, menuHr) {
-				var menuTitlId = "#" + menuHr.menuId + 'MgTitle'
-				var menuBodyId = "#" + menuHr.menuId + 'MgBody'
+				var menuTitlId = "#" + menuHr.menuId + 'Title'
+				var menuBodyId = "#" + menuHr.menuId + 'Body'
 				
 				// Show, Hide 이벤트 추가
 				$(menuBodyId).on('show.bs.collapse', function () {
@@ -130,11 +130,18 @@
 				
 				$.each(menuHr.menuLr, function(index, menuLr) {
 					var pageUrl = menuLr.pageUrl+'/page';
-					var menuDtId = "#" + menuLr.menuId + 'Mg';
+					var menuDtId = "#" + menuLr.menuId;
 					
-					if(pathName == pageUrl) {
-						$(menuBodyId).addClass('show');
-						$(menuDtId+' a').addClass('active');
+					// 해당 페이지 조회 권한이 있다면.
+					if(StringUtils.isYn(menuLr.authYn)) {
+						// 현재 페이지일 경우.
+						if(pathName == pageUrl) {
+							$(menuBodyId).addClass('show');
+							$(menuDtId+' a').addClass('active');
+						}
+					// 조회 권한이 없다면.
+					} else {
+						$(menuDtId+' a').addClass('disabled');
 					}
 				});
 			});

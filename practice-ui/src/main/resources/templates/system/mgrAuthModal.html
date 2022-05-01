@@ -1,0 +1,114 @@
+		<!--================ START MGR AUTH MODAL START ================-->
+				<div class="modal fade" id="modalMgrAuth" tabindex="-1" role="dialog" aria-hidden="true">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">추가 메뉴 선택</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">메뉴 목록</h5>
+								  	<div class="card-body">
+								  		<table class="table table-sm table-hover table-bordered" id="tableMgrAuthModal">
+											<thead class="table-light">
+												<tr>
+													<th class="text-center">No</th>
+													<th class="text-center">아이디</th>
+													<th class="text-center">메뉴명</th>
+													<th class="text-center">타입</th>
+													<th class="text-center">사용여부</th>
+												</tr>
+											</thead>
+										</table>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+					        	<button type="button" class="btn btn-secondary" onclick="mgrAuth.fnClose()">닫기</button>
+					        	<button type="button" class="btn btn-primary" onclick="mgrAuth.fnAdd()">추가</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+				
+					var mgrAuth = {
+						grpId : "",
+						fnGet : function(mgrGrpId) {
+							this.grpId = mgrGrpId;
+							DataTableUtils.get({
+								tableId : "#tableMgrAuthModal",
+								url : "/system/mgr/auth/menu" + AjaxUtils.SEL,
+								param : {
+									"mgrGrpId": mgrGrpId,
+									"roleMgrYn": "N"
+								},
+								orderYn: "N",
+								columns: [
+									{ 
+										"data": "", "class": "text-center",
+									  	"render": function(data, type, row) {
+											return '<input type=\"checkbox\" class=\"form-check-input\" name=\"check\">';
+										}
+									},
+									{"data": "menuCd", "class": "text-center"},
+						            {
+										"data": "menuId", "class": "text-center",
+										"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"menuId\" value=\"'+data+'\" disabled>';
+										}
+									},
+									{"data": "menuNm", "class": "text-left"  },
+									{"data": "useYn", "class": "text-center" }
+						        ]
+							});
+						},
+						fnAdd : function() {
+							var inputList = [];
+			
+							var obj = $('#tableMgrAuthModal').find('input[name=check]');
+							$.each(obj, function(i, item) {
+								if($(item).is(':checked')) {
+									var data = {
+										"mgrGrpId": mgrAuth.grpId,
+										"menuId"     : $('#tableMgrAuthModal').find('input[name=menuId]').eq(i).val(),
+										"readAuthYn" : "Y",
+										"cretAuthYn" : "N",
+										"updAuthYn"  : "N",
+										"delAuthYn"  : "N",
+										"exptAuthYn" : "N",
+										"privDataReadAuthYn" : "N",
+										"useYn"      : "Y"
+									}
+									inputList.push(data);
+								}
+							});
+							
+							if(inputList.length == 0) {
+								alert("추가 할 메뉴를 체크해주세요.");
+								return;
+							}
+							var obj = {
+									url : "/system/mgr/auth" + AjaxUtils.INS,
+									contentType : "application/json",
+									param : JSON.stringify(inputList),
+									funcOk : function(data) {
+										$('#modalMgrAuth').modal('hide');
+										var param = {
+											"mgrGrpId": mgrAuth.grpId
+										}
+										fnAuthInit(param);
+									},
+									funcErr : function(data) {}
+							}
+							AjaxUtils.run(obj);
+						}, 
+						fnClose : function() {
+							$('#modalMgrAuth').modal('hide'); 
+						}
+					}
+				</script>
+		<!--================ END MGR AUTH MODAL END ================-->

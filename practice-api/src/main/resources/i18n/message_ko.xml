@@ -5,9 +5,12 @@
 	<!-- DEFAULT MESSAGE -->
 	<entry key="0000">정상적으로 처리 되었습니다.</entry>
 	<entry key="9999">일시적인 오류가 발생했습니다.</entry>
+	<entry key="9998">{0}의 {1}권한이 없습니다.</entry>
+	<entry key="9997">권한이 없습니다.</entry>
 	
 	<entry key="0001">변경 건수는 {0}건 입니다.</entry>
 	<entry key="0002">삭제 건수는 {0}건 입니다.</entry>
+	<entry key="0003">등록 건수는 {0}건 입니다.</entry>
 	
 	<!-- 000 ADD MESSAGE -->
 	<entry key="9001">입력 값이 존재하지 않습니다.</entry>
@@ -16,10 +19,12 @@
 	<entry key="9004">토큰이 만료되었습니다.</entry>
 	<entry key="9005">해당 {0}는(은) 이미 존재합니다.</entry>
 	<entry key="9006">해당 {0}는(은) 존재하지 않습니다.</entry>
+	<entry key="9007">{0}의 최대길이는 {1}입니다.({2})</entry>
 	
 	<!-- 100 MAIN MESSAGE -->
 	<entry key="9100">존재하지 않는 아이디 입니다.</entry>
 	<entry key="9101">비밀번호가 올바르지 않습니다.</entry>
+	<entry key="9102">해당 관리자의 역할이 존재하지 않습니다.</entry>
 	
 	<!-- 200 MGR MESSAGE -->
 	<entry key="9200">최소 연봉은 최대 연봉보다 클 수 없습니다.</entry>

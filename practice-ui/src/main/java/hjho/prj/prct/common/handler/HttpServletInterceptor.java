@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.service.MainService;
+import hjho.prj.prct.common.exception.AuthVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.util.SessionUtil;
 import hjho.prj.prct.common.util.StringUtil;
@@ -30,55 +33,67 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebMvc
 public class HttpServletInterceptor implements HandlerInterceptor {
 	
-	private final String STOP_WATCH = "stopWatch";
+	private final boolean isHeaderLog = false;
 	
-	private final boolean isHeaderLog = true;
-	
-	private final boolean isCookieLog = true;
+	private final boolean isCookieLog = false;
 	
 	private final boolean isSessionLog = true;
 	
 	private final boolean isSecurityLog = true;
 	
+	private final boolean isTestMode = false;
+	
 	@Autowired
 	private MainService mainService;
-	
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 	throws Exception 
 	{
-		log.debug("============= [INTERCEPTOR STRART] ================");
+		log.info("============= [INTERCEPTOR STRART] ================");
 		log.debug("[H] [ Http BEFORE  ] : {}", request.getRequestURL().toString());
 		StopWatch stopWatch = new StopWatch(request.getRequestURL().toString());
-		stopWatch.start("ResponseTime");
-		request.setAttribute(STOP_WATCH, stopWatch);
 		
+		stopWatch.start("log");
 		// Header Log
 		if(isHeaderLog) this.hearderLog(request);
 		// Cookie Log		
 		if(isCookieLog) this.cookieLog(request);
 		// Session Log
 		if(isSessionLog) this.sessionLog(request);
-		// Set User Info
-		this.initUserInfo(request);
+		stopWatch.stop();
 		
-		// 세션 만료 검증.
-		if(mainService.isSessionFail(request)) {
-			throw new SessionExpirationException();
+		if(isTestMode) {
+			log.info("============= Is Test Mode ================");
+		} else {
+			// 세션 만료 검증. >> 로그인 OK or 사용자 SET
+			stopWatch.start("loginSessionCheck");
+			if(mainService.isSessionFail(request)) {
+				throw new SessionExpirationException();
+			} else {
+				// Set User Info
+				this.initUserInfo(request);
+			}
+			stopWatch.stop();
+			
+			// 토큰 검증 및 재발급.
+			stopWatch.start("tokenCheck");
+			/*
+			if(mainService.isTokenVerifyFail(request)) {
+				throw new SessionExpirationException(); // 다른 EXCEPTION "유효하지 않은 토큰입니다."
+			}*/
+			stopWatch.stop();
+			
+			// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority
+			stopWatch.start("authorityCheck");
+			/**/
+			if(mainService.isMgrAuthorityFail(request)) {
+				throw new AuthVerifyException(); // "권한이 없습니다."
+			}
+			stopWatch.stop();
 		}
-
-//      토큰 확인?
-//		StopWatch tokenStopWatch = new StopWatch("TokenCheck");
-//		tokenStopWatch.start();
-//		tokenStopWatch.stop();
-//		log.debug("\n{}", tokenStopWatch.shortSummary());
-//		
-//		// 사용자 역할 권한 체크
-//		StopWatch ruleStopWatch = new StopWatch("RuleCheck");
-//		ruleStopWatch.start();
-//		ruleStopWatch.stop();
-//		log.debug("\n{}", ruleStopWatch.shortSummary());
+		stopWatch.start("runningTime");
+		request.setAttribute("STOP_WATCH", stopWatch);
 		return true;
 	}
 
@@ -100,8 +115,10 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 	private void cookieLog(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		log.debug("============= [COOKIE LOG START] ================");
-		for (Cookie cookie : cookies) {
-			log.debug("=== {} : {}", StringUtil.RPAD(cookie.getName(), 20, ""), cookie.getValue());
+		if(cookies != null) {
+			for (Cookie cookie : cookies) {
+				log.debug("=== {} : {}", StringUtil.RPAD(cookie.getName(), 20, ""), cookie.getValue());
+			}
 		}
 		log.debug("============= [COOKIE LOG END]===================");
 	}
@@ -110,15 +127,15 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		Enumeration<String> sessionNames = session.getAttributeNames();
 		log.debug("============= [SESSION LOG START] ================");
-		log.debug("=== {} : {}", StringUtil.RPAD("session-id", 20, ""), session.getId());
-		log.debug("=== {} : {}", StringUtil.RPAD("creation-time", 20, ""), SessionUtil.getCreationTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("session-id"        , 20, ""), session.getId());
+		log.debug("=== {} : {}", StringUtil.RPAD("creation-time"     , 20, ""), SessionUtil.getCreationTime(session));
 		log.debug("=== {} : {}", StringUtil.RPAD("last-accessed-time", 20, ""), SessionUtil.getLastAccessedTime(session));
-		log.debug("=== {} : {}", StringUtil.RPAD("destroy-time", 20, ""), SessionUtil.getDestroyTime(session));
-		log.debug("=== {} : {}", StringUtil.RPAD("destroy-set-time", 20, ""), SessionUtil.getDestroySetTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("destroy-time"      , 20, ""), SessionUtil.getDestroyTime(session));
+		log.debug("=== {} : {}", StringUtil.RPAD("destroy-set-time"  , 20, ""), SessionUtil.getDestroySetTime(session));
 		while(sessionNames.hasMoreElements()) {
 			String sessionName = sessionNames.nextElement();
 			Object sessionObj = session.getAttribute(sessionName);
-			log.debug("=== {} : {}", StringUtil.RPAD(sessionName, 20, ""), sessionObj);
+			log.debug("=== {} : {}", StringUtil.RPAD(sessionName     , 20, ""), sessionObj);
 		}
 		log.debug("============= [SESSION LOG END]===================");
 	}
@@ -147,16 +164,29 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 	 */
 	private boolean initUserInfo(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		String sessionId = session.getId();
 		
-		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getMgrInfo(session), sessionId, new String[] {"CRET", "READ", "UPD", "DEL"});
+		// 메뉴 조회.
+		String requestUri = request.getRequestURI();
+		String menuId = "NONE";
+		String pageUri = "EMPTY";
+		String[] uri = request.getHeader("referer").split(request.getHeader("host"));
+		if(uri.length > 1 && uri[1].endsWith("/page")) {
+			MenuAuthVO menu = SessionUtil.getUriMenu(session, uri[1]);
+			if(ObjectUtils.isNotEmpty(menu)) {
+				menuId = menu.getMenuId();
+				pageUri = menu.getPageUrl();
+			}
+		}
+		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getUser(session)
+				                                                     , SessionUtil.getToken(session)
+				                                                     , new String[] {menuId, pageUri, requestUri});
+
 		SecurityContext context = SecurityContextHolder.createEmptyContext(); 
 		context.setAuthentication(authentication);
 		SecurityContextHolder.setContext(context);
 		
 		if(isSecurityLog)  {
 			log.debug("============= [SECURITY LOG START] ================");
-			// log.debug("=== {} : {}", StringUtil.RPAD("session-id", 20, ""), sessionId);
 			log.debug("=== {} : {}", StringUtil.RPAD("authenticated", 20, ""), authentication.isAuthenticated());
 			log.debug("=== {} : {}", StringUtil.RPAD("principal", 20, ""), authentication.getPrincipal());
 			log.debug("=== {} : {}", StringUtil.RPAD("credentials", 20, ""), authentication.getCredentials());
@@ -176,6 +206,8 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 			               @Nullable ModelAndView modelAndView)
 	throws Exception 
 	{
+		StopWatch stopWatch = (StopWatch) request.getAttribute("STOP_WATCH");
+		stopWatch.stop();
 		log.debug("[H] [ Http AFTER   ] : {}", request.getRequestURL().toString());
 		this.delUserInfo();
 	}
@@ -185,12 +217,11 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 			                    @Nullable Exception ex) 
 	throws Exception 
 	{
-		StopWatch stopWatch = (StopWatch) request.getAttribute(STOP_WATCH);
-		stopWatch.stop();
+		log.debug("[H] [ Http COMPLET ] : {}", request.getRequestURL().toString());
+		StopWatch stopWatch = (StopWatch) request.getAttribute("STOP_WATCH");
 		// log.debug("## {}", stopWatch.shortSummary());
 		// log.debug("## {}", stopWatch.getTotalTimeMillis());
-		// log.debug("\n{}", stopWatch.prettyPrint());
-		log.debug("[H] [ Http COMPLET ] : {}", request.getRequestURL().toString());
-		log.debug("============= [INTERCEPTOR END] ===================");
+		log.debug("\n{}", stopWatch.prettyPrint());
+		log.info("============= [INTERCEPTOR END] ===================");
 	}
 }

@@ -10,25 +10,25 @@
 <th:block th:each="menuHr : ${session.menu}">
 					  	<div class="card menu">
 					    	<div class="card-header menu" 
-					    	     th:id="|${menuHr.menuId}Mg|">
+					    	     th:id="${menuHr.menuId}">
 					    	
 					      		<h5 data-toggle="collapse" class="sidebar-heading d-flex justify-content-between align-items-center px-3 text-muted menu-title"
-					      		    th:id="|${menuHr.menuId}MgTitle|" th:data-target="|#${menuHr.menuId}MgBody|"
-					      		    th:aria-controls="|${menuHr.menuId}MgBody|">
+					      		    th:id="|${menuHr.menuId}Title|" th:data-target="|#${menuHr.menuId}Body|"
+					      		    th:aria-controls="|${menuHr.menuId}Body|">
 					       		   	<span th:text="${menuHr.menuNm}"></span>
 						       		<a class="d-flex align-items-center text-muted">
-						         		<span th:id="|${menuHr.menuId}MgTitleUp|" data-feather="chevron-up"></span>
-						         		<span th:id="|${menuHr.menuId}MgTitleDown|" data-feather="chevron-down"></span>
+						         		<span th:id="|${menuHr.menuId}TitleUp|" data-feather="chevron-up"></span>
+						         		<span th:id="|${menuHr.menuId}TitleDown|" data-feather="chevron-down"></span>
 						       		</a>
 					      		</h5>
 					      		
 					    	</div>
 					    	<div data-parent="#sideBarMenu"
-					    	     th:id="|${menuHr.menuId}MgBody|" class="collapse" th:aria-labelledby="|${menuHr.menuId}Mg|">
+					    	     th:id="|${menuHr.menuId}Body|" class="collapse" th:aria-labelledby="${menuHr.menuId}">
 					      		<div class="card-body menu-body">
 	<th:block th:each="menuLr : ${menuHr.menuLr}">
 					        		<div class="nav-item col-12"
-					        		     th:id="|${menuLr.menuId}Mg|">
+					        		     th:id="${menuLr.menuId}">
 						             	<a class="nav-link" th:href="|${menuLr.pageUrl}/page|">
 											<span th:data-feather="${menuLr.iconVal}"></span>
 											<span th:text="${menuLr.menuNm}"></span>

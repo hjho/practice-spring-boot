@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MgrAuthMgMapper">
+	<sql id="order-system-mgr-auth">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>menu_id</when>
+            <when test='sortCol == 1'>menu_id</when>
+            <when test='sortCol == 2'>menu_nm</when>
+            <when test='sortCol == 3'>menu_cd</when>
+            <when test='sortCol == 5'>read_auth_yn</when>
+            <when test='sortCol == 6'>cret_auth_yn</when>
+            <when test='sortCol == 7'>upd_auth_yn</when>
+            <when test='sortCol == 8'>del_auth_yn</when>
+            <when test='sortCol == 9'>expt_auth_yn</when>
+            <when test='sortCol == 10'>priv_data_read_auth_yn</when>
+            <when test='sortCol == 11'>use_yn</when>
+            <otherwise>menu_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , menu_id asc
+    </sql>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgVO" resultType="int">
+        /* 관리자 그룹 권한 PK CHECK */
+        SELECT COUNT(*) FROM practice.sys_mgr_auth WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR} AND menu_id = #{menuId, jdbcType=VARCHAR} 
+    </select>
+    
+    <select id="getSysMgrAuth" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrAuthMgPagingRVO">
+        /* 관리자 그룹 권한 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT auth.mgr_grp_id 
+             , auth.menu_id 
+             , menu.menu_nm 
+             , menu.menu_cd 
+             , auth.read_auth_yn 
+             , auth.cret_auth_yn 
+             , auth.upd_auth_yn 
+             , auth.del_auth_yn 
+             , auth.expt_auth_yn 
+             , auth.priv_data_read_auth_yn 
+             , auth.use_yn 
+             , auth.cret_dtm 
+             , auth.upd_dtm 
+         FROM practice.sys_mgr_auth auth
+        INNER JOIN practice.sys_menu_info menu
+           ON auth.menu_id    = menu.menu_id 
+        WHERE auth.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+    <include refid="hjho.prj.prct.biz.system.mapper.MgrAuthMgMapper.order-system-mgr-auth"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <select id="getSysMgrAuthMenu" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrAuthMgPagingRVO">
+        /* 관리자 그룹 권한의 메뉴 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT menu_id 
+             , menu_nm 
+             , menu_cd 
+             , use_yn 
+          FROM practice.sys_menu_info
+         WHERE menu_id
+    <choose>
+        <when test='roleMgrYn == "N"'>NOT IN</when>
+        <otherwise>IN</otherwise>
+    </choose>(SELECT menu_id 
+                FROM practice.sys_mgr_auth
+               WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR})
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postSysMgrAuth" parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgVO">
+        /* 관리자 그룹 권한 관리 > 등록 */
+        INSERT INTO practice.sys_mgr_auth (
+                    mgr_grp_id
+                  , menu_id 
+                  , read_auth_yn 
+                  , cret_auth_yn 
+                  , upd_auth_yn 
+                  , del_auth_yn 
+                  , expt_auth_yn 
+                  , priv_data_read_auth_yn
+                  , use_yn
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{mgrGrpId          , jdbcType=VARCHAR}
+                  , #{menuId            , jdbcType=VARCHAR}
+                  , #{readAuthYn        , jdbcType=VARCHAR}
+                  , #{cretAuthYn        , jdbcType=VARCHAR}
+                  , #{updAuthYn         , jdbcType=VARCHAR}
+                  , #{delAuthYn         , jdbcType=VARCHAR}
+                  , #{exptAuthYn        , jdbcType=VARCHAR}
+                  , #{privDataReadAuthYn, jdbcType=VARCHAR}
+                  , 'Y'
+                  , #{cretSysId         , jdbcType=VARCHAR}
+                  , #{cretMgrId         , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE     , 'YYYY-MM-DD HH24:MI:SS')
+         )
+    </insert>
+    
+    <update id="putSysMgrAuth" parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgVO">
+        /* 관리자 그룹 권한 관리 > 수정 */
+        UPDATE practice.sys_mgr_auth
+           SET read_auth_yn           = #{readAuthYn        , jdbcType=VARCHAR}
+             , cret_auth_yn           = #{cretAuthYn        , jdbcType=VARCHAR}
+             , upd_auth_yn            = #{updAuthYn         , jdbcType=VARCHAR}
+             , del_auth_yn            = #{delAuthYn         , jdbcType=VARCHAR}
+             , expt_auth_yn           = #{exptAuthYn        , jdbcType=VARCHAR}
+             , priv_data_read_auth_yn = #{privDataReadAuthYn, jdbcType=VARCHAR}
+             , use_yn                 = #{useYn             , jdbcType=VARCHAR}
+             , upd_sys_id             = #{updSysId          , jdbcType=VARCHAR}            
+             , upd_mgr_id             = #{updMgrId          , jdbcType=VARCHAR}            
+             , upd_dtm                = TO_CHAR(SYSDATE     , 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_grp_id             = #{mgrGrpId          , jdbcType=VARCHAR}
+           AND menu_id                = #{menuId            , jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysMgrAuth" parameterType="hjho.prj.prct.biz.system.model.MgrAuthMgVO">
+        /* 관리자 그룹 권한 관리 > 삭제 */
+        DELETE
+          FROM practice.sys_mgr_auth
+         WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+           AND menu_id    = #{menuId  , jdbcType=VARCHAR}
+    </delete>
+	
+</mapper> 

@@ -23,6 +23,9 @@ public class SysMenuInfo extends CommonModel {
 	@ApiModelProperty(name="menuCtnt", value="메뉴 내용")
 	private String menuCtnt;
 	
+	@ApiModelProperty(name="menuCd", value="메뉴코드")
+	private String menuCd;
+	
 	@ApiModelProperty(name="pageUrl", value="페이지 URL")
 	private String pageUrl;
 	

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -124,7 +125,8 @@ public class SqlLogInterceptor implements Interceptor {
 						field.setAccessible(true);
 						
 						if(String.class == javaType) {
-							sql = sql.replaceFirst("\\?", "'".concat((String) field.get(param)).concat("'"));
+							String val = (String) ObjectUtils.defaultIfNull(field.get(param), "");
+							sql = sql.replaceFirst("\\?", "'".concat(val).concat("'"));
 						} else {
 							sql = this.replaceSql(sql, field.get(param));
 						}

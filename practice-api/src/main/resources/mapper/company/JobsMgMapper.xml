@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.company.mapper.JobsMgMapper">
+	
+    <sql id="order-company-jobs">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>job_id</when>
+            <when test='sortCol == 1'>job_id</when>
+            <when test='sortCol == 2'>job_title</when>
+            <when test='sortCol == 3'>min_salary</when>
+            <when test='sortCol == 4'>max_salary</when>
+            <otherwise>job_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , job_id asc
+    </sql>
+	
+    <select id="getJobs" parameterType="hjho.prj.prct.biz.company.model.JobsMgPagingPVO" resultType="hjho.prj.prct.biz.company.model.JobsMgPagingRVO">
+        /* 자사 직책 관리 > 조회 */
+        <include refid="common.sql.page-head"/>
+        SELECT job_id
+             , job_title 
+             , min_salary 
+             , max_salary 
+          FROM hr.jobs
+        <where>
+          <if test='jobTitle != null and jobTitle != ""'>
+           AND job_title LIKE '%'||#{jobTitle, jdbcType=VARCHAR}||'%'
+          </if>
+        </where>
+        <include refid="hjho.prj.prct.biz.company.mapper.JobsMgMapper.order-company-jobs"/>
+        <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <select id="getJobsBox" resultType="hjho.prj.prct.biz.company.model.JobsMgPagingRVO">
+        /* 자사 직책 SELECT BOX */
+        SELECT job_id, job_title FROM hr.jobs
+    </select>
+    
+    <insert id="postJobs" parameterType="hjho.prj.prct.biz.company.model.JobsMgVO">
+        /* 자사 직책 관리 > 등록 */
+        INSERT INTO hr.jobs (
+                    job_id
+                  , job_title
+                  , min_salary
+                  , max_salary
+         ) VALUES ( 
+                    #{jobId    , jdbcType=VARCHAR}
+                  , #{jobTitle , jdbcType=VARCHAR}
+                  , #{minSalary, jdbcType=NUMERIC}
+                  , #{maxSalary, jdbcType=NUMERIC}
+         )
+                
+    </insert>
+    
+    <update id="putJobs" parameterType="hjho.prj.prct.biz.company.model.JobsMgVO">
+        /* 자사 직책 관리 > 수정 */
+        UPDATE hr.jobs
+           SET job_title  = #{jobTitle , jdbcType=VARCHAR}
+             , min_salary = #{minSalary, jdbcType=NUMERIC}
+             , max_salary = #{maxSalary, jdbcType=NUMERIC}
+         WHERE job_id     = #{jobId    , jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteJobs" parameterType="hjho.prj.prct.biz.company.model.JobsMgVO">
+        /* 자사 직책 관리 > 삭제 */
+        DELETE 
+          FROM hr.jobs
+         WHERE job_id = #{jobId, jdbcType=VARCHAR}
+    </delete>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.company.model.JobsMgVO" resultType="int">
+        /* 자사 직책 관리 > PK */
+        SELECT COUNT(*) AS cnt
+          FROM hr.jobs
+         WHERE job_id = #{jobId, jdbcType=VARCHAR} 
+    </select>
+    
+</mapper> 

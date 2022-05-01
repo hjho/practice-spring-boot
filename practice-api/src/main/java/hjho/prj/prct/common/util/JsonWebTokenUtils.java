@@ -129,7 +129,7 @@ public class JsonWebTokenUtils {
         return VoUtil.objToMap(data);
     }    
 	// Refresh 토큰 검증
-	public boolean verifyRefreshJWT(String jwt) {
+	public boolean verifyRefreshJWT(String jwt) throws UserException {
 		try {
 			Jws<Claims> jwtClaims = Jwts.parser()
 					.setSigningKey(JWT_KEY.getBytes())	// Set Key.
@@ -141,13 +141,13 @@ public class JsonWebTokenUtils {
         	}
 		} catch (ExpiredJwtException eje) { 
 			log.warn("[JWT] 토큰 만료      : [{}]", eje.getMessage());
-			return false;
+			 throw new UserException("9004");
 		} catch (IncorrectClaimException ice) {
-			log.warn("[JWT] 토큰 오류      : [{}]", ice.getMessage());
-			return false;
+			log.warn("[JWT] 토큰 검증 오류      : [{}]", ice.getMessage());
+			throw new UserException("9003", new String[] {"토큰 검증"});
 		} catch (Exception e) {
 			log.warn("[JWT] 토큰 오류      : [{}]", e.getMessage());
-			return false;
+			throw new UserException("9003", new String[] {"토큰 검증"});
 		}
 		
 		return true;

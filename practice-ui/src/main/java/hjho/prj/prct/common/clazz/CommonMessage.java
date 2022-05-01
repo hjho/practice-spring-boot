@@ -16,6 +16,10 @@ public class CommonMessage implements MessageResource {
 	private Object data;
 	
 	private String[] args;
+
+	public boolean isSuccess() {
+		return DEFAULT_SUCCESS_CODE.equals(this.code);
+	}
 	
 	@Override
 	public void setOk() {

@@ -64,16 +64,16 @@ public class ApiExceptionHandler {
 		// HTTP STATUS
 		HttpStatus status = HttpStatus.valueOf(response.getStatus());
 		
-		log.debug("========================================");
+		log.error("================== [ EXCEPTION ] ======================");
 		for(StackTraceElement element : e.getStackTrace()) {
-			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
-				log.debug("=== Cause       : {} ({})", element.getClassName(), element.getLineNumber());
+			if(element.getClassName().startsWith("hjho.prj.prct")) {
+				log.error("=== Cause       : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}
-		log.debug("=== Exception   : {}", e.getClass());
-		log.debug("=== Response    : {}", message);
-		log.debug("=== Http Value  : [{}] {}, {}", status.value(), status.getReasonPhrase(), status.series());
-		log.debug("========================================");
+		log.error("=== Exception   : {}", e.getClass());
+		log.error("=== Response    : {}", message);
+		log.error("=== Http Value  : [{}] {}, {}", status.value(), status.getReasonPhrase(), status.series());
+		log.error("=======================================================");
 		
 		return new ResponseEntity<CommonMessage>(message, headers, status);
 	}

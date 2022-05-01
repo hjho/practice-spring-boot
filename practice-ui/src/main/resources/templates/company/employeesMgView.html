@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head> 
+	<body>
+			<th:block th:fragment="employeesMg">
+				<!-- 조회 -->
+				<div class="card">
+				  	<div class="card-body">
+				  		<div class="row">
+					   		<div class="col-10 row">
+								<div class="col-5 row">
+					   				<label for="inDepartmentId" class="col-3 col-form-label text-right">부서</label>
+							      	<select class="col-8 form-control change-start" id="inDepartmentId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxDept}">
+							        	<option th:value=${item.departmentId} th:text=${item.departmentName}></option>
+							        </th:block>
+							      	</select>
+								</div>
+								<div class="col-5 row">
+					   				<label for="inJobId" class="col-3 col-form-label text-right">직책</label>
+							      	<select class="col-8 form-control change-start" id="inJobId">
+							        	<option value="" selected>All</option>
+							        <th:block th:each="item : ${boxJob}">
+							        	<option th:value=${item.jobId} th:text=${item.jobTitle}></option>
+							        </th:block>
+							      	</select>
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="col text-right">
+									<button type="button" class="btn btn-primary inqr-run" onclick="fnGet()">조회</button>
+								</div>
+							</div>
+				  		</div>
+				  	</div>
+				</div>
+			<br>	
+				<!-- 테이블 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		사원 목록
+				  	</h6>
+				  	<div class="card-body">
+				  		<table class="table table-sm table-hover table-bordered" id="tableEmployees">
+							<thead class="table-light">
+								<tr>
+									<th class="text-center">No</th>
+									<th class="text-center">사원번호</th>
+									<th class="text-center">사원명</th>
+									<th class="text-center">입사일자</th>
+									<th class="text-center">부서명</th>
+									<th class="text-center">직책명</th>
+									<th class="text-center">연봉(만원)</th>
+								</tr>
+							</thead>
+						</table>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-info" onclick="fnGetJobHistory()">변경 히스토리</button>
+				  	</div>
+				</div>
+			<br>
+				<!-- 상세 정보 -->
+				<div class="card">
+				  	<h6 class="card-header">
+				  		사원 상세 정보
+				  	</h6>
+				  	<div class="card-body">
+					  	<form id="formEmployees">
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="employeeId"><span class="req">*</span>사원번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="employeeId" name="employeeId" aria-describedby="employeeIdText" placeholder="신규 시 자동 등록" onkeyup="EventUtils.numberFormat(this)" disabled>
+			    					<small id="employeeIdText" class="form-text text-muted">
+	  									사원번호는 1 단위 입니다.
+									</small>
+								</div>
+					  			<div class="col-2">
+									<label for="firstName">이름</label>
+			    					<input type="text" class="form-control form-control-sm" id="firstName" name="firstName">
+								</div>
+					  			<div class="col-2">
+									<label for="lastName"><span class="req">*</span>성</label>
+			    					<input type="text" class="form-control form-control-sm" id="lastName" name="lastName">
+								</div>
+					  			<div class="col-4">
+									<label for="hireDate"><span class="req">*</span>직책수행일시</label>
+			    					<input type="text" class="form-control form-control-sm" id="hireDate" name="hireDate" aria-describedby="hireDateText" readonly>
+			    					<small id="hireDateText" class="form-text text-muted">
+	  									직책 또는 부서 변경 시에만 자동 변경
+									</small>
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+					  			<div class="col-4">
+									<label for="email"><span class="req">*</span>이메일</label>
+			    					<input type="text" class="form-control form-control-sm" id="email" name="email">
+								</div>
+					  			<div class="col-4">
+									<label for="phoneNumber">핸드폰번호</label>
+			    					<input type="text" class="form-control form-control-sm" id="phoneNumber" name="phoneNumber">
+								</div>
+					  			<div class="col-2">
+									<label for="salary">연봉(만원)</label>
+			    					<input type="text" class="form-control form-control-sm text-right" id="salary" name="salary" onkeyup="EventUtils.commaFormat(this)">
+								</div>
+					  			<div class="col-2">
+									<label for="commissionPct">수수료(영업사원)</label>
+			    					<input type="text" class="form-control form-control-sm text-right" id="commissionPct" name="commissionPct" onkeyup="EventUtils.onlyFloat(this, 2)">
+								</div>
+					  		</div>
+					  	<hr>
+					  		<div class="row">
+						  		<div class="col-4">
+					  				<label for="jobId"><span class="req">*</span>직책ID/명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalJob" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="jobId" name="jobId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="jobTitle" readonly>
+										</div>
+									</div>
+								</div>
+					  			<div class="col-4">
+					  				<label for="managerId">관리자번호/명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalEmployee" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="managerId" name="managerId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="managerName" readonly>
+										</div>
+									</div>
+								</div>
+					  			<div class="col-4">
+					  				<label for="departmentId">부서ID/명</label>
+						  			<div class="input-group">
+									  	<div class="input-group-prepend">
+									    	<button data-target="#modalDepartment" class="btn btn-sm btn-outline-secondary" type="button" data-toggle="modal">검색</button>
+									  	</div>
+									  	<input type="text" class="form-control form-control-sm text-right" id="departmentId" name="departmentId" style="min-width: 50px" readonly>
+									  	<div class="input-group-append">
+											<input type="text" class="form-control form-control-sm" id="departmentName" readonly>
+										</div>
+									</div>
+								</div>
+	  						</div>
+					  	</form>
+				  	</div>
+				  	<div class="card-footer text-right">
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+				  	</div>
+				</div>
+			<br>
+<th:block th:include="/company/employeeModal"></th:block>
+<th:block th:include="/company/departmentModal"></th:block>
+<th:block th:include="/company/jobModal"></th:block>
+<th:block th:include="/company/jobHitoryModal"></th:block>
+			</th:block>
+			
+
+<th:block th:fragment="employeesMgScript">
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			// 테이블 초기화
+			DataTableUtils.init('#tableEmployees');
+			DataTableUtils.init('#tableEmployee');
+			DataTableUtils.init('#tableDepartment');
+			DataTableUtils.init('#tableJob');
+			DataTableUtils.init('#tableJobHs');
+			
+			// 상세 정보 초기화
+			fnDtlInit();
+			
+			// 테이블 클릭 함수
+			$('#tableEmployees').on('click', 'tbody tr', function() {
+				fnDtlInit();
+				
+				var data = $('#tableEmployees').dataTable().fnGetData(this);
+				if(StringUtils.isEmpty(data)) {
+					return;
+				}
+				
+				if(DataTableUtils.isSeleted('#tableEmployees', this)) {
+					return;
+				}
+				
+				fnDtlData(data);
+			});
+			
+			// 모달 팝업 초기화 (사원 검색)
+			$('#modalEmployee').on('show.bs.modal', function (e) {
+				fnGetMgrEmp('#managerId', '#managerName');
+			});
+			// 모달 팝업 초기화 (부서 검색)
+			$('#modalDepartment').on('show.bs.modal', function (e) {
+				fnGetMgrDept('#departmentId', '#departmentName');
+			});
+			// 모달 팝업 초기화 (직책 검색)
+			$('#modalJob').on('show.bs.modal', function (e) {
+				fnGetMgrJob('#jobId', '#jobTitle');
+			});
+			// 모달 팝업 초기화 (변경 히스토리)
+			$('#modalJobHs').on('show.bs.modal', function (e) {
+				var data = $('#tableEmployees').dataTable().fnGetData('#tableEmployees .selected');
+				fnGetMgrJobHs(data);
+			});
+			
+			new DateTime($('#hireDate'), {
+		        format: 'YYYY-MM-DD 00:00:00' // 'YYYY-MM-DD HH:mm:ss'
+		    });
+		});
+		// 조회
+		function fnGet() {
+			fnDtlInit();
+			// alert("부서 검색");
+			DataTableUtils.get({
+				tableId : "#tableEmployees",
+				url : "/company/employees" + AjaxUtils.SEL,
+				param : {
+					"departmentId" : $('#inDepartmentId').val(),
+					"jobId"        : $('#inJobId').val()
+				},
+				columns: [
+		            { "data": "rowNo"         , "class": "text-center"},
+		            { "data": "employeeId"    , "class": "text-center"},
+		            { "data": "employeeName"  , "class": "text-left"  },
+		            { "data": "hireDate"      , "class": "text-center", "format": "dtm"},
+		            { "data": "departmentName", "class": "text-left"  },
+		            { "data": "jobTitle"      , "class": "text-left"  },
+		            { "data": "salary"        , "class": "text-right" , "format": "money"}
+		        ]
+			});
+		}
+		// 초기화
+		function fnDtlInit() {
+			$('#btnIns').attr('disabled', false);
+			$('#btnUpd').attr('disabled', true);
+			$('#btnDel').attr('disabled', true);
+			
+			// 사원번호
+			$('#formEmployees').find('#employeeId').val("");
+			// 사원 이름
+			$('#formEmployees').find('#firstName').val("");
+			// 사원 성
+			$('#formEmployees').find('#lastName').val("");
+			// 입사일자
+			$('#formEmployees').find('#hireDate').val("").attr('disabled', false);
+			// 이메일
+			$('#formEmployees').find('#email').val("");
+			// 핸드폰번호
+			$('#formEmployees').find('#phoneNumber').val("");
+			// 직책ID/명
+			$('#formEmployees').find('#jobId').val("");
+			$('#formEmployees').find('#jobTitle').val("");
+			// 연봉
+			$('#formEmployees').find('#salary').val("");
+			// 수수료(영업사원)
+			$('#formEmployees').find('#commissionPct').val("");
+			// 관리자번호/명
+			$('#formEmployees').find('#managerId').val("");
+			$('#formEmployees').find('#managerName').val("");
+			// 부서번호/명
+			$('#formEmployees').find('#departmentId').val("");
+			$('#formEmployees').find('#departmentName').val("");
+		}
+		
+		// 값 설정
+		function fnDtlData(data) {
+			$('#btnIns').attr('disabled', true);
+			$('#btnUpd').attr('disabled', false);
+			$('#btnDel').attr('disabled', false);
+			
+			// 사원번호
+			$('#formEmployees').find('#employeeId').val(data.employeeId);
+			// 사원 이름
+			$('#formEmployees').find('#firstName').val(data.firstName);
+			// 사원 성
+			$('#formEmployees').find('#lastName').val(data.lastName);
+			// 입사일자
+			$('#formEmployees').find('#hireDate').val(DateUtils.dtmFormat(data.hireDate)).attr('disabled', true);
+			// 이메일
+			$('#formEmployees').find('#email').val(data.email);
+			// 핸드폰번호
+			$('#formEmployees').find('#phoneNumber').val(data.phoneNumber);
+			// 직책ID/명
+			$('#formEmployees').find('#jobId').val(data.jobId);
+			$('#formEmployees').find('#jobTitle').val(data.jobTitle);
+			// 연봉
+			$('#formEmployees').find('#salary').val(StringUtils.commaFormat(data.salary));
+			// 수수료(영업사원)
+			if(isJobSA(data.jobId)) {
+				$('#formEmployees').find('#commissionPct').val(data.commissionPct).attr('disabled', false);
+			} else {
+				$('#formEmployees').find('#commissionPct').val("").attr('disabled', true);
+			}
+			// 관리자번호/명
+			$('#formEmployees').find('#managerId').val(data.managerId);
+			$('#formEmployees').find('#managerName').val(data.managerName);
+			// 부서번호/명
+			$('#formEmployees').find('#departmentId').val(data.departmentId);
+			$('#formEmployees').find('#departmentName').val(data.departmentName);
+			
+		}
+		
+		// 등록, 수정, 삭제
+		function fnAjax(method) {
+			// alert("Method : " + method);
+			// 입력 값 확인.
+			var failObj = fnInputFailObj(method);  
+			if(failObj != '') {
+				$(failObj).focus();
+				return;
+			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL && !confirm("해당 사원을 삭제 하시겠습니까?")) {
+				return;
+			}
+			var obj = {
+					url : "/company/employees"+method,
+					param : AjaxUtils.getParam(
+						"#formEmployees",
+						function() {
+							$('#salary').val(StringUtils.numberFormat($('#salary').val()));
+						},
+						function(param) { 
+							$('#salary').val(StringUtils.commaFormat($('#salary').val()));
+							return param; 
+						}
+					),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableEmployees');
+					},
+					funcErr : function(data) {}
+			}
+			// console.log(obj);
+			AjaxUtils.run(obj);
+		}
+		
+		function fnInputFailObj(method) {
+			
+			var message = "필수 입력값을 확인해주세요.";
+			
+			if(method != AjaxUtils.INS) {
+				if(StringUtils.isEmpty($('#employeeId').val())) {
+					alert(message);
+					return '#employeeId';
+				}
+			}
+			
+			if(StringUtils.isEmpty($('#lastName').val())) {
+				alert(message);
+				return '#lastName';
+			} else if(StringUtils.isEmpty($('#hireDate').val())) {
+				alert(message);
+				return '#hireDate';
+			} else if(StringUtils.isEmpty($('#email').val())) {
+				alert(message);
+				return '#email';
+			} else if(StringUtils.isEmpty($('#jobId').val())) {
+				alert(message);
+				return '#jobId';
+			}
+			
+			return '';
+		}
+		
+		function isJobSA(jobId) {
+			if(jobId.indexOf("SA") == 0) {
+				return true;
+			}
+			return false;
+		}
+		
+		function fnGetJobHistory() {
+			if($('#tableEmployees .selected').length == 0) {
+				return alert("사원을 선택해주세요.");;
+			} else {
+				$('#modalJobHs').modal('show');
+			}
+		}
+	</script>
+</th:block>
+	</body>
+</html>
+
+
+
+

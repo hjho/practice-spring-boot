@@ -10,12 +10,22 @@
 	<link th:href="@{/css/bootstrap-4.6.1/bootstrap.css}" rel="stylesheet" type="text/css" />
 	<link th:href="@{/css/bootstrap-4.6.1/login.css}" rel="stylesheet" type="text/css" />
 	
+	<!-- PRACTICE -->
+	<link th:href="@{/css/common/practice.css}" rel="stylesheet" type="text/css" />
+	
+	<script th:src="@{/js/bootstrap-4.6.1/bootstrap.js}" type="text/javascript"></script>
+	<script th:src="@{/js/bootstrap-4.6.1/bootstrap.bundle.js}" type="text/javascript"></script>
+	
+	<script th:src="@{/js/datatables-1.11.3/datatables.js}" type="text/javascript"></script>
+	<script th:src="@{/js/datatables-1.11.3/dataTables.dateTime.js}" type="text/javascript"></script>
+	<script th:src="@{/js/datatables-1.11.3/dataTables.moment.js}" type="text/javascript"></script>
+	
 	<!-- Common -->
 	<script th:src="@{/js/common/hjho-string-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-ajax-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-date-utils.js}" type="text/javascript"></script>
 	<script th:src="@{/js/common/hjho-event-utils.js}" type="text/javascript"></script>
-	
+	<script th:src="@{/js/common/hjho-datatables.js}" type="text/javascript"></script>
 <title>프로젝트 연습(로그인)</title>
 </head>
 <body class="text-center">
@@ -30,13 +40,94 @@
   			<label for="userPw">Password</label>
   			<input type="password" id="userPw" name="userPw" class="form-control">
   			
+  			<input type="hidden" id="mgrGrpId" name="mgrGrpId">
 		</div>
 	    <button class="btn btn-lg btn-primary btn-block" onclick="loginProc()">로그인</button>
 	    <p class="mt-5 mb-3 text-muted">&copy; 2021-ING</p>
     </form>
+	<!--================ START MGR GRP MODAL START ================-->
+		<div class="modal fade" id="modalMgrGrp" tabindex="-1" role="dialog" aria-hidden="true">
+		 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<h5 class="modal-title">관리자 그룹 선택</h5>
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="card">
+						  	<h5 class="card-header text-left">그룹 목록</h5>
+						  	<div class="card-body">
+						  		<table class="table table-sm table-hover table-bordered" id="tableMgrGrp">
+									<thead class="table-light">
+										<tr>
+											<th class="text-center">No</th>
+											<th class="text-center">그룹번호</th>
+											<th class="text-center">그룹명</th>
+										</tr>
+									</thead>
+								</table>
+						  	</div>
+						</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" onclick="fnChoc()">선택</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				
+				$('#tableMgrGrp').on('click', 'tbody tr', function() {
+					var data = $('#tableMgrGrp').dataTable().fnGetData(this);
+					if(StringUtils.isEmpty(data)) {
+						return;
+					}
+					
+					if(DataTableUtils.isSeleted('#tableMgrGrp', this)) {
+						return;
+					}
+				});
+			});
+			// 사원 조회
+			function fnGetMgrGrp(data) {
+				$('#tableMgrGrp').dataTable( {
+					"serverSide": false,
+				    "paging": false,
+				    "autoWidth": false,
+				    "ordering": false,
+				    "select": "single",
+				    "searching" : false,
+				    "data": data,
+				    "columns": [
+			            { "data": "rowNo"     , "class": "text-center"},
+			            { "data": "mgrGrpId"  , "class": "text-center"},
+			            { "data": "mgrGrpNm"  , "class": "text-left"  },
+			        ]
+				});
+			}
+			// 선택
+			function fnChoc() {
+				var data = $('#tableMgrGrp').dataTable().fnGetData('#tableMgrGrp .selected');
+				if(StringUtils.isEmpty(data)) {
+					return alert("그룹을 선택해주세요.");;
+				}
+				// alert(data.mgrGrpId);
+				$('#mgrGrpId').val(data.mgrGrpId);
+				$('#modalMgrGrp').modal('hide')
+				loginProc();
+			}
+		</script>
+<!--================ END EMP MODAL END ================-->
 </body>
 <script th:inline="javascript">
+
+	var grpList = [];
+	
 	$(document).ready(function() {
+		// DataTableUtils.init('#tableMgrGrp');
 		
 		fnLoginDtlInit();
 		
@@ -44,10 +135,20 @@
 		    return false; // return false to cancel form action
 		});
 		
+		// 모달 팝업 초기화 (관리자 선택)
+		$('#modalMgrGrp').on('show.bs.modal', function (e) {
+			$.each(grpList, function(index, item) {
+				grpList[index].rowNo = (index+1);
+			});
+			fnGetMgrGrp(grpList);
+		});
+		
 	});
 	function fnLoginDtlInit() {
 		$('#loginFormData').find('#userId').val("");
 		$('#loginFormData').find('#userPw').val("");
+		$('#loginFormData').find('#mgrGrpId').val("");
+		grpList = [];
 	}
 	
 	function loginProc() {
@@ -62,13 +163,16 @@
 				),
 				funcOk : function(data) {
 					// alert(data.message);
-					location.href = "/main/page";
+					grpList = data.data;
+					if(grpList.length == 1) {
+						location.href = "/main/page";
+					} else {
+						// alert("관리자 그룹 선택해야함.");
+						$('#modalMgrGrp').modal('show')
+					}
 				},
-				funcErr : function(data) {
-					
-				}
+				funcErr : function(data) {}
 		}
-		// console.log(obj.param);
 		AjaxUtils.run(obj);
 	}
 </script>

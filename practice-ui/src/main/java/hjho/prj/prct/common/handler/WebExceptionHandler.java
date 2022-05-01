@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import hjho.prj.prct.common.exception.AuthVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,6 @@ public class WebExceptionHandler {
 	@ExceptionHandler(UserException.class)
 	public ModelAndView handlerUserException(HttpServletRequest request, HttpServletResponse response, UserException e) {
 		
-		log.warn("[H] UserException Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -36,10 +36,25 @@ public class WebExceptionHandler {
 		return mav;
 	}
 	
+	@ExceptionHandler(AuthVerifyException.class)
+	public ModelAndView handlerAuthVerifyException(HttpServletRequest request, HttpServletResponse response, AuthVerifyException e) {
+		
+		this.errorMessage(e);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(this.isRequestAjax(request)) {
+			mav.setViewName("jsonView");
+		} else {
+			mav.setViewName("/error/authVerify");
+		}
+		
+		return this.returnMessageMapping(request, mav, e.getStatus(), e.getMessage());
+	}
+	
 	@ExceptionHandler(SessionExpirationException.class)
 	public ModelAndView handlerSessionExpirationException(HttpServletRequest request, HttpServletResponse response, SessionExpirationException e) {
 		
-		log.warn("[H] SessionExpirationException Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -56,8 +71,6 @@ public class WebExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handlerException(HttpServletRequest request, HttpServletResponse response, Exception e) {
 		
-		log.error("[H] Exception Class   : {}", e.getClass());
-		log.error("[H] Exception Message : {}", e.getMessage());
 		this.errorMessage(e);
 		
 		ModelAndView mav = new ModelAndView();
@@ -72,11 +85,15 @@ public class WebExceptionHandler {
 	}
 
 	private void errorMessage(Exception e) {
+		log.error("================== [ EXCEPTION ] ======================");
+		log.error("=== Class    : {}", e.getClass());
+		log.error("=== Message  : {}", e.getMessage());
 		for(StackTraceElement element : e.getStackTrace()) {
-			if(element.getClassName().indexOf("hjho.prj.prct") > -1) {
-				log.error("[H] Exception Cause   : {} ({})", element.getClassName(), element.getLineNumber());
+			if(element.getClassName().startsWith("hjho.prj.prct")) {
+				log.error("=== Cause    : {} ({})", element.getClassName(), element.getLineNumber());
 			}
 		}
+		log.error("=======================================================");
 	}
 	
 	private boolean isRequestAjax(HttpServletRequest request) {

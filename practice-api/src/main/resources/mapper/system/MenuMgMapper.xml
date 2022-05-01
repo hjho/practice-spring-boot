@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MenuMgMapper">
+	
+    <sql id="order-system-menu">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>menu_id</when>
+            <when test='sortCol == 1'>menu_id</when>
+            <when test='sortCol == 2'>menu_nm</when>
+            <when test='sortCol == 3'>page_url</when>
+            <when test='sortCol == 4'>use_yn</when>
+            <otherwise>menu_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , menu_id asc
+    </sql>
+	
+    <select id = "getSysMenu" 
+            parameterType = "hjho.prj.prct.biz.system.model.MenuMgPagingPVO" 
+            resultType    = "hjho.prj.prct.biz.system.model.MenuMgPagingRVO">
+        /* 메뉴 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT LEVEL AS lvl
+             , IN_SMI.* 
+          FROM (
+                SELECT menu_id 
+                     , hr_menu_id 
+                     , (SELECT smi2.menu_nm 
+                          FROM practice.sys_menu_info smi2
+                         WHERE smi2.menu_id = smi.hr_menu_id) AS hr_menu_nm
+                     , menu_nm 
+                     , menu_ctnt
+                     , menu_cd 
+                     , page_url 
+                     , ord_by_cls 
+                     , icon_val 
+                     , use_yn 
+                     , cret_dtm 
+                     , upd_dtm 
+                     , (SELECT COUNT(*)
+                          FROM practice.sys_menu_info smi2
+                         WHERE smi2.hr_menu_id = smi.menu_id) AS lr_menu_cnt
+                  FROM practice.sys_menu_info smi
+          ) IN_SMI
+   <where>
+     <if test='menuNm != null and menuNm != ""'>
+        AND (menu_nm LIKE '%'||#{menuNm, jdbcType=VARCHAR}||'%'
+             OR hr_menu_nm LIKE '%'||#{menuNm, jdbcType=VARCHAR}||'%')
+     </if>
+     <if test='useYn != null and useYn != ""'>
+        AND use_yn  = #{useYn, jdbcType=VARCHAR}
+     </if>
+     <if test='hrMenuYn == "Y"'>
+        AND (hr_menu_id IS NULL OR hr_menu_id = '') 
+     </if>
+     <if test='hrMenuYn == "N"'>
+        AND (hr_menu_id IS NOT NULL OR hr_menu_id != '')
+     </if>
+   </where>
+      START WITH IN_SMI.hr_menu_id IS NULL
+    CONNECT BY PRIOR IN_SMI.menu_id = IN_SMI.hr_menu_id
+      ORDER SIBLINGS BY ord_by_cls
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postSysMenu" parameterType="hjho.prj.prct.biz.system.model.MenuMgVO">
+        /* 메뉴 관리 > 등록 */
+        INSERT INTO practice.sys_menu_info (
+                    menu_id 
+                  , hr_menu_id 
+                  , menu_nm 
+                  , menu_ctnt
+                  , menu_cd 
+                  , page_url 
+                  , ord_by_cls 
+                  , icon_val 
+                  , use_yn 
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{menuId    , jdbcType=VARCHAR}
+                  , #{hrMenuId  , jdbcType=VARCHAR}
+                  , #{menuNm    , jdbcType=VARCHAR}
+                  , #{menuCtnt  , jdbcType=VARCHAR}
+                  , #{menuCd    , jdbcType=VARCHAR}
+                  , #{pageUrl   , jdbcType=VARCHAR}
+                  , #{ordByCls  , jdbcType=NUMERIC}
+                  , #{iconVal   , jdbcType=VARCHAR}
+                  , #{useYn     , jdbcType=VARCHAR}
+                  , #{cretSysId , jdbcType=VARCHAR}
+                  , #{cretMgrId , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         )
+                
+    </insert>
+    
+    <update id="putSysMenu" parameterType="hjho.prj.prct.biz.system.model.MenuMgVO">
+        /* 메뉴 관리 > 수정 */
+        UPDATE practice.sys_menu_info
+           SET hr_menu_id = #{hrMenuId , jdbcType=VARCHAR}            
+             , menu_nm    = #{menuNm   , jdbcType=VARCHAR}            
+             , menu_ctnt  = #{menuCtnt , jdbcType=VARCHAR}    
+             , menu_cd    = #{menuCd   , jdbcType=VARCHAR}
+             , page_url   = #{pageUrl  , jdbcType=VARCHAR}            
+             , ord_by_cls = #{ordByCls , jdbcType=NUMERIC}            
+             , icon_val   = #{iconVal  , jdbcType=VARCHAR}            
+             , use_yn     = #{useYn    , jdbcType=VARCHAR}            
+             , upd_sys_id = #{updSysId , jdbcType=VARCHAR}            
+             , upd_mgr_id = #{updMgrId , jdbcType=VARCHAR}            
+             , upd_dtm    = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE menu_id    = #{menuId, jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysMenu" parameterType="hjho.prj.prct.biz.system.model.MenuMgVO">
+        /* 메뉴 관리 > 삭제 */
+        DELETE 
+          FROM practice.sys_menu_info
+         WHERE menu_id = #{menuId, jdbcType=VARCHAR}
+    </delete>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MenuMgVO" resultType="int">
+        /* 메뉴 관리 > PK */
+        SELECT COUNT(*) AS cnt
+          FROM practice.sys_menu_info
+         WHERE menu_id = #{menuId, jdbcType=VARCHAR}
+    </select>
+</mapper> 
