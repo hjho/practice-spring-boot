@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.CodeMgMapper">
+	<sql id="order-system-code">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>comm_cd_id</when>
+            <when test='sortCol == 1'>comm_cd_id</when>
+            <when test='sortCol == 2'>comm_cd_nm</when>
+            <when test='sortCol == 3'>use_yn</when>
+            <when test='sortCol == 4'>addt_cd_nm</when>
+            <when test='sortCol == 4'>addt_cd_use_yn</when>
+            <otherwise>comm_cd_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , comm_cd_id asc
+    </sql>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.CodeMgVO" resultType="int">
+        /* 공통코드 PK CHECK */
+        SELECT COUNT(*) FROM practice.sys_comm_cd_bs WHERE comm_cd_id = #{commCdId, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getSysCode" 
+            parameterType="hjho.prj.prct.biz.system.model.CodeMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.CodeMgPagingRVO">
+        /* 공통코드 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT comm_cd_id 
+             , comm_cd_nm 
+             , comm_cd_info 
+             , use_yn 
+             , addt_cd_nm 
+             , addt_cd_use_yn
+             , (SELECT COUNT(*) FROM sys_comm_cd_dt dt WHERE dt.comm_cd_id = bs.comm_cd_id) AS lr_code_cnt
+             , cret_dtm 
+             , upd_dtm 
+          FROM practice.sys_comm_cd_bs bs
+    <where>
+        <if test='commCdNm != null and commCdNm != ""'>
+           AND comm_cd_nm LIKE '%'||#{commCdNm, jdbcType=VARCHAR}||'%'
+        </if>
+        <if test='useYn != null and useYn != ""'>
+           AND use_yn = #{useYn, jdbcType=VARCHAR}
+        </if>
+    </where>
+    <include refid="hjho.prj.prct.biz.system.mapper.CodeMgMapper.order-system-code"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postSysCode" parameterType="hjho.prj.prct.biz.system.model.CodeMgVO">
+        /* 공통코드 관리 > 등록 */
+        INSERT INTO practice.sys_comm_cd_bs (
+                    comm_cd_id
+                  , comm_cd_nm
+                  , comm_cd_info
+                  , use_yn
+                  , addt_cd_nm
+                  , addt_cd_use_yn
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{commCdId     , jdbcType=VARCHAR}
+                  , #{commCdNm     , jdbcType=VARCHAR}
+                  , #{commCdInfo   , jdbcType=VARCHAR}
+                  , #{useYn        , jdbcType=VARCHAR}
+                  , #{addtCdNm     , jdbcType=VARCHAR}
+                  , #{addtCdUseYn  , jdbcType=VARCHAR}
+                  , #{cretSysId    , jdbcType=VARCHAR}
+                  , #{cretMgrId    , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         )
+    </insert>
+    
+    <update id="putSysCode" parameterType="hjho.prj.prct.biz.system.model.CodeMgVO">
+        /* 공통코드 관리 > 수정 */
+        UPDATE practice.sys_comm_cd_bs
+           SET comm_cd_nm     = #{commCdNm     , jdbcType=VARCHAR}
+             , comm_cd_info   = #{commCdInfo   , jdbcType=VARCHAR}
+             , use_yn         = #{useYn        , jdbcType=VARCHAR}
+             , addt_cd_nm     = #{addtCdNm     , jdbcType=VARCHAR}
+             , addt_cd_use_yn = #{addtCdUseYn  , jdbcType=VARCHAR}
+             , upd_sys_id     = #{updSysId     , jdbcType=VARCHAR}            
+             , upd_mgr_id     = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm        = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE comm_cd_id     = #{commCdId, jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysCode" parameterType="hjho.prj.prct.biz.system.model.CodeMgVO">
+        /* 공통코드 관리 > 삭제 */
+        DELETE
+          FROM practice.sys_comm_cd_bs
+         WHERE comm_cd_id = #{commCdId, jdbcType=VARCHAR}
+    </delete>
+	
+</mapper> 

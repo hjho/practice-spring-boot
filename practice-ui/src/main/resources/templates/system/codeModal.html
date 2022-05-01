@@ -1,0 +1,207 @@
+		<!--================ START CODE BS INFO MODAL START ================-->
+				<div class="modal fade" id="modalCode" tabindex="-1" role="dialog" aria-hidden="true">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">공통코드 등록 및 수정</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">코드 정보</h5>
+								  	<div class="card-body">
+								  		<form id="formSysCode">
+									  		<div class="row">
+									  			<div class="col-4">
+													<label for="commCdId"><span class="req">*</span>공통코드아이디</label>
+							    					<input type="text" class="form-control form-control-sm" id="commCdId" name="commCdId" aria-describedby="commCdIdText">
+							    					<small id="commCdIdText" class="form-text text-muted">
+					  									코드아이디는 대문자 24자리 입니다.
+													</small>
+												</div>
+									  			<div class="col-4">
+													<label for="commCdNm"><span class="req">*</span>공통코드명</label>
+							    					<input type="text" class="form-control form-control-sm" id="commCdNm" name="commCdNm">
+												</div>
+												<div class="col-4">
+													<label for="useYn"><span class="req">*</span>사용여부</label>
+							    					<div class="form-check">
+													  	<input class="form-check-input" type="checkbox" id="useYn" onclick="EventUtils.checkBoxVal(this)">
+													  	<label class="form-check-label" for="useYn">
+													    	이 코드를 사용합니다.
+													  	</label>
+													</div>
+												</div>
+									  		</div>
+									  	<hr>
+									  		<div class="row">
+												<div class="col-4">
+													<label for="addtCdNm">부속코드명</label>
+							    					<input type="text" class="form-control form-control-sm" id="addtCdNm" name="addtCdNm">
+												</div>
+										  		<div class="col-4">
+													<label for="addtCdUseYn"><span class="req">*</span>부속코드사용여부</label>
+							    					<div class="form-check">
+													  	<input class="form-check-input" type="checkbox" id="addtCdUseYn" onclick="EventUtils.checkBoxVal(this)">
+													  	<label class="form-check-label" for="addtCdUseYn">
+													    	부속코드를 사용합니다.
+													  	</label>
+													</div>
+												</div>
+									  		</div>
+									  	<hr>
+									  		<div class="row">
+												<div class="col-8">
+													<label for="commCdInfo">코드설명</label>
+							    					<input type="text" class="form-control form-control-sm" id="commCdInfo" name="commCdInfo">
+												</div>
+									  		</div>
+									  	<hr>
+									  		<div class="row">
+												<div class="col-4">
+													<label for="cretDtm">등록일시</label>
+							    					<input type="text" class="form-control form-control-sm" id="cretDtm" disabled>
+												</div>
+										  		<div class="col-4">
+													<label for="updDtm">수정일시</label>
+												  	<input type="text" class="form-control form-control-sm" id="updDtm" disabled>
+												</div>
+									  		</div>
+									  	</form>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+					        	<button type="button" class="btn btn-secondary" id="btnInitBs" onclick="fnDtlInit()">신규</button>
+							  	<button type="button" class="btn btn-success"   id="btnInsBs"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
+							  	<button type="button" class="btn btn-warning"   id="btnUpdBs"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
+							  	<button type="button" class="btn btn-danger"    id="btnDelBs"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+								
+					$(document).ready(function() {
+						
+					});
+					// 조회
+					function fnGet() {
+						fnDtlInit();
+						DataTableUtils.get({
+							tableId : "#tableSysCode",
+							url : "/system/code" + AjaxUtils.SEL,
+							param : {
+								"commCdNm": $('#inCommCdNm').val(),
+								"useYn"   : $('#inUseYn').val()
+							},
+							columns: [
+								{ "data": "rowNo"      , "class": "text-center"},
+					            { "data": "commCdId"   , "class": "text-left"  },
+					            { "data": "commCdNm"   , "class": "text-left"  },
+					            { "data": "useYn"      , "class": "text-center"},
+					            { "data": "addtCdNm"   , "class": "text-left"  },
+					            { "data": "addtCdUseYn", "class": "text-center"},
+					            { "data": "lrCodeCnt"  , "class": "text-center"}
+					        ]
+						});
+					}
+					
+					// 초기화
+					function fnDtlInit() {
+						$('#btnInsBs').attr('disabled', false);
+						$('#btnUpdBs').attr('disabled', true);
+						$('#btnDelBs').attr('disabled', true);
+						
+						// 공통코드 아이디
+						$('#formSysCode').find('#commCdId').val("").attr("disabled", false);
+						// 공통코드 명
+						$('#formSysCode').find('#commCdNm').val("");
+						// 공통코드 정보
+						$('#formSysCode').find('#commCdInfo').val("");
+						// 사용여부
+						$('#formSysCode').find('#useYn').val("Y").attr('checked', true);
+						// 부속코드 명
+						$('#formSysCode').find('#addtCdNm').val("");
+						// 부속코드 사용여부
+						$('#formSysCode').find('#addtCdUseYn').val("N").attr('checked', false);
+						// 등록일시
+						$('#formSysCode').find('#cretDtm').val("");
+						// 수정일시 
+						$('#formSysCode').find('#updDtm').val("");
+						
+						// 공통코드 상세
+						DataTableUtils.init('#tableSysCodeDt');
+						DataTableUtils.init('#tableSysCodeSort');
+						$('#grpCdId').text("");
+						$('#commCdIdDt').val("");
+						$('#grpAddtCdNm').text("");
+					}
+					// 값 설정
+					function fnDtlData(data) {
+						$('#btnInsBs').attr('disabled', true);
+						$('#btnUpdBs').attr('disabled', false);
+						if(!StringUtils.isYn(data.useYn) && data.lrCodeCnt == 0) {
+							$('#btnDelBs').attr('disabled', false);	
+						} else {
+							$('#btnDelBs').attr('disabled', true);
+						}
+						
+						// 공통코드 아이디
+						$('#formSysCode').find('#commCdId').val(data.commCdId).attr("disabled", true);
+						// 공통코드 명
+						$('#formSysCode').find('#commCdNm').val(data.commCdNm);
+						// 공통코드 정보
+						$('#formSysCode').find('#commCdInfo').val(data.commCdInfo);
+						// 사용여부
+						$('#formSysCode').find('#useYn').val(data.useYn).attr('checked', StringUtils.isYn(data.useYn));
+						// 부속코드 명
+						$('#formSysCode').find('#addtCdNm').val(data.addtCdNm);
+						// 부속코드 사용여부
+						$('#formSysCode').find('#addtCdUseYn').val(data.addtCdUseYn).attr('checked', StringUtils.isYn(data.addtCdUseYn));
+						// 등록일시
+						$('#formSysCode').find('#cretDtm').val(data.cretDtm);
+						// 수정일시 
+						$('#formSysCode').find('#updDtm').val(data.updDtm);
+						
+						// 공통코드 상세
+						$('#grpCdId').text(data.commCdId);
+						$('#commCdIdDt').val(data.commCdId);
+						var addtStr = (StringUtils.isEmpty(data.addtCdNm)) ? "사용 안함" : data.addtCdNm;
+						$('#grpAddtCdNm').text(addtStr);
+					}
+					
+					// 등록, 수정, 삭제
+					function fnAjax(method) {
+						// 입력값 확인.
+						if(reqValCheckFail('#formSysCode')) {
+							return;
+						}
+						// 삭제 전 확인.
+						if(method == AjaxUtils.DEL && !confirm("해당 코드 정보를 삭제 하시겠습니까?")) {
+							return;
+						}
+						var obj = {
+								url : "/system/code"+method,
+								param : AjaxUtils.getParam(
+									"#formSysCode",
+									function() {},
+									function(param) {
+										param += "&useYn="+$('#formSysCode').find('#useYn').val();
+										param += "&addtCdUseYn="+$('#formSysCode').find('#addtCdUseYn').val();
+										return param; 
+									}
+								),
+								funcOk : function(data) {
+									DataTableUtils.refrash('#tableSysCode');
+									$('#modalCode').modal('hide');
+								},
+								funcErr : function(data) {}
+						}
+						// console.log(obj);
+						AjaxUtils.run(obj);
+					}
+				</script>
+		<!--================ END CODE BS INFO MODAL END ================-->

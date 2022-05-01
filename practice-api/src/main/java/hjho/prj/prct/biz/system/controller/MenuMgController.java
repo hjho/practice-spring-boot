@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hjho.prj.prct.biz.main.model.LoginRVO;
 import hjho.prj.prct.biz.system.model.MenuMgPagingPVO;
 import hjho.prj.prct.biz.system.model.MenuMgPagingRVO;
 import hjho.prj.prct.biz.system.model.MenuMgVO;
@@ -32,7 +31,7 @@ public class MenuMgController extends CommonController {
 	private MenuMgService menuMgService;
 	
 	@GetMapping()
-	@ApiOperation(value="getSysMenu", notes="시스템 메뉴 조회", response=LoginRVO.class)
+	@ApiOperation(value="getSysMenu", notes="시스템 메뉴 조회", response=MenuMgPagingRVO.class)
 	public CommonMessage getSysMenu(@ModelAttribute MenuMgPagingPVO menuMgPagingPVO) throws UserException {
 		this.parameterLog("SysMenuMg[getSysMenu]", menuMgPagingPVO);
 		CommonMessage message = new CommonMessage();

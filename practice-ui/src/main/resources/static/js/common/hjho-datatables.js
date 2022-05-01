@@ -89,7 +89,7 @@ var DataTableUtils = function() {
 				"destroy": true,
 				"serverSide": true,
 				"processing": true,
-				"paging": true,
+				"paging": (data.pagingYn == "N") ? false : true,
 				"pagingType" : "full_numbers", // simple, simple_numbers, full, full_numbers
 				"ordering": (data.orderYn == "N") ? false : true,
 				"autoWidth": false,
