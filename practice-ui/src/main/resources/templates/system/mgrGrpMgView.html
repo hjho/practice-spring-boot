@@ -120,7 +120,7 @@
 											<th class="text-center">관리자명</th>
 											<th class="text-center">소속일시</th>
 											<th class="text-center">만료일시</th>
-											<th class="text-center">사용여부</th>
+											<th class="text-center">소속여부</th>
 										</tr>
 									</thead>
 								</table>
@@ -148,24 +148,29 @@
 						</div>
 				  	</div>
 				  	<div class="card-footer text-right">
-					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit()">신규</button>
+					  	<button type="button" class="btn btn-secondary" id="btnInit" onclick="fnDtlInit(true)">신규</button>
 					  	<button type="button" class="btn btn-success"   id="btnIns"  onclick="fnAjax(AjaxUtils.INS)">등록</button>
 					  	<button type="button" class="btn btn-warning"   id="btnUpd"  onclick="fnAjax(AjaxUtils.UPD)">수정</button>
 					  	<button type="button" class="btn btn-danger"    id="btnDel"  onclick="fnAjax(AjaxUtils.DEL)">삭제</button>
 				  	</div>
 				</div>
 			<br>
+<th:block th:include="/system/mgrRoleModal"></th:block>
 			</th:block>
 			
 
 <th:block th:fragment="mgrGrpMgScript">
 	<script th:inline="javascript">
 	
-		var tabType = 'mgr';
+		var tabType = 'grp';
+		
+		var chocGrpId = '';
 		
 		$(document).ready(function() {
 			// 테이블 초기화
 			DataTableUtils.init('#tableSysMgrGrp');
+			DataTableUtils.init('#tableMgrRole');
+			DataTableUtils.init('#tableMgrAuth');
 			
 			// 상세 정보 초기화
 			fnDtlInit();
@@ -176,6 +181,7 @@
 				
 				var data = $('#tableSysMgrGrp').dataTable().fnGetData(this);
 				if(StringUtils.isEmpty(data)) {
+					chocGrpId = '';
 					return;
 				}
 				
@@ -191,6 +197,16 @@
 			$('#mgrGrpTab a').on('click', function (event) {
 			  	event.preventDefault();
 			  	tabType = $(event.target).attr('tabType');
+			  	
+			  	var data = $('#tableSysMgrGrp').dataTable().fnGetData('.selected');
+			  	if(StringUtils.isNotEmpty(data)) {
+					fnDtlData(data);
+				}
+			});
+			
+			// 모달 팝업 초기화 (소속 관리자)
+			$('#modalMgrRole').on('show.bs.modal', function (e) {
+				mgrRole.fnGet(chocGrpId);
 			});
 			
 		});
@@ -215,28 +231,44 @@
 		}
 		
 		// 초기화
-		function fnDtlInit() {
+		function fnDtlInit(isModalOn) {
 			$('#btnIns').attr('disabled', false);
 			$('#btnUpd').attr('disabled', true);
 			$('#btnDel').attr('disabled', true);
-			
-			// 그룹아이디
-			$('#formMgrGrp').find('#mgrGrpId').val("").attr('disabled', false);
-			// 그룹명
-			$('#formMgrGrp').find('#mgrGrpNm').val("");
-			// 그룹정보
-			$('#formMgrGrp').find('#mgrGrpInfo').val("");
-			// 사용여부 
-			$('#formMgrGrp').find('#useYn').val("Y").attr('checked', true);
-			// 등록일시
-			$('#formMgrGrp').find('#cretDtm').val("");
-			// 수정일시 
-			$('#formMgrGrp').find('#updDtm').val("");
-			
+			// 관리자 그룹 정보
+			if('grp' == tabType) {
+				// 그룹아이디
+				$('#formMgrGrp').find('#mgrGrpId').val("").attr('disabled', false);
+				// 그룹명
+				$('#formMgrGrp').find('#mgrGrpNm').val("");
+				// 그룹정보
+				$('#formMgrGrp').find('#mgrGrpInfo').val("");
+				// 사용여부 
+				$('#formMgrGrp').find('#useYn').val("Y").attr('checked', true);
+				// 등록일시
+				$('#formMgrGrp').find('#cretDtm').val("");
+				// 수정일시 
+				$('#formMgrGrp').find('#updDtm').val("");
+				
 			// 소속 관리자
-			DataTableUtils.init('#tableMgrRole');
-			// 그룹 권한
-			DataTableUtils.init('#tableMgrAuth');
+			} else if('role' == tabType) {
+				$('#btnIns').attr('disabled', true);
+				$('#btnUpd').attr('disabled', false);
+				$('#btnDel').attr('disabled', false);	
+				// DataTableUtils.init('#tableMgrRole');
+				if(isModalOn) {
+					$('#modalMgrRole').modal('show'); 
+				}
+			// 권한 정보
+			} else if('auth' == tabType) {
+				$('#btnIns').attr('disabled', true);
+				$('#btnUpd').attr('disabled', false);
+				$('#btnDel').attr('disabled', false);	
+				// DataTableUtils.init('#tableMgrAuth');
+				if(isModalOn) {
+					
+				}
+			}
 		}
 		
 		// 값 설정
@@ -244,6 +276,9 @@
 			$('#btnIns').attr('disabled', true);
 			$('#btnUpd').attr('disabled', false);
 			$('#btnDel').attr('disabled', false);	
+			
+			// 선택한 그룹 아이디.
+			chocGrpId = data.mgrGrpId;
 			
 			// 그룹아이디
 			$('#formMgrGrp').find('#mgrGrpId').val(data.mgrGrpId).attr('disabled', true);
@@ -281,7 +316,8 @@
 					}},
 		            { "data": "mgrNm"   , "class": "text-left"  ,
 						"render": function(data, type, row) {
-							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"mgrNm\" value=\"'+data+'\" disabled>';
+							var mgrNm = (StringUtils.isEmpty(data)) ? "" : data;
+							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"mgrNm\" value=\"'+mgrNm+'\" disabled>';
 					}},
 		            { "data": "apitDtm" , "class": "text-center",
 						"render": function(data, type, row) {
@@ -299,11 +335,15 @@
 		        ],
 		        callback : function(settings) {
 					// alert(settings);
-					new DateTime($('input[name=apitDtm]'), {
-			   			format: 'YYYY-MM-DD HH:mm:ss' // 'YYYY-MM-DD HH:mm:ss'
+					$.each($('#tableMgrRole').find('input[name=apitDtm]'), function(i, item) {
+						new DateTime(item, {
+				   			format: 'YYYY-MM-DD HH:mm:ss'
+						});
 					});
-					new DateTime($('input[name=exprDtm]'), {
-			   			format: 'YYYY-MM-DD HH:mm:ss' // 'YYYY-MM-DD HH:mm:ss'
+					$.each($('#tableMgrRole').find('input[name=exprDtm]'), function(i, item) {
+						new DateTime(item, {
+				   			format: 'YYYY-MM-DD HH:mm:ss'
+						});
 					});
 				}
 			});
@@ -410,11 +450,43 @@
 			AjaxUtils.run(obj);
 		}
 		function fnAjaxRole(method) {
-			// 삭제 전 확인.
-			if(method == AjaxUtils.DEL && !confirm("선택한 관리자를 제외 하시겠습니까?")) {
+			var inputList = [];
+			
+			var obj = $('#tableMgrRole').find('input[name=check]');//.eq(2).is(':checked')
+			$.each(obj, function(i, item) {
+				if($(item).is(':checked')) {
+					var data = {
+						"mgrGrpId": chocGrpId,
+						"mgrId"   : $('#tableMgrRole').find('input[name=mgrId]').eq(i).val(),
+						"apitDtm" : $('#tableMgrRole').find('input[name=apitDtm]').eq(i).val(),
+						"exprDtm" : $('#tableMgrRole').find('input[name=exprDtm]').eq(i).val(),
+						"useYn"   : ($('#tableMgrRole').find('input[name=useYn]').eq(i).is(':checked')) ? "Y" : "N"
+					}
+					inputList.push(data);
+				}
+			});
+			if(inputList.length == 0) {
+				alert("변경 할 관리자를 체크해주세요.");
 				return;
 			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL) {
+				if(!confirm("선택한 관리자("+inputList.length+"건)를 제외 하시겠습니까?")) {
+					return;
+				}
+			}
+			var obj = {
+					url : "/system/mgr/role"+method,
+					contentType : "application/json",
+					param : JSON.stringify(inputList),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableMgrRole');
+					},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
 		}
+		
 		function fnAjaxAuth(method) {
 			// 삭제 전 확인.
 			if(method == AjaxUtils.DEL && !confirm("선택한 권한을 해제 하시겠습니까?")) {

@@ -1,9 +1,12 @@
 package hjho.prj.prct.biz.main.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import hjho.prj.prct.biz.main.model.LoginPVO;
@@ -26,10 +29,20 @@ public class LoginService extends CommonService {
 		return rspnData;
 	}
 
-	// 유저 정보 설정!
-	public boolean setUser(HttpServletRequest request, MgrInfoVO mgrInfoVO) {
+	// 관리자 정보 설정!
+	public boolean setMgr(HttpServletRequest request, MgrInfoVO mgrInfoVO) {
 		
 		SessionUtil.setMgrInfo(request, mgrInfoVO);
+		
+		return true;
+	}
+	
+	// 유저 정보 설정!
+	public boolean setUser(HttpServletRequest request, MgrInfoVO mgrInfoVO) {
+		Map<String, String> userMap = new HashMap<String, String>();
+		userMap.put("mgrId", mgrInfoVO.getMgrId());
+		userMap.put("mgrGrpId", mgrInfoVO.getMgrGrpId());
+		SessionUtil.setUser(request, userMap);
 		
 		return true;
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,11 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SessionUtil implements HttpSessionListener {
 	
+	public final static String MGR_INFO  = "mgr";
+	
+	public final static String USER_INFO = "user";
+	
 	public final static String TREE_MENU = "menu";
 	
-	public final static String MGR_INFO = "mgr";
-	
-	public final static String TOKEN = "token";
+	public final static String TOKEN     = "token";
 	
 	private static SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -51,7 +54,7 @@ public class SessionUtil implements HttpSessionListener {
 	 * Session 관리자 정보 저장.
 	 * @param userData (관리자)
 	 */
-	public static void setMgrInfo(HttpServletRequest request, Object MgrInfo) {
+	public static void setMgrInfo(HttpServletRequest request, MgrInfoVO MgrInfo) {
 		HttpSession session = request.getSession();
 		session.removeAttribute(MGR_INFO);
 		session.setAttribute(MGR_INFO, MgrInfo);		// user
@@ -66,9 +69,33 @@ public class SessionUtil implements HttpSessionListener {
 //		log.debug("[ Session getMgrInfo ] MGR ID   : {}",session.getId());
 //		log.debug("[ Session getMgrInfo ] MGR INFO : {}",session.getAttribute(SessionUtil.MGR_INFO));
 		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.MGR_INFO))) {
+			log.debug("[ Session getMgrInfo ] MGR INFO : {}",session.getAttribute("TEST"));
 			return null;
 		} 
 		return (MgrInfoVO) VoUtil.objToVO(session.getAttribute(SessionUtil.MGR_INFO), MgrInfoVO.class);
+	}
+	
+	/***
+	 * Session 관리자 정보 저장.
+	 * @param userData (관리자)
+	 */
+	public static void setUser(HttpServletRequest request, Map<String, String> userMap) {
+		HttpSession session = request.getSession();
+		session.removeAttribute(USER_INFO);
+		session.setAttribute(USER_INFO, userMap);		// user
+		log.debug("[ Session Attribute ] USER INFO OK, ID : {}", session.getId());
+	}
+	
+	/***
+	 * Session에 저장된 관리자 정보.
+	 * @return
+	 */
+	public static MgrInfoVO getUser(HttpSession session) {
+		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.USER_INFO))) {
+			log.debug("[ Session getMgrInfo ] USER INFO : {}",session.getAttribute(SessionUtil.USER_INFO));
+			return null;
+		} 
+		return (MgrInfoVO) VoUtil.objToVO(session.getAttribute(SessionUtil.USER_INFO), MgrInfoVO.class);
 	}
 	
 	/***

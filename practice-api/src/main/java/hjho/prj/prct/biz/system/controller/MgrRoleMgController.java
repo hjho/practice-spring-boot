@@ -1,8 +1,8 @@
 package hjho.prj.prct.biz.system.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hjho.prj.prct.biz.system.model.MgrMgPagingRVO;
 import hjho.prj.prct.biz.system.model.MgrRoleMgPagingPVO;
 import hjho.prj.prct.biz.system.model.MgrRoleMgPagingRVO;
 import hjho.prj.prct.biz.system.model.MgrRoleMgVO;
+import hjho.prj.prct.biz.system.service.MgrRoleMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
@@ -26,23 +28,30 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags="SysMgrRoleMg", value="시스템 관리자 그룹 역할 관리", description="시스템 관리자 역할 관리")
 public class MgrRoleMgController extends CommonController {
 	
+	@Autowired
+	private MgrRoleMgService mgrRoleMgService;
+	
 	@GetMapping()
 	@ApiOperation(value="getSysMgrRole", notes="시스템 관리자 그룹 역할 조회", response=MgrRoleMgPagingRVO.class)
 	public CommonMessage getSysMgrRole(@ModelAttribute MgrRoleMgPagingPVO mgrRoleMgPagingPVO) throws UserException {
 		this.parameterLog("MgrRoleMg[getSysMgrRole]", mgrRoleMgPagingPVO);
 		CommonMessage message = new CommonMessage();
 		
-		List<MgrRoleMgPagingRVO> returnList = new ArrayList<MgrRoleMgPagingRVO>(); 
-		//mgrMgService.getSysMgrRole(mgrMgPagingPVO);
-		MgrRoleMgPagingRVO returnVO = new MgrRoleMgPagingRVO();
-		returnVO.setMgrGrpId(mgrRoleMgPagingPVO.getMgrGrpId());
-		returnVO.setMgrId("MGRID");
-		returnVO.setMgrNm("MGRNM");
-		returnVO.setApitDtm("2022-01-01 00:00:00");
-		returnVO.setExprDtm("2022-12-31 23:59:59");
-		returnVO.setTotalCnt(1L);
-		returnVO.setUseYn("Y");
-		returnList.add(returnVO);
+		List<MgrRoleMgPagingRVO> returnList = mgrRoleMgService.getSysMgrRole(mgrRoleMgPagingPVO); 
+
+		message.setOk();
+		message.setData(returnList);
+		return message;
+	}
+	
+	@GetMapping("/mgr")
+	@ApiOperation(value="getSysMgrRoleMgr", notes="시스템 관리자 그룹 역할의 소속 관리자 조회", response=MgrRoleMgPagingRVO.class)
+	public CommonMessage getSysMgrRoleMgr(@ModelAttribute MgrRoleMgPagingPVO mgrRoleMgPagingPVO) throws UserException {
+		this.parameterLog("MgrRoleMg[getSysMgrRoleMgr]", mgrRoleMgPagingPVO);
+		CommonMessage message = new CommonMessage();
+		
+		List<MgrMgPagingRVO> returnList = mgrRoleMgService.getSysMgrRoleMgr(mgrRoleMgPagingPVO); 
+		
 		message.setOk();
 		message.setData(returnList);
 		return message;
@@ -50,15 +59,19 @@ public class MgrRoleMgController extends CommonController {
 	
 	@PostMapping()
 	@ApiOperation(value="postSysMgrRole", notes="시스템 관리자 그룹 역할 등록", response=Integer.class)
-	public CommonMessage postSysMgrRole(@RequestBody MgrRoleMgVO mgrRoleMgVO) throws UserException {
-		this.parameterLog("MgrRoleMg[postSysMgrRole]", mgrRoleMgVO);
+	public CommonMessage postSysMgrRole(@RequestBody List<MgrRoleMgVO> mgrRoleMgList) throws UserException {
+		this.parameterLog("MgrRoleMg[postSysMgrRole]", mgrRoleMgList);
 		
 		CommonMessage output = new CommonMessage();
 		
-		int insCnt = 1;
-		// mgrMgService.postSysMgrRole(mgrMgVO);
+		int insCnt = 0;
 		
-		output.setOk();
+		for (MgrRoleMgVO mgrRoleMgVO : mgrRoleMgList) {
+			insCnt += mgrRoleMgService.postSysMgrRole(mgrRoleMgVO);
+		}
+		
+		output.setCode("0003");
+		output.setArgs(new String[] {Integer.toString(insCnt)});
 		output.setData(insCnt);
 		if(insCnt < 1) {
 			output.setError();
@@ -68,14 +81,19 @@ public class MgrRoleMgController extends CommonController {
 	
 	@PutMapping()
 	@ApiOperation(value="putSysMgrRole", notes="시스템 관리자 그룹 역할 수정", response=Integer.class)
-	public CommonMessage putSysMgrRole(@RequestBody MgrRoleMgVO mgrRoleMgVO) throws UserException {
-		this.parameterLog("MgrRoleMg[putSysMgrRole]", mgrRoleMgVO);
+	public CommonMessage putSysMgrRole(@RequestBody List<MgrRoleMgVO> mgrRoleMgList) throws UserException {
+		this.parameterLog("MgrRoleMg[putSysMgrRole]", mgrRoleMgList);
 		
 		CommonMessage output = new CommonMessage();
 		
-		int updCnt = 1;
+		int updCnt = 0;
 		
-		output.setOk();
+		for (MgrRoleMgVO mgrRoleMgVO : mgrRoleMgList) {
+			updCnt += mgrRoleMgService.putSysMgrRole(mgrRoleMgVO);
+		}
+		
+		output.setCode("0001");
+		output.setArgs(new String[] {Integer.toString(updCnt)});
 		output.setData(updCnt);
 		if(updCnt < 1) {
 			output.setError();
@@ -85,14 +103,19 @@ public class MgrRoleMgController extends CommonController {
 	
 	@DeleteMapping()
 	@ApiOperation(value="deleteSysMgrRole", notes="시스템 관리자 그룹 역할 삭제", response=Integer.class)
-	public CommonMessage deleteSysMgrRole(@RequestBody MgrRoleMgVO mgrRoleMgVO) throws UserException {
-		this.parameterLog("MgrRoleMg[deleteSysMgrRole]", mgrRoleMgVO);
+	public CommonMessage deleteSysMgrRole(@RequestBody List<MgrRoleMgVO> mgrRoleMgList) throws UserException {
+		this.parameterLog("MgrRoleMg[deleteSysMgrRole]", mgrRoleMgList);
 		
 		CommonMessage output = new CommonMessage();
 		
-		int delCnt = 1;
+		int delCnt = 0;
 		
-		output.setOk();
+		for (MgrRoleMgVO mgrRoleMgVO : mgrRoleMgList) {
+			delCnt += mgrRoleMgService.deleteSysMgrRole(mgrRoleMgVO);
+		}
+		
+		output.setCode("0002");
+		output.setArgs(new String[] {Integer.toString(delCnt)});
 		output.setData(delCnt);
 		if(delCnt < 1) {
 			output.setError();

@@ -3,6 +3,7 @@ package hjho.prj.prct.biz.system.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +19,12 @@ public class MgrGrpMgService {
 	@Autowired 
 	private MgrGrpMgMapper mgrGrpMgMapper;
 
+	@Transactional(readOnly=true)
 	public List<MgrGrpMgPagingRVO> getSysMgrGrp(MgrGrpMgPagingPVO mgrGrpMgPagingPVO) {
 		return mgrGrpMgMapper.getSysMgrGrp(mgrGrpMgPagingPVO);
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int postSysMgrGrp(MgrGrpMgVO mgrGrpMgVO) throws UserException {
 		int insCnt = 0;
 		
@@ -39,6 +42,7 @@ public class MgrGrpMgService {
 		return insCnt;
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int putSysMgrGrp(MgrGrpMgVO mgrGrpMgVO) throws UserException {
 		int updCnt = 0;
 		
@@ -56,6 +60,7 @@ public class MgrGrpMgService {
 		return updCnt;
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int deleteSysMgrGrp(MgrGrpMgVO mgrGrpMgVO) throws UserException {
 		int delCnt = 0;
 		

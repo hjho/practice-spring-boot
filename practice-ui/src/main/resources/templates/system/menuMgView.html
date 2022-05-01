@@ -201,8 +201,11 @@
 						"data": "menuNm" , "class": "text-left",
 						"render": function(data, type, row) {
 							var menuNm = data;
-							if(row.lvl > 1) {
-								menuNm = row.hrMenuNm + " > " + data;
+							if(row.lvl == 2) {
+								// menuNm = row.hrMenuNm + " > " + data;
+								menuNm = "&nbsp;┕ " + data;
+							} else if(row.lvl == 3) {
+								menuNm = "&nbsp; &nbsp; &nbsp;┕ " + data;
 							}
 							return menuNm;
 						}  

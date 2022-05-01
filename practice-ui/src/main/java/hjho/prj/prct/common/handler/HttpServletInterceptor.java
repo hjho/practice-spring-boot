@@ -33,15 +33,15 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebMvc
 public class HttpServletInterceptor implements HandlerInterceptor {
 	
-	private final boolean isHeaderLog = true;
+	private final boolean isHeaderLog = false;
 	
-	private final boolean isCookieLog = true;
+	private final boolean isCookieLog = false;
 	
 	private final boolean isSessionLog = true;
 	
 	private final boolean isSecurityLog = true;
 	
-	private final boolean isTestMode = true;
+	private final boolean isTestMode = false;
 	
 	@Autowired
 	private MainService mainService;

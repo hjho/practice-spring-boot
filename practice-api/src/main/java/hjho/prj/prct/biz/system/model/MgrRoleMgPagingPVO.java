@@ -18,4 +18,7 @@ public class MgrRoleMgPagingPVO extends PagingModel {
 	@ApiModelProperty(name="mgrGrpId", value="관리자 그룹 아이디")
 	private String mgrGrpId;
 	
+	@ApiModelProperty(name="roleMgrYn", value="소속 관리자 여부")
+	private String roleMgrYn;
+	
 }

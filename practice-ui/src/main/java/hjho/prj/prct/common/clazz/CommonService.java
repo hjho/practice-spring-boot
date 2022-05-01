@@ -1,6 +1,7 @@
 package hjho.prj.prct.common.clazz;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -120,8 +121,11 @@ public class CommonService {
 	}
 	
 	private CommonMessage excute(HttpMethod method, String url, Object data) {
+		// Set Common
+		Object input = this.initCommon(data);
+		
 		// Set Header
-		HttpHeaders header = this.initHeader(data);
+		HttpHeaders header = this.initHeader(url);
 		
 		// Set URL
 		String requestUrl = API_URL.concat(url);
@@ -129,10 +133,10 @@ public class CommonService {
 		// Set Data
 		HttpEntity<Object> entity = null;
 		if(HttpMethod.GET.equals(method)) {
-			requestUrl = requestUrl.concat(this.initParam(data));
+			requestUrl = requestUrl.concat(this.initParam(input));
 			entity = new HttpEntity<Object>(header);
 		} else {
-			entity = new HttpEntity<Object>(data, header);
+			entity = new HttpEntity<Object>(input, header);
 		}
 		
 		// Run
@@ -141,14 +145,16 @@ public class CommonService {
 		return response.getBody();
 	}
 	
-	private HttpHeaders initHeader(Object data) {
+	private HttpHeaders initHeader(String url) {
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
-		// header.set("Authorization", "Bearer ".concat(SecurityUtil.getToken()));
-		if(data instanceof CommonModel) {
-			CommonModel headerVO = (CommonModel) data;
-			header.add("functionYn", headerVO.getFunctionYn());
+		if(!(url.equals(URI.MAIN_LOGIN_PROC_API)
+	         ||url.equals(URI.MAIN_MENU_AUTH_API)
+	         ||url.equals(URI.MAIN_TOKEN_ISSUE_API))
+		) {
+			header.set("Authorization", "Bearer ".concat(SecurityUtil.getToken()));
 		}
+		
 		return header;
 	}
 	
@@ -180,4 +186,52 @@ public class CommonService {
 		return sb.substring(0, (sb.length()-1)).toString();
 	}
 	
+	@SuppressWarnings("unchecked")
+	private Object initCommon(Object data) {
+		if(data == null) return data; 
+			
+		// TODO LIST처리 아직 안되어있음.
+		if(data instanceof List) {
+			List<Object> list = (List<Object>) data;
+			for (Object obj : list) {
+				if(this.isCommonModel(obj.getClass())) {
+					String menuId = SecurityUtil.getAuthoritie().get("menuId");
+					String mgrId  = SecurityUtil.getMgrInfo().getMgrId();
+
+					CommonModel common = (CommonModel) obj;
+					common.setCretSysId(menuId);
+					common.setUpdSysId(menuId);
+					common.setCretMgrId(mgrId);
+					common.setUpdMgrId(mgrId);
+				}
+			}
+			return list;
+		}
+		
+		if(this.isCommonModel(data.getClass())) {
+			String menuId = SecurityUtil.getAuthoritie().get("menuId");
+			String mgrId  = SecurityUtil.getMgrInfo().getMgrId();
+
+			CommonModel common = (CommonModel) data;
+			common.setCretSysId(menuId);
+			common.setUpdSysId(menuId);
+			common.setCretMgrId(mgrId);
+			common.setUpdMgrId(mgrId);
+			return common;
+		}
+		return data;
+	}
+	
+	private boolean isCommonModel(Class<?> paramClass) {
+		
+		if(Object.class.equals(paramClass)) {
+			return false;
+		}
+		
+		if(CommonModel.class.equals(paramClass)) {
+			return true;//false;
+		}
+		
+		return this.isCommonModel(paramClass.getSuperclass());
+	}
 }

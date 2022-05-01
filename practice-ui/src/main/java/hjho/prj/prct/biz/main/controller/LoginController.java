@@ -50,9 +50,12 @@ public class LoginController extends CommonController {
 				// 유저 정보 설정
 				MgrInfoVO mgrInfoVO = (MgrInfoVO) VoUtil.objToVO(list.get(0), MgrInfoVO.class);
 				
+				// 관리자 정보 저장
+				loginService.setMgr(request, mgrInfoVO);
+				// 유저 정보 저장
+				loginService.setUser(request, mgrInfoVO);
 				// 메뉴 권한 정보 설정
 				loginService.setMenu(request, mgrInfoVO);
-				loginService.setUser(request, mgrInfoVO);
 				// 토큰 발급 및 저장.
 				loginService.setToken(request, mgrInfoVO);
 				

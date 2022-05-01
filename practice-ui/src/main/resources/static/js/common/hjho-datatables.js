@@ -131,7 +131,9 @@ var DataTableUtils = function() {
 			var pages = $(tableId).dataTable().api().page.info().pages;
 			if(pages != 0) {
 				$(tableId).dataTable().api().ajax.reload(null, false);
-			}
+			} else {
+				$(tableId).dataTable().api().ajax.reload(null, false);
+			} 
 		},
 		isSeleted : function(tableId, tr) {
 			if($(tr).attr('class').indexOf('selected') > -1) {

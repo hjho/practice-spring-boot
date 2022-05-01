@@ -10,6 +10,7 @@
 	
 	<entry key="0001">변경 건수는 {0}건 입니다.</entry>
 	<entry key="0002">삭제 건수는 {0}건 입니다.</entry>
+	<entry key="0003">등록 건수는 {0}건 입니다.</entry>
 	
 	<!-- 000 ADD MESSAGE -->
 	<entry key="9001">입력 값이 존재하지 않습니다.</entry>

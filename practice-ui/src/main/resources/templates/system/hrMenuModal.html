@@ -61,13 +61,24 @@
 							tableId : "#tableHrMenu",
 							url : "/system/menu" + AjaxUtils.SEL,
 							param : {
-								"hrMenuYn": "Y"
+								//"hrMenuYn": "Y"
 							},
 							orderYn: "N",
 							columns: [
 								{ "data": "rowNo"    , "class": "text-center"},
 					            { "data": "menuId"   , "class": "text-center"},
-					            { "data": "menuNm"   , "class": "text-left"  },
+					            { 
+									"data": "menuNm"   , "class": "text-left",
+									"render": function(data, type, row) {
+										var menuNm = data;
+										if(row.lvl == 2) {
+											menuNm = "&nbsp;┕ " + data;
+										} else if(row.lvl == 3) {
+											menuNm = "&nbsp; &nbsp; &nbsp;┕ " + data;
+										}
+										return menuNm;
+									}    
+								},
 					            { "data": "pageUrl"  , "class": "text-left"  },
 					            { "data": "lrMenuCnt", "class": "text-center"},
 					            { "data": "useYn"    , "class": "text-center"}

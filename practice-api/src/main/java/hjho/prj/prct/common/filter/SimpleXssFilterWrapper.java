@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 	
-	private boolean isLog = false;
+	private boolean isLog = true;
 	
 	private InputStream input; 
 	
@@ -43,31 +42,19 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 		if(input == null) return null;
 		
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> returnMap = new HashMap<>();
 		
-		// ServletInputStream to Map
-		Map<String, Object> bodyMap = mapper.readValue(IOUtils.toByteArray(this.input), HashMap.class);
+		Object inputObj = mapper.readValue(IOUtils.toByteArray(this.input), Object.class);
 		
-		for (String key : bodyMap.keySet()) {
-			Object obj = bodyMap.get(key);
-			if(obj != null) {
-				if(obj instanceof String) {
-					String cleanVal = obj.toString();
-					obj = SimpleXssFilter.cleanPatameter(key, cleanVal);
-					// log.debug("[F] XSS InputStream String : {}", obj);
-				} else
-				if(obj instanceof List) {
-					obj = this.getCleanList((List<Object>) obj);
-					// log.debug("[F] XSS InputStream List : {}", obj);
-				} else
-				if(obj instanceof Map) {
-					obj = this.getCleanMap((Map<String, Object>) obj);
-					// log.debug("[F] XSS InputStream Map : {}", obj);
-				}
-			}
-			returnMap.put(key, obj);
+		// ServletInputStream to String
+		String output = "";
+		if(inputObj instanceof Map) {
+			Map<String, Object> cleanMap = this.getCleanMap((Map<String, Object>) inputObj);
+			output = mapper.writeValueAsString(cleanMap);
+		} else if(inputObj instanceof List) {
+			List<Object> cleanList = this.getCleanList((List<Object>) inputObj);
+			output = mapper.writeValueAsString(cleanList);
 		}
-		String output = mapper.writeValueAsString(returnMap);
+
 		if(this.isLog) {
 			log.debug("[F] XSS InputStream OutPut : {}", output);
 		}
@@ -124,15 +111,17 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 			if(obj instanceof String) {
 				String cleanVal = obj.toString();
 				obj = SimpleXssFilter.cleanPatameter("list", cleanVal);
-			} else
-			if(obj instanceof Map) {
+			} else if(obj instanceof Map) {
 				obj = this.getCleanMap((Map<String, Object>) obj);
+			} else if(obj instanceof List) {
+				obj = this.getCleanList((List<Object>) obj);
 			}
 			list.add(obj);
 		}
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> getCleanMap(Map<String, Object> param) {
 		Map<String, Object> map = param;
 		for (String key : param.keySet()) {
@@ -140,6 +129,10 @@ public class SimpleXssFilterWrapper extends HttpServletRequestWrapper {
 			if(obj != null && obj instanceof String) {
 				String cleanVal = obj.toString();
 				obj = SimpleXssFilter.cleanPatameter(key, cleanVal);
+			} else if(obj instanceof Map) {
+				obj = this.getCleanMap((Map<String, Object>) obj);
+			} else if(obj instanceof List) {
+				obj = this.getCleanList((List<Object>) obj);
 			}
 			map.put(key, obj);
 		}

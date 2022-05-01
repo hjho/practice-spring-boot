@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class MgrMgService {
 	@Autowired 
 	private MgrMgMapper mgrMgMapper;
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public boolean tokenSave(MgrInfoVO mgrInfoVO, String refreshToken) {
 		
 		int saveCnt = mgrMgMapper.tokenSave(mgrInfoVO.getMgrId(), refreshToken);
@@ -28,10 +30,12 @@ public class MgrMgService {
 		return saveCnt > 0;
 	}
 
+	@Transactional(readOnly=true)
 	public List<MgrMgPagingRVO> getSysMgr(MgrMgPagingPVO mgrMgPagingPVO) {
 		return mgrMgMapper.getSysMgr(mgrMgPagingPVO);
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int postSysMgr(MgrMgVO mgrMgVO) throws UserException {
 		int insCnt = 0;
 		
@@ -52,6 +56,7 @@ public class MgrMgService {
 		return insCnt;
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int putSysMgr(MgrMgVO mgrMgVO) throws UserException {
 		int updCnt = 0;
 		
@@ -69,6 +74,7 @@ public class MgrMgService {
 		return updCnt;
 	}
 
+	@Transactional(rollbackFor={DataAccessException.class})
 	public int deleteSysMgr(MgrMgVO mgrMgVO) throws UserException {
 		int delCnt = 0;
 		

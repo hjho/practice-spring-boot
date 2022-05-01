@@ -14,4 +14,6 @@ public class MgrRoleMgPagingVO extends PagingModel {
 
 	private String mgrGrpId;
 	
+	private String roleMgrYn;
+	
 }

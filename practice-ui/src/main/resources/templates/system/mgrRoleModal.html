@@ -1,0 +1,116 @@
+		<!--================ START MGR ROLE MODAL START ================-->
+				<div class="modal fade" id="modalMgrRole" tabindex="-1" role="dialog" aria-hidden="true">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">추가 관리자 선택</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">관리자 목록</h5>
+								  	<div class="card-body">
+								  		<table class="table table-sm table-hover table-bordered" id="tableMgrRoleModal">
+											<thead class="table-light">
+												<tr>
+													<th class="text-center">No</th>
+													<th class="text-center">이름</th>
+													<th class="text-center">관리자 아이디</th>
+													<th class="text-center">상태</th>
+												</tr>
+											</thead>
+										</table>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+					        	<button type="button" class="btn btn-secondary" onclick="mgrRole.fnClose()">닫기</button>
+					        	<button type="button" class="btn btn-primary" onclick="mgrRole.fnAdd()">추가</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+				
+					var mgrRole = {
+						grpId : "",
+						fnGet : function(mgrGrpId) {
+							this.grpId = mgrGrpId;
+							DataTableUtils.get({
+								tableId : "#tableMgrRoleModal",
+								url : "/system/mgr/role/mgr" + AjaxUtils.SEL,
+								param : {
+									"mgrGrpId": mgrGrpId,
+									"roleMgrYn": "N"
+								},
+								orderYn: "N",
+								columns: [
+									{ 
+										"data": "", "class": "text-center",
+									  	"render": function(data, type, row) {
+											return '<input type=\"checkbox\" class=\"form-check-input\" name=\"check\">';
+										}
+									},
+									{"data": "mgrNm", "class": "text-left"  },
+						            {
+										"data": "mgrId", "class": "text-center",
+										"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"mgrId\" value=\"'+data+'\" disabled>';
+										}
+									},
+						            {
+										"data": "sysMgrStatCd", "class": "text-center"  ,
+										"render": function(data, type, row) {
+											if('00' == data) {
+												return '재직'
+											} else if('99' == data) {
+												return '퇴직'
+											}
+											return data;
+										}
+									}
+						        ]
+							});
+						},
+						fnAdd : function() {
+							var inputList = [];
+			
+							var obj = $('#tableMgrRoleModal').find('input[name=check]');//.eq(2).is(':checked')
+							$.each(obj, function(i, item) {
+								if($(item).is(':checked')) {
+									var data = {
+										"mgrGrpId": mgrRole.grpId,
+										"mgrId"   : $('#tableMgrRoleModal').find('input[name=mgrId]').eq(i).val(),
+									}
+									inputList.push(data);
+								}
+							});
+							
+							if(inputList.length == 0) {
+								alert("추가 할 관리자를 체크해주세요.");
+								return;
+							}
+							var obj = {
+									url : "/system/mgr/role" + AjaxUtils.INS,
+									contentType : "application/json",
+									param : JSON.stringify(inputList),
+									funcOk : function(data) {
+										$('#modalMgrRole').modal('hide');
+										var param = {
+											"mgrGrpId": mgrRole.grpId
+										}
+										fnRoleInit(param);
+										// DataTableUtils.refrash('#tableMgrRole');
+									},
+									funcErr : function(data) {}
+							}
+							AjaxUtils.run(obj);
+						}, 
+						fnClose : function() {
+							$('#modalMgrRole').modal('hide'); 
+						}
+					}
+				</script>
+		<!--================ END MGR ROLE MODAL END ================-->

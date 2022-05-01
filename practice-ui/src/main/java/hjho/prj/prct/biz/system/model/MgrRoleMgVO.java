@@ -14,9 +14,11 @@ public class MgrRoleMgVO extends CommonModel {
 
 	private String mgrGrpId;
 	
-	private String mgrGrpNm;
+	private String mgrId;
 	
-	private String mgrGrpInfo;
+	private String apitDtm;
+	
+	private String exprDtm;
 	
 	private String useYn;
 	

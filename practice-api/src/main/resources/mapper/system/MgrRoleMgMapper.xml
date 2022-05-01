@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.system.mapper.MgrRoleMgMapper">
+	<sql id="order-system-mgr-role">
+        ORDER BY
+        <choose>
+            <when test='sortCol == 0'>mgr_id</when>
+            <when test='sortCol == 1'>mgr_id</when>
+            <when test='sortCol == 2'>mgr_nm</when>
+            <when test='sortCol == 3'>apit_dtm</when>
+            <when test='sortCol == 4'>expr_dtm</when>
+            <when test='sortCol == 5'>use_yn</when>
+            <otherwise>mgr_id</otherwise>
+        </choose>
+        <if test='sortType == "asc"'> asc</if>
+        <if test='sortType == "desc"'> desc</if>
+        , mgr_id asc
+    </sql>
+    
+    <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgVO" resultType="int">
+        /* 관리자 그룹 역할 PK CHECK */
+        SELECT COUNT(*) FROM practice.sys_mgr_role WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR} AND mgr_id = #{mgrId, jdbcType=VARCHAR} 
+    </select>
+    
+    <select id="getSysMgrRole" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrRoleMgPagingRVO">
+        /* 관리자 그룹 역할 관리 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT rol.mgr_grp_id 
+             , rol.mgr_id 
+             , NVL(mgr.mgr_nm, '')       AS mgr_nm 
+             , rol.apit_dtm 
+             , rol.expr_dtm 
+             , rol.use_yn 
+             , rol.cret_dtm 
+             , rol.upd_dtm 
+          FROM practice.sys_mgr_role        rol
+          LEFT JOIN practice.sys_mgr        mgr
+            ON rol.mgr_id     = mgr.mgr_id
+          LEFT JOIN practice.sys_mgr_grp    grp
+            ON rol.mgr_grp_id = grp.mgr_grp_id 
+         WHERE grp.mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+    <include refid="hjho.prj.prct.biz.system.mapper.MgrRoleMgMapper.order-system-mgr-role"/>
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <select id="getSysMgrRoleMgr" 
+            parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgPagingPVO"
+            resultType   ="hjho.prj.prct.biz.system.model.MgrMgPagingRVO">
+        /* 관리자 그룹 역할의 소속 관리자 > 조회 */
+    <include refid="common.sql.page-head"/>
+        SELECT mgr_id
+             , mgr_nm
+             , sys_mgr_stat_cd
+          FROM practice.sys_mgr
+         WHERE mgr_id 
+    <choose>
+        <when test='roleMgrYn == "N"'>NOT IN</when>
+        <otherwise>IN</otherwise>
+    </choose>(SELECT mgr_id
+                FROM practice.sys_mgr_role
+               WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR})
+    <include refid="common.sql.page-foot"/>
+    </select>
+    
+    <insert id="postSysMgrRole" parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgVO">
+        /* 관리자 그룹 역할 관리 > 등록 */
+        INSERT INTO practice.sys_mgr_role (
+                    mgr_grp_id
+                  , mgr_id
+                  , apit_dtm
+                  , expr_dtm
+                  , use_yn
+                  , cret_sys_id 
+                  , cret_mgr_id 
+                  , cret_dtm 
+         ) VALUES ( 
+                    #{mgrGrpId     , jdbcType=VARCHAR}
+                  , #{mgrId        , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                  , TO_CHAR(SYSDATE+(INTERVAL '1' YEAR), 'YYYY-MM-DD HH24:MI:SS')
+                  , 'Y'
+                  , #{cretSysId    , jdbcType=VARCHAR}
+                  , #{cretMgrId    , jdbcType=VARCHAR}
+                  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+         )
+    </insert>
+    
+    <update id="putSysMgrRole" parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgVO">
+        /* 관리자 그룹 역할 관리 > 수정 */
+        UPDATE practice.sys_mgr_role
+           SET mgr_grp_id   = #{mgrGrpId     , jdbcType=VARCHAR}
+             , mgr_id       = #{mgrId        , jdbcType=VARCHAR}
+             , apit_dtm     = #{apitDtm      , jdbcType=VARCHAR}
+             , expr_dtm     = #{exprDtm      , jdbcType=VARCHAR}
+             , use_yn       = #{useYn        , jdbcType=VARCHAR}
+             , upd_sys_id   = #{updSysId     , jdbcType=VARCHAR}            
+             , upd_mgr_id   = #{updMgrId     , jdbcType=VARCHAR}            
+             , upd_dtm      = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_grp_id   = #{mgrGrpId     , jdbcType=VARCHAR}
+           AND mgr_id       = #{mgrId        , jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="deleteSysMgrRole" parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgVO">
+        /* 관리자 그룹 역할 관리 > 삭제 */
+        DELETE
+          FROM practice.sys_mgr_role
+         WHERE mgr_grp_id = #{mgrGrpId, jdbcType=VARCHAR}
+           AND mgr_id     = #{mgrId   , jdbcType=VARCHAR}
+    </delete>
+	
+</mapper> 
