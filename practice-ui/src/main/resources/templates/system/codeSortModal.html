@@ -1,0 +1,188 @@
+		<!--================ START CODE DT SORT INFO MODAL START ================-->
+				<div class="modal fade" id="modalCodeSort" tabindex="-1" role="dialog" aria-hidden="true">
+				 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<h5 class="modal-title">공통코드 상세 정렬순서 변경</h5>
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          			<span aria-hidden="true">&times;</span>
+				        		</button>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="card">
+								  	<h5 class="card-header">코드 정보</h5>
+								  	<div class="card-body">
+								  		<table class="table table-sm table-hover table-bordered" id="tableSysCodeSort">
+											<thead class="table-light">
+												<tr>
+													<th class="text-center">No</th>
+													<th class="text-center">코드값</th>
+													<th class="text-center">코드값명</th>
+													<th class="text-center">부속코드값</th>
+													<th class="text-center">정렬순서</th>
+													<th class="text-center">사용여부</th>
+												</tr>
+											</thead>
+										</table>
+								  	</div>
+								</div>
+				      		</div>
+					      	<div class="modal-footer">
+							  	<button type="button" class="btn btn-success"   onclick="sort.change('up')"    >▲</button>
+							  	<button type="button" class="btn btn-success"   onclick="sort.change('down')"  >▼</button>
+					        	<button type="button" class="btn btn-secondary" onclick="sort.run()">순서변경</button>
+					        	<button type="button" class="btn btn-danger"    data-dismiss="modal">닫기</button>
+					      	</div>
+				    	</div>
+				  	</div>
+				</div>
+				<script th:inline="javascript">
+								
+					$(document).ready(function() {
+						// 테이블 클릭 함수
+						$('#tableSysCodeSort').on('click', 'tbody tr', function() {
+							var data = $('#tableSysCodeSort').dataTable().fnGetData(this);
+							if(StringUtils.isEmpty(data)) {
+								return;
+							}
+							
+							if(DataTableUtils.isSeleted('#tableSysCodeSort', this)) {
+								return;
+							}
+						});
+						
+					});
+					var sort = {
+						grpCdId : '',
+						fnGet : function(data) {
+							this.grpCdId = data.commCdId;
+							
+							DataTableUtils.get({
+								tableId : "#tableSysCodeSort",
+								url : "/system/code/detail" + AjaxUtils.SEL,
+								param : {
+									"commCdId": data.commCdId
+								},
+								orderYn : "N",
+								pagingYn : "N",
+								columns: [
+									{ 
+										"data": "rowNo"    , "class": "text-center",
+						            	"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"rowNo\" value=\"'+data+'\" disabled>';
+										}
+									},
+						            { 
+										"data": "cdVal"    , "class": "text-center",
+						            	"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"cdVal\" value=\"'+data+'\" disabled>';
+										}
+									},
+						            { 
+										"data": "cdValNm"  , "class": "text-center",
+						            	"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"cdValNm\" value=\"'+data+'\" disabled>';
+										}
+									},
+						            { 
+										"data": "addtCdVal", "class": "text-center",
+						            	"render": function(data, type, row) {
+											var str = StringUtils.isEmpty(data) ? "" : data;
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"addtCdVal\" value=\"'+str+'\" disabled>';
+										}
+									},
+						            { 
+										"data": "rowNo"    , "class": "text-center",
+						            	"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"sortOrd\" value=\"'+data+'\" disabled>';
+										}
+									},
+						            { 
+										"data": "useYn"    , "class": "text-center",
+						            	"render": function(data, type, row) {
+											return '<input type=\"text\" class=\"form-control form-control-sm text-center\" name=\"useYn\" value=\"'+data+'\" disabled>';
+										}
+									}
+						        ]
+							});
+						},
+						change : function(type) {
+							var selectRowNo = $('#tableSysCodeSort').dataTable().fnGetData($('#tableSysCodeSort .selected')).rowNo;
+							if(type == 'up') {
+								if(selectRowNo == 1) {
+									alert("첫번째 순서 입니다.");
+									return;
+								}								
+							} else {
+								if(selectRowNo == $('#tableSysCodeSort tbody tr').length) {
+									alert("마지막 순서 입니다.");
+									return;
+								}
+							}
+			
+							var inputList = [];
+							var obj = $('#tableSysCodeSort').find('input[name=rowNo]');
+							var selectIndex = 0;
+							$.each(obj, function(i, item) {
+								var rowNo = $('#tableSysCodeSort').find('input[name=rowNo]').eq(i).val();
+								if(rowNo == selectRowNo) {
+									selectIndex = i;
+								}
+								var data = {
+									"rowNo"    : rowNo,
+									"cdVal"    : $('#tableSysCodeSort').find('input[name=cdVal]').eq(i).val(),
+									"cdValNm"  : $('#tableSysCodeSort').find('input[name=cdValNm]').eq(i).val(),
+									"addtCdVal": $('#tableSysCodeSort').find('input[name=addtCdVal]').eq(i).val(),
+									"sortOrd"  : $('#tableSysCodeSort').find('input[name=sortOrd]').eq(i).val(),
+									"useYn"    : $('#tableSysCodeSort').find('input[name=useYn]').eq(i).val()
+								}
+								inputList.push(data);
+							});
+							
+							if(type == 'up') {
+								this.changeRow(inputList, selectIndex, (selectIndex-1));
+							} else {
+								this.changeRow(inputList, selectIndex, (selectIndex+1));
+							}
+						},
+						changeRow : function(list, selectIndex, changeIndex) {
+							// CHANGE DATA >> SELECT DATA
+							$('#tableSysCodeSort').find('input[name=cdVal]').eq(selectIndex).val(list[changeIndex].cdVal);
+							$('#tableSysCodeSort').find('input[name=cdValNm]').eq(selectIndex).val(list[changeIndex].cdValNm);
+							$('#tableSysCodeSort').find('input[name=addtCdVal]').eq(selectIndex).val(list[changeIndex].addtCdVal);
+							$('#tableSysCodeSort').find('input[name=useYn]').eq(selectIndex).val(list[changeIndex].useYn);
+							// SELECT DATA >> CHANGE DATA
+							$('#tableSysCodeSort').find('input[name=cdVal]').eq(changeIndex).val(list[selectIndex].cdVal);
+							$('#tableSysCodeSort').find('input[name=cdValNm]').eq(changeIndex).val(list[selectIndex].cdValNm);
+							$('#tableSysCodeSort').find('input[name=addtCdVal]').eq(changeIndex).val(list[selectIndex].addtCdVal);
+							$('#tableSysCodeSort').find('input[name=useYn]').eq(changeIndex).val(list[selectIndex].useYn);
+							// SELECTED CSS CHANGE
+							$('#tableSysCodeSort tbody tr').eq(selectIndex).removeClass('selected');
+							$('#tableSysCodeSort tbody tr').eq(changeIndex).addClass('selected');
+						},
+						run : function() {
+							var inputList = [];
+							var obj = $('#tableSysCodeSort').find('input[name=rowNo]');
+							$.each(obj, function(i, item) {
+								var data = {
+									"commCdId" : sort.grpCdId,
+									"cdVal"    : $('#tableSysCodeSort').find('input[name=cdVal]').eq(i).val(),
+									"sortOrd"  : $('#tableSysCodeSort').find('input[name=sortOrd]').eq(i).val(),
+								}
+								inputList.push(data);
+							});
+							var obj = {
+									url : "/system/code/detail/sort"+AjaxUtils.UPD,
+									contentType : "application/json",
+									param : JSON.stringify(inputList),
+									funcOk : function(data) {
+										DataTableUtils.refrash('#tableSysCodeDt');
+										$('#modalCodeSort').modal('hide');
+									},
+									funcErr : function(data) {}
+							}
+							AjaxUtils.run(obj);
+						}
+					}
+				</script>
+		<!--================ END CODE DT SORT INFO MODAL END ================-->
