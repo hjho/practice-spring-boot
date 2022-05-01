@@ -26,6 +26,7 @@ public class URI {
 	private static final String TOKEN_ISSUE  = "/token/issue";
 	
 	private static final String CODE         = "/code";
+	private static final String DETAIL       = "/detail";
 	private static final String MENU         = "/menu";
 	private static final String MANAGER      = "/mgr";
 	private static final String GROUP        = "/grp";
@@ -52,6 +53,8 @@ public class URI {
 /* Add Table */
 	// 시스템관리 > 공통코드관리
 	public static final String SYSTEM_CODE_API          = DEF.concat(SYSTEM).concat(CODE);
+	// 시스템관리 > 공통코드관리 > 상세
+	public static final String SYSTEM_CODE_DT_API       = DEF.concat(SYSTEM).concat(CODE).concat(DETAIL);
 	// 시스템관리 > 메뉴관리
 	public static final String SYSTEM_MENU_API          = DEF.concat(SYSTEM).concat(MENU);
 	// 시스템관리 > 관리자관리

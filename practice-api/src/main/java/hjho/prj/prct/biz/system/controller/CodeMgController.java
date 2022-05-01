@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hjho.prj.prct.biz.main.model.LoginRVO;
 import hjho.prj.prct.biz.system.model.CodeMgPagingPVO;
 import hjho.prj.prct.biz.system.model.CodeMgPagingRVO;
 import hjho.prj.prct.biz.system.model.CodeMgVO;
@@ -32,7 +31,7 @@ public class CodeMgController extends CommonController {
 	private CodeMgService codeMgService;
 	
 	@GetMapping()
-	@ApiOperation(value="getSysCode", notes="시스템 공통코드 조회", response=LoginRVO.class)
+	@ApiOperation(value="getSysCode", notes="시스템 공통코드 조회", response=CodeMgPagingRVO.class)
 	public CommonMessage getSysCode(@ModelAttribute CodeMgPagingPVO codeMgPagingPVO) throws UserException {
 		this.parameterLog("SysCodeMg[getSysCode]", codeMgPagingPVO);
 		CommonMessage message = new CommonMessage();

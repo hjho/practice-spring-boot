@@ -70,12 +70,15 @@
 					            { 
 									"data": "menuNm"   , "class": "text-left",
 									"render": function(data, type, row) {
-										var menuNm = data;
-										if(row.lvl == 2) {
-											menuNm = "&nbsp;┕ " + data;
-										} else if(row.lvl == 3) {
-											menuNm = "&nbsp; &nbsp; &nbsp;┕ " + data;
+										var buf = '';
+										if(row.lvl > 1) {
+											buf += ' &nbsp;';
+											for(var i=2; i<row.lvl; i++) {
+												buf += ' &nbsp; &nbsp;';
+											}
+											buf += '┕ '; 
 										}
+										var menuNm = buf + data;
 										return menuNm;
 									}    
 								},

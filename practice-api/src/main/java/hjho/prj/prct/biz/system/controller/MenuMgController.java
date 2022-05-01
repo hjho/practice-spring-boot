@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hjho.prj.prct.biz.main.model.LoginRVO;
 import hjho.prj.prct.biz.system.model.MenuMgPagingPVO;
 import hjho.prj.prct.biz.system.model.MenuMgPagingRVO;
 import hjho.prj.prct.biz.system.model.MenuMgVO;
