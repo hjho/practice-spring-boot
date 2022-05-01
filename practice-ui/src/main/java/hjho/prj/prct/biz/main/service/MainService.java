@@ -23,7 +23,7 @@ public class MainService extends CommonService {
 
 	public boolean isSessionFail(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		if(ObjectUtils.isEmpty(SessionUtil.getMgrInfo(session))) {
+		if(ObjectUtils.isEmpty(SessionUtil.getUser(session))) {
 			log.warn("[V] 마지막 접속이후 {}이 지났습니다.", SessionUtil.getDestroySetTime(session));
 			return true;
 		} else {
@@ -35,7 +35,7 @@ public class MainService extends CommonService {
 	public boolean isTokenVerifyFail(HttpServletRequest request) {
 		boolean isFail = true;
 		HttpSession session = request.getSession();
-		MgrInfoVO mgrInfoVO = SessionUtil.getMgrInfo(session);
+		MgrInfoVO mgrInfoVO = SessionUtil.getUser(session);
 		String sessMgrId = mgrInfoVO.getMgrId();
 		String token = SessionUtil.getToken(session);
 		

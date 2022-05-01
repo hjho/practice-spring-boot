@@ -66,8 +66,6 @@ public class SessionUtil implements HttpSessionListener {
 	 * @return
 	 */
 	public static MgrInfoVO getMgrInfo(HttpSession session) {
-//		log.debug("[ Session getMgrInfo ] MGR ID   : {}",session.getId());
-//		log.debug("[ Session getMgrInfo ] MGR INFO : {}",session.getAttribute(SessionUtil.MGR_INFO));
 		if(ObjectUtils.isEmpty(session) || ObjectUtils.isEmpty(session.getAttribute(SessionUtil.MGR_INFO))) {
 			log.debug("[ Session getMgrInfo ] MGR INFO : {}",session.getAttribute("TEST"));
 			return null;

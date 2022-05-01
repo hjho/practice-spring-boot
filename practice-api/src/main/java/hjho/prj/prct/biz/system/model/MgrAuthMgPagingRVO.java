@@ -19,6 +19,9 @@ public class MgrAuthMgPagingRVO extends SysMgrAuth {
 	@ApiModelProperty(name="menuNm", value="메뉴명")
 	private String menuNm;
 	
+	@ApiModelProperty(name="menuCd", value="메뉴코드")
+	private String menuCd;
+	
 	// 페이지네이션 변수 
 	@ApiModelProperty(name="rowNo", value="행 번호")
 	private Long   rowNo;

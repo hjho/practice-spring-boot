@@ -91,8 +91,7 @@
     <update id="putSysMgrRole" parameterType="hjho.prj.prct.biz.system.model.MgrRoleMgVO">
         /* 관리자 그룹 역할 관리 > 수정 */
         UPDATE practice.sys_mgr_role
-           SET mgr_grp_id   = #{mgrGrpId     , jdbcType=VARCHAR}
-             , mgr_id       = #{mgrId        , jdbcType=VARCHAR}
+           SET mgr_id       = #{mgrId        , jdbcType=VARCHAR}
              , apit_dtm     = #{apitDtm      , jdbcType=VARCHAR}
              , expr_dtm     = #{exprDtm      , jdbcType=VARCHAR}
              , use_yn       = #{useYn        , jdbcType=VARCHAR}

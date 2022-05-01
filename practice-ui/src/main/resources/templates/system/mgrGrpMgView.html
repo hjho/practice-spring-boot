@@ -134,6 +134,7 @@
 											<th class="text-center">선택</th>
 											<th class="text-center">메뉴아이디</th>
 											<th class="text-center">메뉴명</th>
+											<th class="text-center">메뉴타입</th>
 											<th class="text-center">조회</th>
 											<th class="text-center">등록</th>
 											<th class="text-center">수정</th>
@@ -156,6 +157,7 @@
 				</div>
 			<br>
 <th:block th:include="/system/mgrRoleModal"></th:block>
+<th:block th:include="/system/mgrAuthModal"></th:block>
 			</th:block>
 			
 
@@ -207,6 +209,11 @@
 			// 모달 팝업 초기화 (소속 관리자)
 			$('#modalMgrRole').on('show.bs.modal', function (e) {
 				mgrRole.fnGet(chocGrpId);
+			});
+			
+			// 모달 팝업 초기화 (소속 관리자)
+			$('#modalMgrAuth').on('show.bs.modal', function (e) {
+				mgrAuth.fnGet(chocGrpId);
 			});
 			
 		});
@@ -266,7 +273,7 @@
 				$('#btnDel').attr('disabled', false);	
 				// DataTableUtils.init('#tableMgrAuth');
 				if(isModalOn) {
-					
+					$('#modalMgrAuth').modal('show'); 
 				}
 			}
 		}
@@ -364,10 +371,8 @@
 						"render": function(data, type, row) {
 							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"menuId\" value=\"'+data+'\" disabled>';
 					}},
-		            { "data": "menuNm"    , "class": "text-left"  ,
-						"render": function(data, type, row) {
-							return '<input type=\"text\" class=\"form-control form-control-sm\" name=\"menuNm\" value=\"'+data+'\" disabled>';
-					}},
+		            { "data": "menuNm"    , "class": "text-left"  },
+		            { "data": "menuCd"    , "class": "text-center"},
 		            { "data": "readAuthYn", "class": "text-center",
 						"render": function(data, type, row) {
 							var checked = (StringUtils.isYn(data)) ? "checked" : "" ;
@@ -488,11 +493,47 @@
 		}
 		
 		function fnAjaxAuth(method) {
-			// 삭제 전 확인.
-			if(method == AjaxUtils.DEL && !confirm("선택한 권한을 해제 하시겠습니까?")) {
+			var inputList = [];
+			
+			var obj = $('#tableMgrAuth').find('input[name=check]');//.eq(2).is(':checked')
+			$.each(obj, function(i, item) {
+				if($(item).is(':checked')) {
+					var data = {
+						"mgrGrpId"   : chocGrpId,
+						"menuId"     : $('#tableMgrAuth').find('input[name=menuId]').eq(i).val(),
+						"readAuthYn" : ($('#tableMgrAuth').find('input[name=readAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"cretAuthYn" : ($('#tableMgrAuth').find('input[name=cretAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"updAuthYn"  : ($('#tableMgrAuth').find('input[name=updAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"delAuthYn"  : ($('#tableMgrAuth').find('input[name=delAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"exptAuthYn" : ($('#tableMgrAuth').find('input[name=exptAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"privDataReadAuthYn" : ($('#tableMgrAuth').find('input[name=privDataReadAuthYn]').eq(i).is(':checked')) ? "Y" : "N",
+						"useYn"      : ($('#tableMgrAuth').find('input[name=useYn]').eq(i).is(':checked')) ? "Y" : "N"
+					}
+					inputList.push(data);
+				}
+			});
+			if(inputList.length == 0) {
+				alert("변경 할 메뉴를 체크해주세요.");
 				return;
 			}
+			// 삭제 전 확인.
+			if(method == AjaxUtils.DEL) {
+				if(!confirm("선택한 메뉴("+inputList.length+"건)를 제외 하시겠습니까?")) {
+					return;
+				}
+			}
+			var obj = {
+					url : "/system/mgr/auth"+method,
+					contentType : "application/json",
+					param : JSON.stringify(inputList),
+					funcOk : function(data) {
+						DataTableUtils.refrash('#tableMgrAuth');
+					},
+					funcErr : function(data) {}
+			}
+			AjaxUtils.run(obj);
 		}
+		
 		function reqValCheckFail(formId) {
 			var isFail = false;
 			var reqObj = $(formId).find('.req');

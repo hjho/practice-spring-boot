@@ -177,7 +177,7 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 				pageUri = menu.getPageUrl();
 			}
 		}
-		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getMgrInfo(session)
+		Authentication authentication = new TestingAuthenticationToken(SessionUtil.getUser(session)
 				                                                     , SessionUtil.getToken(session)
 				                                                     , new String[] {menuId, pageUri, requestUri});
 

@@ -9,6 +9,8 @@ public class MenuAuthVO {
 	
 	private String menuId;
 	
+	private String menuCd;
+	
 	private String hrMenuId;
 	
 	private String menuNm;

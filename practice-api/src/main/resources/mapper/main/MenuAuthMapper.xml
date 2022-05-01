@@ -9,6 +9,7 @@
         /* 상위 메뉴 */
         SELECT menu.menu_id 
              , menu.hr_menu_id 
+             , menu.menu_cd 
              , menu.menu_nm 
              , menu.page_url 
              , menu.icon_val 
@@ -34,7 +35,8 @@
             resultType    = "hjho.prj.prct.biz.main.model.MenuAuthVO">
         /* 하위 메뉴 */
         SELECT menu.menu_id 
-             , menu.hr_menu_id 
+             , menu.hr_menu_id
+             , menu.menu_cd 
              , menu.menu_nm 
              , menu.page_url 
              , menu.icon_val 
@@ -60,7 +62,8 @@
             resultType    = "hjho.prj.prct.biz.main.model.MgrAuthRVO">
         /* 권한 조회 */
         SELECT mgr.mgr_id 
-             , grp.mgr_grp_id 
+             , grp.mgr_grp_id
+             , menu.menu_cd 
              , menu.menu_id 
              , menu.menu_nm 
              , auth.cret_auth_yn 
