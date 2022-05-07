@@ -17,9 +17,10 @@
 								<div class="col-4 row">
 									<label class="col-6 col-form-label text-right" for="inSysMgrStatCd">관리자 상태</label>
 							      	<select class="col-6 form-control change-start" id="inSysMgrStatCd">
-							        	<option value="" selected>전체</option>
-							        	<option value="00">재직</option>
-							        	<option value="99">퇴사</option>
+							      		<option value="" selected>전체</option>
+							        <th:block th:each="item : ${mgrStatCd}">
+							        	<option th:value=${item.cdVal} th:text=${item.cdValNm}></option>
+							        </th:block>
 							      	</select>
 								</div>
 							</div>
@@ -96,8 +97,9 @@
 								<div class="col-4">
 									<label for="sysMgrStatCd"><span class="req">*</span>관리자 상태</label>
 			    					<select class="form-control form-control-sm" id="sysMgrStatCd" name="sysMgrStatCd">
-							        	<option value=00 selected>재직</option>
-							        	<option value=99>퇴사</option>
+							        <th:block th:each="item : ${mgrStatCd}">
+							        	<option th:value=${item.cdVal} th:text=${item.cdValNm}></option>
+							        </th:block>
 									</select>
 								</div>
 								<div class="col-4">
@@ -199,14 +201,15 @@
 		            { 
 						"data": "sysMgrStatCd", "class": "text-center",
 						"render": function(data, type, row) {
-							var statCd = data;
-							if('00' == statCd) {
-								return '재직'
-							} else
-							if('99' == statCd) {
-								return '퇴직'
-							}
-							return data;
+							var mgrStatNm = data;
+							var statCd = /*[[${mgrStatCd}]]*/[];
+							$.each(statCd, function(index, item) {
+								if(item.cdVal == data) {
+									mgrStatNm = item.cdValNm;
+									return false;
+								}
+							});
+							return mgrStatNm;
 						}
 					},
 		            { "data": "rcntAccDtm"  , "class": "text-center", "format": "dtm"}

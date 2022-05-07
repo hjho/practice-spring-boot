@@ -23,7 +23,13 @@ public class URI {
 	private static final String LOGIN_PROC   = "/login/proc";
 	private static final String AUTH_MENU    = "/auth/menu";
 	private static final String AUTH_MANAGER = "/auth/mgr";
-	private static final String TOKEN_ISSUE  = "/token/issue";
+	
+	/* 토큰 관련 */
+	private static final String TOKEN_ISSUE    = "/token/issue";
+	private static final String TOKEN_VERIFY   = "/token/verify";
+	private static final String TOKEN_REISSUE  = "/token/reissue";
+	private static final String TOKEN_REVERIFY = "/token/reverify";
+	private static final String REFRESH_TOKEN  = "/token/getToken";
 	
 	private static final String CODE         = "/code";
 	private static final String DETAIL       = "/detail";
@@ -32,6 +38,8 @@ public class URI {
 	private static final String GROUP        = "/grp";
 	private static final String AUTHORISE    = "/auth";
 	private static final String ROLE         = "/role";
+	
+	private static final String BOX          = "/box";
 	
 /* Default XE Oracle Table */
 	// 세계정보관리 > 대륙관리
@@ -53,6 +61,7 @@ public class URI {
 /* Add Table */
 	// 시스템관리 > 공통코드관리
 	public static final String SYSTEM_CODE_API          = DEF.concat(SYSTEM).concat(CODE);
+	public static final String SELECT_BOX               = DEF.concat(SYSTEM).concat(CODE).concat(BOX);
 	// 시스템관리 > 공통코드관리 > 상세
 	public static final String SYSTEM_CODE_DT_API       = DEF.concat(SYSTEM).concat(CODE).concat(DETAIL);
 	// 시스템관리 > 메뉴관리
@@ -73,7 +82,16 @@ public class URI {
 	public static final String MAIN_MENU_AUTH_API       = DEF.concat(MAIN).concat(AUTH_MENU);
 	// 관리자 권한 조회.
 	public static final String MAIN_MGR_AUTH_API        = DEF.concat(MAIN).concat(AUTH_MANAGER);
+	
 	// 토큰 발급.
 	public static final String MAIN_TOKEN_ISSUE_API     = DEF.concat(MAIN).concat(TOKEN_ISSUE);
+	// 토큰 검증.
+	public static final String MAIN_TOKEN_VERIFY_API    = DEF.concat(MAIN).concat(TOKEN_VERIFY);
+	// 토큰 재 발급.
+	public static final String MAIN_TOKEN_REISSUE_API   = DEF.concat(MAIN).concat(TOKEN_REISSUE);
+	// 토큰 재 검증.
+	public static final String MAIN_TOKEN_REVERIFY_API  = DEF.concat(MAIN).concat(TOKEN_REVERIFY);
+	// 관리자 리프래쉬 토큰 정보 가져오기.
+	public static final String MAIN_REFRESH_TOKEN_API   = DEF.concat(MAIN).concat(REFRESH_TOKEN);
 	
 }

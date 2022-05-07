@@ -22,6 +22,15 @@
            AND mgr_pw = #{userPw, jdbcType=VARCHAR} 
     </select>
     
+    <update id="errPw" parameterType="hjho.prj.prct.biz.main.model.LoginPVO">
+        /* 비밀번호 오류 */
+        UPDATE practice.sys_mgr
+           SET pw_err_cnt = pw_err_cnt + 1
+             , upd_sys_id = 'ERR_PW'
+             , upd_dtm    = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+         WHERE mgr_id     = #{userId, jdbcType=VARCHAR}
+    </update>
+    
     <select id = "loginProc" 
             parameterType = "hjho.prj.prct.biz.main.model.LoginPVO" 
             resultType    = "hjho.prj.prct.biz.main.model.MgrInfoVO">

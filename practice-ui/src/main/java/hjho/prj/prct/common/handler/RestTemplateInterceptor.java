@@ -24,7 +24,7 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 		} else {
 			log.debug(">>>>> Request  : {}", new String(body).toString());
 		}
-		log.debug("===== EXCUTE   : ({}) {}{}", request.getMethodValue(), request.getURI().getAuthority(), request.getURI().getPath());
+		log.info("== ({}) {}{}", request.getMethodValue(), request.getURI().getAuthority(), request.getURI().getPath());
 		ClientHttpResponse clientHttpResponse = execution.execute(request, body);
 		
 		log.debug("<<<<< Response : ({}) {}", clientHttpResponse.getRawStatusCode(), this.getBody(clientHttpResponse));

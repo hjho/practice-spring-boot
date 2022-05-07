@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import hjho.prj.prct.biz.main.model.MenuAuthVO;
 import hjho.prj.prct.biz.main.service.MainService;
 import hjho.prj.prct.common.exception.AuthVerifyException;
+import hjho.prj.prct.common.exception.JwtVerifyException;
 import hjho.prj.prct.common.exception.SessionExpirationException;
 import hjho.prj.prct.common.util.SessionUtil;
 import hjho.prj.prct.common.util.StringUtil;
@@ -78,10 +79,9 @@ public class HttpServletInterceptor implements HandlerInterceptor {
 			
 			// 토큰 검증 및 재발급.
 			stopWatch.start("tokenCheck");
-			/*
 			if(mainService.isTokenVerifyFail(request)) {
-				throw new SessionExpirationException(); // 다른 EXCEPTION "유효하지 않은 토큰입니다."
-			}*/
+				throw new JwtVerifyException();
+			}
 			stopWatch.stop();
 			
 			// 사용자 접속 권한 체크. 조회, 등록, 수정, 삭제 authority

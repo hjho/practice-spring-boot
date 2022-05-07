@@ -1,5 +1,6 @@
 package hjho.prj.prct.biz.main.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import hjho.prj.prct.biz.main.model.MgrInfoVO;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.clazz.CommonService;
+import hjho.prj.prct.common.clazz.URI;
 import hjho.prj.prct.common.util.SessionUtil;
 import hjho.prj.prct.common.util.StringUtil;
 import hjho.prj.prct.common.util.VoUtil;
@@ -37,67 +39,70 @@ public class MainService extends CommonService {
 		HttpSession session = request.getSession();
 		MgrInfoVO mgrInfoVO = SessionUtil.getUser(session);
 		String sessMgrId = mgrInfoVO.getMgrId();
+		
 		String token = SessionUtil.getToken(session);
 		
 		if(StringUtils.isEmpty(token)) {
-			log.warn("[V] 토큰이 존재하지 않습니다.");
+			log.warn("[V] Json Web Token Empty.");
 			return true;
 		}
 		
 		// 1. Access Token Verify.
-		CommonMessage atkMsg = super.post("/api/token/verify", token);
-		String atkMsgCode = atkMsg.getCode();
+		Map<String, String> tokenMap = new HashMap<String, String>();
+		tokenMap.put("token", token);
+		CommonMessage atkMsg = super.post(URI.MAIN_TOKEN_VERIFY_API, tokenMap);
 		
 		// 2. Access Token Verify OK.
-		if("0000".equals(atkMsgCode)) {
+		if(atkMsg.isSuccess()) {
 			Map<String, Object> data = VoUtil.objToMap(atkMsg.getData());
 			String tkMgrId = (String) data.get("mgrId");
 			
 			// 3. Token Data, Login Data Check!
-			if(tkMgrId.equals(sessMgrId)) {
+			if(sessMgrId.equals(tkMgrId)) {
 				isFail = false;
 			}
 		// 2. Access Token Verify Fail.
 		} else {
 			// 4. Access Token Expiration.
-			if("9004".equals(atkMsgCode)) {
+			if("9004".equals(atkMsg.getCode())) {
 				
-				log.debug("[V] Access Token Expiration");
+				log.debug("[V] Access Json Web Token Expiration");
 				// 5. Get Refresh Token Value.
-				CommonMessage mgrMsg = super.post("/api/sys/mgr/getToken", sessMgrId);
+				CommonMessage mgrMsg = super.post(URI.MAIN_REFRESH_TOKEN_API, mgrInfoVO);
 				
 				// 6. Refresh Token Verify.
-				CommonMessage rtkMsg = super.post("/api/token/reverify", mgrMsg.getData());
-				String rtkMsgCode = rtkMsg.getCode();
+				Map<String, String> refreshTokenMap = new HashMap<String, String>();
+				refreshTokenMap.put("refreshToken", (String) mgrMsg.getData());
+				CommonMessage rtkMsg = super.post(URI.MAIN_TOKEN_REVERIFY_API, refreshTokenMap);
 				
 				// 7. Refresh Token Verify OK.
 				CommonMessage tkIssueMsg = null;
-				if("0000".equals(rtkMsgCode)) {
+				if(rtkMsg.isSuccess()) {
 					
 					// 8. Access Token Reissue. - AccessToken 만 재발급
-					tkIssueMsg = super.post("/api/token/reissue", mgrInfoVO);
+					tkIssueMsg = super.post(URI.MAIN_TOKEN_REISSUE_API, mgrInfoVO);
 					
 				} else {
 					// 9. Refresh Token Expiration.
-					if("9004".equals(rtkMsgCode)) {
+					if("9004".equals(rtkMsg.getCode())) {
 						
-						log.debug("[V] Refresh Token Expiration");
+						log.debug("[V] Refresh Json Web Token Expiration");
 						// 10. Access Token Issue. - AccessToken, RefreshToken 재발급
-						tkIssueMsg = super.post("/api/token/issue", mgrInfoVO);
+						tkIssueMsg = super.post(URI.MAIN_TOKEN_ISSUE_API, mgrInfoVO);
 					}
 				}
 				
 				// 11. Access Token Save.
-				if("0000".equals(tkIssueMsg.getCode())) {
+				if(tkIssueMsg.isSuccess()) {
 					SessionUtil.setToken(request, (String) tkIssueMsg.getData());
 					isFail = false;
 				}
 			}
 		}
 		if(isFail) {
-			log.debug("[V] Verify Token Fail");
+			log.warn("[V] Verify Json Web Token Fail");
 		} else {
-			log.debug("[V] Verify Token Ok");
+			log.debug("[V] Verify Json Web Token Ok");
 		}
 		return isFail;
 	}
@@ -114,9 +119,9 @@ public class MainService extends CommonService {
 			}
 		}
 		if(isFail) {
-			log.debug("[V] Verify Auth Fail : {}", message.getMessage());
+			log.warn("[V] Verify Mgr Auth Fail : {}", message.getMessage());
 		} else {
-			log.debug("[V] Verify Auth Ok");
+			log.debug("[V] Verify Mgr Auth Ok");
 		}
 		return isFail;
 	}

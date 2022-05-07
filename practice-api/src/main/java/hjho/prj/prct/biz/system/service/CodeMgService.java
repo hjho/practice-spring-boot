@@ -12,6 +12,7 @@ import hjho.prj.prct.biz.system.mapper.CodeMgMapper;
 import hjho.prj.prct.biz.system.model.CodeMgPagingPVO;
 import hjho.prj.prct.biz.system.model.CodeMgPagingRVO;
 import hjho.prj.prct.biz.system.model.CodeMgVO;
+import hjho.prj.prct.biz.system.model.SelectBoxRVO;
 import hjho.prj.prct.common.exception.UserException;
 
 @Service
@@ -19,6 +20,11 @@ public class CodeMgService {
 	
 	@Autowired 
 	private CodeMgMapper codeMgMapper;
+	
+	@Transactional(readOnly=true)
+	public List<SelectBoxRVO> selectBox(String commCdId) {
+		return codeMgMapper.selectBox(commCdId);
+	}
 	
 	@Transactional(readOnly=true)
 	public List<CodeMgPagingRVO> getSysCode(CodeMgPagingPVO codeMgPagingPVO) {

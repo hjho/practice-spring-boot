@@ -1,5 +1,6 @@
 package hjho.prj.prct.common.util;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +57,8 @@ public class JsonWebTokenUtils {
                 		, JWT_KEY.getBytes()) 		// Key로 Sign
                 .setIssuer(TK_ISSUER)				// 발급자
                 .compact(); 						// 토큰 생성
-
-        return jwt;
+        
+        return Base64.getEncoder().encodeToString(jwt.getBytes());
     }
     
     // Refash 토큰 생성
@@ -76,7 +77,7 @@ public class JsonWebTokenUtils {
     							.signWith(SignatureAlgorithm.HS256, JWT_KEY.getBytes()) // HS256 과 Key로 Sign
     							.compact(); 				// 토큰 생성
     	
-    	return refreshJwt;
+    	return Base64.getEncoder().encodeToString(refreshJwt.getBytes());
     }
     
     // 토큰 검증
@@ -84,13 +85,15 @@ public class JsonWebTokenUtils {
 	public Map<String, Object> verifyJWT(String jwt) throws UserException {
         Object data = null;
         String signature = null;
+        
+        String decodeJwt = new String(Base64.getDecoder().decode(jwt.getBytes()));
         try {
         	
         	Jws<Claims> jwtClaims = Jwts.parser()
         							.setSigningKey(JWT_KEY.getBytes())	// Set Key.
         							.requireSubject(ACCESS_TOKEN)		// 토큰 용도 검증.
         							.requireIssuer(TK_ISSUER)			// 토큰 발급자 검증.
-        							.parseClaimsJws(jwt);				// 파싱 및 검증, 실패 시 에러
+        							.parseClaimsJws(decodeJwt);			// 파싱 및 검증, 실패 시 에러
             
         	Claims claims = jwtClaims.getBody();
         	
@@ -130,12 +133,13 @@ public class JsonWebTokenUtils {
     }    
 	// Refresh 토큰 검증
 	public boolean verifyRefreshJWT(String jwt) throws UserException {
+		String decodeJwt = new String(Base64.getDecoder().decode(jwt.getBytes()));
 		try {
 			Jws<Claims> jwtClaims = Jwts.parser()
 					.setSigningKey(JWT_KEY.getBytes())	// Set Key.
 					.requireSubject(REFRESH_TOKEN)		// 토큰 용도 검증.
 					.requireIssuer(TK_ISSUER)			// 토큰 발급자 검증.
-					.parseClaimsJws(jwt);				// 파싱 및 검증, 실패 시 에러
+					.parseClaimsJws(decodeJwt);			// 파싱 및 검증, 실패 시 에러
 			if(isLog) {
         		log.debug("[JWT] EXPIRED   : {}", DateUtil.getFormat(jwtClaims.getBody().getExpiration()));
         	}
