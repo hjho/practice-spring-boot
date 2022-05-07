@@ -46,6 +46,10 @@ public class CommonService {
 		return this.excute(HttpMethod.GET, url.concat("/box"), null).getData();
 	}
 	
+	public Object box(String commCdId) {
+		return this.excute(HttpMethod.GET, URI.SELECT_BOX, "commCdId=".concat(commCdId)).getData();
+	}
+	
 	public static String getMethod(String requestURI) {
 		String method = "";
 		// 조회, 페이지 이동.
@@ -149,8 +153,8 @@ public class CommonService {
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
 		if(!(url.equals(URI.MAIN_LOGIN_PROC_API)
-	         ||url.equals(URI.MAIN_MENU_AUTH_API)
-	         ||url.equals(URI.MAIN_TOKEN_ISSUE_API))
+		   ||url.equals(URI.MAIN_MENU_AUTH_API)
+		   ||url.equals(URI.MAIN_TOKEN_ISSUE_API))
 		) {
 			header.set("Authorization", "Bearer ".concat(SecurityUtil.getToken()));
 		}
@@ -190,7 +194,6 @@ public class CommonService {
 	private Object initCommon(Object data) {
 		if(data == null) return data; 
 			
-		// TODO LIST처리 아직 안되어있음.
 		if(data instanceof List) {
 			List<Object> list = (List<Object>) data;
 			for (Object obj : list) {
@@ -229,7 +232,7 @@ public class CommonService {
 		}
 		
 		if(CommonModel.class.equals(paramClass)) {
-			return true;//false;
+			return true;
 		}
 		
 		return this.isCommonModel(paramClass.getSuperclass());

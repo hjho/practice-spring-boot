@@ -29,6 +29,14 @@ public class MgrMgService {
 		
 		return saveCnt > 0;
 	}
+	
+	@Transactional(readOnly=true)
+	public String getToken(MgrInfoVO mgrInfoVO) {
+		
+		String refreshTOken = mgrMgMapper.getToken(mgrInfoVO.getMgrId());
+		
+		return refreshTOken;
+	}
 
 	@Transactional(readOnly=true)
 	public List<MgrMgPagingRVO> getSysMgr(MgrMgPagingPVO mgrMgPagingPVO) {
@@ -83,7 +91,11 @@ public class MgrMgService {
 			
 			// PK 확인.
 			if(this.isDataOne(mgrMgVO)) {
-				delCnt = mgrMgMapper.deleteSysMgr(mgrMgVO);
+				if("99".equals(mgrMgVO.getSysMgrStatCd())) {
+					delCnt = mgrMgMapper.deleteSysMgr(mgrMgVO);
+				} else {
+					throw new UserException("9202");
+				}
 			} else {
 				throw new UserException("9006", new String[] {"관리자아이디"});
 			}

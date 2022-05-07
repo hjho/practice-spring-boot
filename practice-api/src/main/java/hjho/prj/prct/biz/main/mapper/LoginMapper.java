@@ -16,4 +16,6 @@ public interface LoginMapper {
 
 	public int pwCheck(LoginPVO loginPVO);
 
+	public int errPw(LoginPVO loginPVO);
+
 }

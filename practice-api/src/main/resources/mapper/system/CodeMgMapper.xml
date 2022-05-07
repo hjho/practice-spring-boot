@@ -18,6 +18,25 @@
         , comm_cd_id asc
     </sql>
     
+    <select id="selectBox" 
+            parameterType="string" 
+            resultType   ="hjho.prj.prct.biz.system.model.SelectBoxRVO">
+        /* Select Box */
+        SELECT bs.comm_cd_id 
+             , bs.comm_cd_nm 
+             , dt.cd_val 
+             , dt.cd_val_nm
+             , bs.addt_cd_nm 
+             , dt.addt_cd_val 
+          FROM practice.sys_comm_cd_bs bs
+         INNER JOIN practice.sys_comm_cd_dt dt
+            ON bs.comm_cd_id = dt.comm_cd_id
+         WHERE dt.comm_cd_id = #{commCdId, jdbcType=VARCHAR}
+           AND bs.use_yn     = 'Y'
+           AND dt.use_yn     = 'Y'
+         ORDER BY dt.sort_ord ASC 
+    </select>
+    
     <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.CodeMgVO" resultType="int">
         /* 공통코드 PK CHECK */
         SELECT COUNT(*) FROM practice.sys_comm_cd_bs WHERE comm_cd_id = #{commCdId, jdbcType=VARCHAR}

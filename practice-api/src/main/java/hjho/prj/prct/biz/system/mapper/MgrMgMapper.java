@@ -13,6 +13,8 @@ public interface MgrMgMapper {
 
 	int tokenSave(String mgrId, String refreshToken);
 
+	String getToken(String mgrId);
+	
 	int pkCheck(MgrMgVO mgrMgVO);
 
 	List<MgrMgPagingRVO> getSysMgr(MgrMgPagingPVO mgrMgPagingPVO);

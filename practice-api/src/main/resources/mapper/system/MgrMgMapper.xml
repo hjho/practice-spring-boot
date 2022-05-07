@@ -29,6 +29,10 @@
              , rcnt_acc_dtm = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
          WHERE mgr_id       = #{mgrId        , jdbcType=VARCHAR}
     </update>
+    <select id="getToken" parameterType="string" resultType="string">
+        /* INQR REFRESH TOKEN */
+        SELECT rfsh_tk FROM practice.sys_mgr WHERE mgr_id = #{mgrId, jdbcType=VARCHAR}
+    </select>
     
     <select id="pkCheck" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO" resultType="int">
         /* 관리자 PK CHECK */
@@ -145,17 +149,11 @@
          WHERE mgr_id          = #{mgrId, jdbcType=VARCHAR}
     </update>
     
-    <update id="errSysMgrPw" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
-        /* 관리자 관리 > 수정(비밀번호오류) */
-        UPDATE practice.sys_mgr
-           SET pw_err_cnt = pw_err_cnt + 1
-             , upd_sys_id = 'ERR_PW'
-             , upd_dtm    = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
-         WHERE mgr_id     = #{mgrId, jdbcType=VARCHAR}
-    </update>
-    
     <delete id="deleteSysMgr" parameterType="hjho.prj.prct.biz.system.model.MgrMgVO">
         /* 관리자 관리 > 삭제 */
+        DELETE 
+          FROM practice.sys_mgr
+         WHERE mgr_id = #{mgrId, jdbcType=VARCHAR} 
     </delete>
 	
 </mapper> 

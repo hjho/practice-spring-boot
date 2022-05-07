@@ -31,6 +31,19 @@ public class TokenController extends CommonController {
 	@Autowired
 	private MgrMgService mgrMgService;
 	
+	@PostMapping("/getToken")
+	@ApiOperation(value="getToken", notes="리프래쉬 토큰 조회", response=String.class)
+	public CommonMessage getToken(@RequestBody MgrInfoVO mgrInfoVO) throws UserException {
+		this.parameterLog("TokenController[getToken]", mgrInfoVO);
+		CommonMessage message = new CommonMessage();
+		
+		String refreshToken = mgrMgService.getToken(mgrInfoVO);
+		
+		message.setOk();
+		message.setData(refreshToken);
+		return message;
+	}
+	
 	@PostMapping("/issue")
 	@ApiOperation(value="issue", notes="토큰 발급", response=String.class)
 	public CommonMessage issue(@RequestBody MgrInfoVO mgrInfoVO) throws UserException {
@@ -58,7 +71,7 @@ public class TokenController extends CommonController {
 	}
 	
 	@PostMapping("/reissue")
-	@ApiOperation(value="reissue", notes="토큰 발급", response=String.class)
+	@ApiOperation(value="reissue", notes="토큰 재발급", response=String.class)
 	public CommonMessage reissue(@RequestBody MgrInfoVO mgrInfoVO) throws UserException {
 		this.parameterLog("TokenController[reissue]", mgrInfoVO);
 		CommonMessage message = new CommonMessage();
@@ -80,10 +93,10 @@ public class TokenController extends CommonController {
 	
 	@PostMapping("/verify")
 	@ApiOperation(value="verify", notes="토큰 검증", response=String.class)
-	public CommonMessage verify(@RequestBody String token) throws UserException {
-		this.parameterLog("TokenController[verify]", token);
+	public CommonMessage verify(@RequestBody Map<String, String> tokenMap) throws UserException {
+		this.parameterLog("TokenController[verify]", tokenMap.get("token"));
 		CommonMessage message = new CommonMessage();
-		Object data = jsonWebTokenUtils.verifyJWT(token);
+		Object data = jsonWebTokenUtils.verifyJWT(tokenMap.get("token"));
 		message.setOk();
 		message.setData(data);
 		return message;
@@ -91,10 +104,10 @@ public class TokenController extends CommonController {
 	
 	@PostMapping("/reverify")
 	@ApiOperation(value="reverify", notes="리프레쉬 토큰 검증", response=Boolean.class)
-	public CommonMessage reverify(@RequestBody String token) throws UserException {
-		this.parameterLog("TokenController[reverify]", token);
+	public CommonMessage reverify(@RequestBody Map<String, String> tokenMap) throws UserException {
+		this.parameterLog("TokenController[reverify]", tokenMap.get("refreshToken"));
 		CommonMessage message = new CommonMessage();
-		boolean isOk = jsonWebTokenUtils.verifyRefreshJWT(token);
+		boolean isOk = jsonWebTokenUtils.verifyRefreshJWT(tokenMap.get("refreshToken"));
 		message.setOk();
 		message.setData(isOk);
 		return message;

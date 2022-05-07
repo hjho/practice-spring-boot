@@ -24,7 +24,11 @@ public class MgrMgController extends CommonController {
 	
 	@RequestMapping("/page")
 	public ModelAndView page() {
-		return super.pageView("system", "mgrMg");
+		ModelAndView mav = super.getPageMav();
+		
+		mav.addObject("mgrStatCd", commonService.box("SYS_MGR_STAT_CD"));
+		
+		return super.pageView(mav, "system", "mgrMg");
 	}
 	
 	@GetMapping("/get")
