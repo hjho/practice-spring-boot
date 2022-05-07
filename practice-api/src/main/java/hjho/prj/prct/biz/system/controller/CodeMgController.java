@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hjho.prj.prct.biz.system.model.CodeMgPagingPVO;
 import hjho.prj.prct.biz.system.model.CodeMgPagingRVO;
 import hjho.prj.prct.biz.system.model.CodeMgVO;
+import hjho.prj.prct.biz.system.model.SelectBoxRVO;
 import hjho.prj.prct.biz.system.service.CodeMgService;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
@@ -37,6 +39,19 @@ public class CodeMgController extends CommonController {
 		CommonMessage message = new CommonMessage();
 		
 		List<CodeMgPagingRVO> output = codeMgService.getSysCode(codeMgPagingPVO);
+		
+		message.setOk();
+		message.setData(output);
+		return message;
+	}
+	
+	@GetMapping("/box")
+	@ApiOperation(value="selectBox", notes="시스템 공통코드 조회(Select Box)", response=CodeMgPagingRVO.class)
+	public CommonMessage selectBox(@RequestParam String commCdId) throws UserException {
+		this.parameterLog("[SELECT BOX]", commCdId);
+		CommonMessage message = new CommonMessage();
+		
+		List<SelectBoxRVO> output = codeMgService.selectBox(commCdId);
 		
 		message.setOk();
 		message.setData(output);

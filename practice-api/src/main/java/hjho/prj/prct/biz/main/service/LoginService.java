@@ -43,6 +43,7 @@ public class LoginService {
 		// 비밀번호 검증.
 		int pwCnt = loginMapper.pwCheck(loginPVO);
 		if(pwCnt == 0) {
+			loginMapper.errPw(loginPVO);
 			throw new UserException("9101");
 		}
 		// 역할 검증.

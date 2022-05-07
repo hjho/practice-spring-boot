@@ -29,5 +29,6 @@
 	<!-- 200 MGR MESSAGE -->
 	<entry key="9200">최소 연봉은 최대 연봉보다 클 수 없습니다.</entry>
 	<entry key="9201">해당 사원의 변경 히스토리가 존재합니다.</entry>
+	<entry key="9202">퇴사한 관리자만 삭제 가능합니다.</entry>
 	
 </properties>
