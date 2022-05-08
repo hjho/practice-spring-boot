@@ -28,21 +28,21 @@ import lombok.extern.slf4j.Slf4j;
 public class CryptoUtils {
 	
 	@Value("${crypto.algorithm}")
-    private static String CRYPTO_ALGORITHM;
+    private String CRYPTO_ALGORITHM;
 	@Value("${crypto.key}")
-    private static String CRYPTO_KEY;
+    private String CRYPTO_KEY;
 	@Value("${crypto.iv}")
-	private static String CRYPTO_IV;
+	private String CRYPTO_IV;
 	
 	@Value("${hmac.algorithm}")
-	private static String HMAC_ALGORITHM;
+	private String HMAC_ALGORITHM;
 	@Value("${hmac.key}")
-	private static String HMAC_KEY;
+	private String HMAC_KEY;
 	
     @Value("${jaspt.key}")
-	private static String JASPT_KEY;
+	private String JASPT_KEY;
 	@Value("${jaspt.algorithm}")
-	private static String JASPT_ALGORITHM;
+	private String JASPT_ALGORITHM;
 	
 	private final static String DEFAULT_CHAR_SET = "UTF-8";
 	
@@ -52,20 +52,19 @@ public class CryptoUtils {
 	 * @return
 	 * @throws UserException
 	 */
-	public static String aesEncrypt(String decText) throws UserException {
-		return aesEncrypt(decText, CryptoUtils.DEFAULT_CHAR_SET);
+	public String aesEncrypt(String decText) throws UserException {
+		return this.aesEncrypt(decText, CryptoUtils.DEFAULT_CHAR_SET);
 	}
-	public static String aesEncrypt(String decText, String charSet) throws UserException {
+	public String aesEncrypt(String decText, String charSet) throws UserException {
 		
 		byte[] encrypted = null;
 		
 		try {
-			
 			Cipher cipher = Cipher.getInstance(CRYPTO_ALGORITHM);
 			
-			SecretKeySpec keySpec = new SecretKeySpec(CryptoUtils.get16Byte(CRYPTO_KEY, charSet), "AES");
+			SecretKeySpec keySpec = new SecretKeySpec(this.get16Byte(CRYPTO_KEY, charSet), "AES");
 			
-			IvParameterSpec ivParamSpec = new IvParameterSpec(CryptoUtils.get16Byte(CRYPTO_IV, charSet));
+			IvParameterSpec ivParamSpec = new IvParameterSpec(this.get16Byte(CRYPTO_IV, charSet));
 			
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
 			
@@ -86,19 +85,19 @@ public class CryptoUtils {
 	 * @return
 	 * @throws UserException
 	 */
-	public static String aesDecrypt(String encText) throws UserException {
-		return CryptoUtils.aesDecrypt(encText, CryptoUtils.DEFAULT_CHAR_SET);
+	public String aesDecrypt(String encText) throws UserException {
+		return this.aesDecrypt(encText, CryptoUtils.DEFAULT_CHAR_SET);
 	}
-	public static String aesDecrypt(String encText, String charSet) throws UserException {
+	public String aesDecrypt(String encText, String charSet) throws UserException {
 		
 		String decText = null;
         try {
         	
-			Cipher cipher = Cipher.getInstance(CRYPTO_ALGORITHM);
+			Cipher cipher = Cipher.getInstance(this.CRYPTO_ALGORITHM);
 			
-			SecretKeySpec keySpec = new SecretKeySpec(CryptoUtils.get16Byte(CRYPTO_KEY, charSet), "AES");
+			SecretKeySpec keySpec = new SecretKeySpec(this.get16Byte(CRYPTO_KEY, charSet), "AES");
 			
-			IvParameterSpec ivParamSpec = new IvParameterSpec(CryptoUtils.get16Byte(CRYPTO_IV, charSet));
+			IvParameterSpec ivParamSpec = new IvParameterSpec(this.get16Byte(CRYPTO_IV, charSet));
 			
 			cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
 
@@ -124,7 +123,7 @@ public class CryptoUtils {
 	 * @return
 	 * @throws UserException
 	 */
-	public static String shaEncrypt(String password) throws UserException {
+	public String shaEncrypt(String password) throws UserException {
 
 		MessageDigest md = null;
 		try {
@@ -144,8 +143,8 @@ public class CryptoUtils {
         
         return builder.toString();
     }
-	public static boolean shaCheck(String password, String shaPassword) throws UserException {
-		String shaPwd = CryptoUtils.shaEncrypt(password);
+	public boolean shaCheck(String password, String shaPassword) throws UserException {
+		String shaPwd = this.shaEncrypt(password);
 		if(shaPwd.equals(shaPassword)) {
 			return true;
 		}
@@ -158,10 +157,10 @@ public class CryptoUtils {
 	 * @return
 	 * @throws UserException
 	 */
-	public static String hmacBase64(String password) throws UserException {
-		return CryptoUtils.hmacBase64(password, CryptoUtils.DEFAULT_CHAR_SET);
+	public String hmacBase64(String password) throws UserException {
+		return this.hmacBase64(password, CryptoUtils.DEFAULT_CHAR_SET);
 	}
-	public static String hmacBase64(String password, String charSet) throws UserException {
+	public String hmacBase64(String password, String charSet) throws UserException {
 
 		byte[] hash = null;
 		
@@ -180,8 +179,8 @@ public class CryptoUtils {
 		
 		return Base64.encodeBase64String(hash);
     }
-	public static boolean hmacCheck(String password, String hmacPassword) throws UserException {
-		String hmacPwd = CryptoUtils.hmacBase64(password);
+	public boolean hmacCheck(String password, String hmacPassword) throws UserException {
+		String hmacPwd = this.hmacBase64(password);
 		if(hmacPwd.equals(hmacPassword)) {
 			return true;
 		}
@@ -192,7 +191,7 @@ public class CryptoUtils {
 	 * @param value
 	 * @return
 	 */
-	public static String jasyptEncoding(String value) {
+	public String jasyptEncoding(String value) {
 
         StandardPBEStringEncryptor pbeEnc = new StandardPBEStringEncryptor();
         pbeEnc.setPassword(JASPT_KEY);
@@ -201,7 +200,7 @@ public class CryptoUtils {
         return pbeEnc.encrypt(value);
     }
 	
-	private static byte[] get16Byte(String str, String charSet) throws UnsupportedEncodingException {
+	private byte[] get16Byte(String str, String charSet) throws UnsupportedEncodingException {
 		if(StringUtils.isEmpty(str)) return null;
 		
 		String length16 = str;

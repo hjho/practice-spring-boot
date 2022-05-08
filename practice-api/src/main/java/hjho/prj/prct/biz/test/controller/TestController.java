@@ -1,15 +1,19 @@
 package hjho.prj.prct.biz.test.controller;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hjho.prj.prct.biz.test.mapper.TestMapper;
+import hjho.prj.prct.biz.test.model.CryptoTestVO;
 import hjho.prj.prct.common.clazz.CommonController;
 import hjho.prj.prct.common.clazz.CommonMessage;
 import hjho.prj.prct.common.exception.UserException;
@@ -26,6 +30,12 @@ public class TestController extends CommonController {
 	@Autowired
 	private JsonWebTokenUtils jsonWebTokenUtils;
 	
+	@Autowired
+	private CryptoUtils cryptoUtils;
+	
+	@Autowired
+	private TestMapper testMapper;
+	
 	@ApiOperation(value="AES 복호화 테스트", notes="/api/test/aes/decrypt", response=String.class)
 	@GetMapping("/aes/decrypt")
 	public CommonMessage aesDecrypt(@RequestParam String encText) throws UserException {
@@ -33,7 +43,7 @@ public class TestController extends CommonController {
 		
 		CommonMessage message = new CommonMessage();
 		
-		String decText = CryptoUtils.aesDecrypt(encText);
+		String decText = cryptoUtils.aesDecrypt(encText);
 		
 		message.setOk();
 		message.setData(decText);
@@ -47,7 +57,7 @@ public class TestController extends CommonController {
 		
 		CommonMessage message = new CommonMessage();
 		
-		String encText = CryptoUtils.aesEncrypt(decText);
+		String encText = cryptoUtils.aesEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -60,7 +70,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[shaEncrypt]", decText);
 		CommonMessage message = new CommonMessage();
 		
-		String encText = CryptoUtils.shaEncrypt(decText);
+		String encText = cryptoUtils.shaEncrypt(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -74,7 +84,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[shaCheck]", new Object[] {password, shaPassword});
 		CommonMessage message = new CommonMessage();
 		
-		boolean isOk = CryptoUtils.shaCheck(password, shaPassword);
+		boolean isOk = cryptoUtils.shaCheck(password, shaPassword);
 		
 		message.setOk();
 		message.setData(isOk);
@@ -86,7 +96,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[hmacEncrypt]", decText);
 		CommonMessage message = new CommonMessage();
 		
-		String encText = CryptoUtils.hmacBase64(decText);
+		String encText = cryptoUtils.hmacBase64(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -99,7 +109,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[hmacCheck]", new Object[] {password, shaPassword});
 		CommonMessage message = new CommonMessage();
 
-		boolean isOk = CryptoUtils.hmacCheck(password, shaPassword);
+		boolean isOk = cryptoUtils.hmacCheck(password, shaPassword);
 
 		message.setOk();
 		message.setData(isOk);
@@ -112,7 +122,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[jasyptEcrypt]", decText);
 		CommonMessage message = new CommonMessage();
 		
-		String encText = CryptoUtils.jasyptEncoding(decText);
+		String encText = cryptoUtils.jasyptEncoding(decText);
 		
 		message.setOk();
 		message.setData(encText);
@@ -182,7 +192,7 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[base64Encode]", str);
 		CommonMessage message = new CommonMessage();
 		
-		String encode = Base64.encodeBase64String(str.getBytes());
+		String encode = Base64.getEncoder().encodeToString(str.getBytes());
 		
 		message.setOk();
 		message.setData(encode);
@@ -194,10 +204,24 @@ public class TestController extends CommonController {
 		super.parameterLog("Test[base64Decode]", decodeStr);
 		CommonMessage message = new CommonMessage();
 		
-		String decode = new String(Base64.decodeBase64(decodeStr.getBytes()));
+		String decode = new String(Base64.getDecoder().decode(decodeStr.getBytes()));
 		
 		message.setOk();
 		message.setData(decode);
+		return message;
+	}
+	
+	@ApiOperation(value="SQL ENCODE TEST", notes="/api/test/sql/crypto", response=String.class)
+	@PostMapping("/sql/crypto")
+	public CommonMessage sqlCrypto(@RequestBody CryptoTestVO cryptoTestVO) throws UserException {
+		super.parameterLog("Test[CryptoTest Before]", cryptoTestVO);
+		CommonMessage message = new CommonMessage();
+		
+		CryptoTestVO output = testMapper.crytoTest(cryptoTestVO);
+		
+		super.parameterLog("Test[CryptoTest After]", cryptoTestVO);
+		message.setOk();
+		message.setData(output);
 		return message;
 	}
 	

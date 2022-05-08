@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hjho.prj.prct.biz.test.mapper.TestMapper">
+    
+    <select id="crytoTest" 
+            parameterType="hjho.prj.prct.biz.test.model.CryptoTestVO"
+            resultType   ="hjho.prj.prct.biz.test.model.CryptoTestVO">
+    /* Crypto Test */
+    SELECT #{encAes, jdbcType=VARCHAR} AS dec_aes
+         , #{encUri, jdbcType=VARCHAR} AS dec_uri
+         , #{encB64, jdbcType=VARCHAR} AS dec_b64
+         , #{decAes, jdbcType=VARCHAR} AS enc_aes
+         , #{noneCt, jdbcType=VARCHAR} AS none_ct
+      FROM DUAL
+    </select>
+
+</mapper> 
