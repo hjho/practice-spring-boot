@@ -33,6 +33,9 @@ public class DatabaseConfiuration {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	@Autowired
+	private SqlLogInterceptor sqlLogInterceptor;
 
 	@Value("${spring.datasource.hikari.jdbc-url}")
     private String jdbcUrl;
@@ -73,7 +76,8 @@ public class DatabaseConfiuration {
 		sqlSessionFactoryBean.setDataSource(this.dataSource());
 		sqlSessionFactoryBean.setConfiguration(this.mybatisConfig());
 		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/**/*.xml"));
-		sqlSessionFactoryBean.setPlugins(new SqlLogInterceptor());
+		// 뒤에 있는 인터셉터가 먼저 시작.
+		sqlSessionFactoryBean.setPlugins(sqlLogInterceptor);
 		return sqlSessionFactoryBean.getObject();
 	}
 
