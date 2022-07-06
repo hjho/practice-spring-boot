@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hjho.prj.prct.common.filter.HtmlCharacterEscapes;
 import hjho.prj.prct.common.filter.MethodWebFilter;
+import hjho.prj.prct.common.filter.OtherFilter;
 import hjho.prj.prct.common.filter.ParameterResolver;
 import hjho.prj.prct.common.handler.HttpServletInterceptor;
 import hjho.prj.prct.common.util.SessionUtil;
@@ -101,13 +102,24 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	
 	// Method Filter
 	@Bean 
-	public FilterRegistrationBean<MethodWebFilter> getFilterRegistrationBean() {
-		log.debug("[C] {} ##", StringUtil.RPAD("MethodFilter", 32, ""));
+	public FilterRegistrationBean<MethodWebFilter> initMethodWebFilter() {
+		log.debug("[C] {} ##", StringUtil.RPAD("initMethodWebFilter", 32, ""));
 		FilterRegistrationBean<MethodWebFilter> registrationBean = new FilterRegistrationBean<MethodWebFilter>();
 		registrationBean.setFilter(new MethodWebFilter());
 		registrationBean.setOrder(1);
 		registrationBean.addUrlPatterns("/*");
-		registrationBean.setEnabled(false);
+		registrationBean.setEnabled(true);
+		return registrationBean;
+	}
+	
+	@Bean 
+	public FilterRegistrationBean<OtherFilter> initOtherFilter() {
+		log.debug("[C] {} ##", StringUtil.RPAD("initOtherFilter", 32, ""));
+		FilterRegistrationBean<OtherFilter> registrationBean = new FilterRegistrationBean<OtherFilter>();
+		registrationBean.setFilter(new OtherFilter());
+		registrationBean.setOrder(2);
+		registrationBean.addUrlPatterns("/*");
+		registrationBean.setEnabled(true);
 		return registrationBean;
 	}
 	
