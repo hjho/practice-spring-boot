@@ -20,12 +20,17 @@ public class MethodWebFilter extends OncePerRequestFilter {
 			                      , FilterChain filterChain)
 	throws ServletException, IOException 
 	{
-		log.debug("[F] Method Web : ({}) {}", request.getMethod(), request.getRequestURL());
-		if( "GET".equals(request.getMethod())
-		|| "POST".equals(request.getMethod())) {
+		String uri = request.getRequestURI();
+		if(uri.startsWith("/js") || uri.startsWith("/css") || uri.startsWith("/images")) {
 			filterChain.doFilter(request, response);
 		} else {
-			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			log.debug("[F] Method Web : ({}) {}", request.getMethod(), request.getRequestURL());
+			if( "GET".equals(request.getMethod())
+					|| "POST".equals(request.getMethod())) {
+				filterChain.doFilter(request, response);
+			} else {
+				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			}
 		}
 	}
 

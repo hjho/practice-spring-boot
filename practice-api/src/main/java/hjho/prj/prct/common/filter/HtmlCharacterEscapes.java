@@ -4,6 +4,7 @@ package hjho.prj.prct.common.filter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.EntityArrays;
@@ -13,6 +14,9 @@ import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class HtmlCharacterEscapes extends CharacterEscapes {
 
 	private static final long serialVersionUID = -7887438232365715016L;
@@ -24,7 +28,6 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 	private final CharSequenceTranslator translator;
 	 
     public HtmlCharacterEscapes() {
-    	
     	// 1. XSS 방지 처리할 특수 문자 지정
         this.asciiEscapes       = CharacterEscapes.standardAsciiEscapesForJSON();
         this.asciiEscapes['<']  = CharacterEscapes.ESCAPE_CUSTOM;
@@ -50,6 +53,7 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 		        			  , new LookupTranslator(EntityArrays.HTML40_EXTENDED_ESCAPE)
 		        			  , new LookupTranslator(lookupMap)								// 여기에서 커스터마이징 가능
         );
+        log.debug("[##] HtmlCharacterEscapes : {}", translator);
     }
     
 	@Override
@@ -61,19 +65,19 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 	@Override
 	public SerializableString getEscapeSequence(int ch) {
 		
-		// 사용자 지정 HTML 변환.
-		// log.debug("[F] getEscapeCodesForAscii : {}", this.translator.translate(Character.toString((char) ch)));
-		
 		char charAt = (char) ch;
-		
-		// EMOJI(확장문자) Parse Error
 		SerializedString serializedString = null;
-		if(Character.isHighSurrogate(charAt) || Character.isLowSurrogate(charAt)) {
-			String emojiStr = "\\u".concat(String.format("%04x", charAt));
-			serializedString = new SerializedString(emojiStr);
+		
+		String hexCode = String.format("%04x", (int) charAt);
+		if(Character.isHighSurrogate(charAt) || Character.isLowSurrogate(charAt) || "200d".equals(hexCode)) {
+			// EMOJI(확장문자) Parse Error
+			serializedString = new SerializedString("\\u".concat(hexCode));
 		} else {
-			serializedString = new SerializedString(this.translator.translate(Character.toString(charAt)));
+			// 사용자 지정 HTML 변환.
+			// serializedString = new SerializedString(this.translator.translate(Character.toString((char) ch)));
+			serializedString = new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString(charAt)));
 		}
+		// log.debug("[F] getEscapeCodesForAscii : {}", serializedString.getValue());
 		return serializedString;
 	}
 
